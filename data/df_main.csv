@@ -1,0 +1,79 @@
+active_end,active_start,countryName,details,domain,end_date,industry,name,occupation,record_type,start_date
+1797-03-04,1789-04-30,USA,"1,No Party",Institutions,1799-01-01 00:00:00,Government,George Washington,Politician,Active_SE,1732-01-01 00:00:00
+1801-03-04,1797-03-04,USA,"2,Federalist",Institutions,1826-01-01 00:00:00,Government,John Adams,Politician,Active_SE,1735-01-01 00:00:00
+1809-03-04,1801-03-04,USA,"3,Democratic-Republican",Institutions,1826-01-01 00:00:00,Government,Thomas Jefferson,Politician,Active_SE,1743-01-01 00:00:00
+1817-03-04,1809-03-04,USA,"4,Democratic-Republican",Institutions,1836-01-01 00:00:00,Government,James Madison,Politician,Active_SE,1751-01-01 00:00:00
+1825-03-04,1817-03-04,USA,"5,Democratic-Republican",Institutions,1831-01-01 00:00:00,Government,James Monroe,Politician,Active_SE,1758-01-01 00:00:00
+1829-03-04,1825-03-04,USA,"6,Democratic-Republican",Institutions,1848-01-01 00:00:00,Government,John Quincy Adams,Politician,Active_SE,1767-01-01 00:00:00
+1837-03-04,1829-03-04,USA,"7,Democratic",Institutions,1845-01-01 00:00:00,Government,Andrew Jackson,Politician,Active_SE,1767-01-01 00:00:00
+1841-03-04,1837-03-04,USA,"8,Democratic",Institutions,1862-01-01 00:00:00,Government,Martin Van Buren,Politician,Active_SE,1782-01-01 00:00:00
+1841-04-04,1841-03-04,USA,"9,Whig",Institutions,1841-01-01 00:00:00,Government,William Henry Harrison,Politician,Active_SE,1773-01-01 00:00:00
+1845-03-04,1841-04-04,USA,"10,Whig",Institutions,1862-01-01 00:00:00,Government,John Tyler,Politician,Active_SE,1790-01-01 00:00:00
+1849-03-04,1845-03-04,USA,"11,Democratic",Institutions,1849-01-01 00:00:00,Government,James K. Polk,Politician,Active_SE,1795-01-01 00:00:00
+1850-07-09,1849-03-04,USA,"12,Whig",Institutions,1850-01-01 00:00:00,Government,Zachary Taylor,Politician,Active_SE,1784-01-01 00:00:00
+1853-03-04,1850-07-09,USA,"13,Whig",Institutions,1874-01-01 00:00:00,Government,Millard Fillmore,Politician,Active_SE,1800-01-01 00:00:00
+1857-03-04,1853-03-04,USA,"14,Democratic",Institutions,1869-01-01 00:00:00,Government,Franklin Pierce,Politician,Active_SE,1804-01-01 00:00:00
+1861-03-04,1857-03-04,USA,"15,Democratic",Institutions,1868-01-01 00:00:00,Government,James Buchanan,Politician,Active_SE,1791-01-01 00:00:00
+1865-04-15,1861-03-04,USA,"16,Republican",Institutions,1865-01-01 00:00:00,Government,Abraham Lincoln,Politician,Active_SE,1809-01-01 00:00:00
+1869-03-04,1865-04-15,USA,"17,Democratic",Institutions,1875-01-01 00:00:00,Government,Andrew Johnson,Politician,Active_SE,1808-01-01 00:00:00
+1877-03-04,1869-03-04,USA,"18,Republican",Institutions,1885-01-01 00:00:00,Government,Ulysses S. Grant,Politician,Active_SE,1822-01-01 00:00:00
+1881-03-04,1877-03-04,USA,"19,Republican",Institutions,1893-01-01 00:00:00,Government,Rutherford B. Hayes,Politician,Active_SE,1822-01-01 00:00:00
+1881-09-19,1881-03-04,USA,"20,Republican",Institutions,1881-01-01 00:00:00,Government,James A. Garfield,Politician,Active_SE,1831-01-01 00:00:00
+1885-03-04,1881-09-19,USA,"21,Republican",Institutions,1886-01-01 00:00:00,Government,Chester A. Arthur,Politician,Active_SE,1829-01-01 00:00:00
+1889-03-04,1885-03-04,USA,"22,Democratic",Institutions,1908-01-01 00:00:00,Government,Grover Cleveland,Politician,Active_SE,1837-01-01 00:00:00
+1893-03-04,1889-03-04,USA,"23,Republican",Institutions,1901-01-01 00:00:00,Government,Benjamin Harrison,Politician,Active_SE,1833-01-01 00:00:00
+1897-03-04,1893-03-04,USA,"24,Democratic",Institutions,1908-01-01 00:00:00,Government,Grover Cleveland,Politician,Active_SE,1837-01-01 00:00:00
+1901-09-14,1897-03-04,USA,"25,Republican",Institutions,1901-01-01 00:00:00,Government,William McKinley,Politician,Active_SE,1843-01-01 00:00:00
+1909-03-04,1901-09-14,USA,"26,Republican",Institutions,1919-01-01 00:00:00,Government,Theodore Roosevelt,Politician,Active_SE,1858-01-01 00:00:00
+1913-03-04,1909-03-04,USA,"27,Republican",Institutions,1930-01-01 00:00:00,Government,William Howard Taft,Politician,Active_SE,1857-01-01 00:00:00
+1921-03-04,1913-03-04,USA,"28,Democratic",Institutions,1924-01-01 00:00:00,Government,Woodrow Wilson,Politician,Active_SE,1856-01-01 00:00:00
+1923-08-02,1921-03-04,USA,"29,Republican",Institutions,1923-01-01 00:00:00,Government,Warren G. Harding,Politician,Active_SE,1865-01-01 00:00:00
+1929-03-04,1923-08-02,USA,"30,Republican",Institutions,1933-01-01 00:00:00,Government,Calvin Coolidge,Politician,Active_SE,1872-01-01 00:00:00
+1933-03-04,1929-03-04,USA,"31,Republican",Institutions,1964-01-01 00:00:00,Government,Herbert Hoover,Politician,Active_SE,1874-01-01 00:00:00
+1945-04-12,1933-03-04,USA,"32,Democratic",Institutions,1945-01-01 00:00:00,Government,Franklin D. Roosevelt,Politician,Active_SE,1882-01-01 00:00:00
+1953-01-20,1945-04-12,USA,"33,Democratic",Institutions,1972-01-01 00:00:00,Government,Harry S. Truman,Politician,Active_SE,1884-01-01 00:00:00
+1961-01-20,1953-01-20,USA,"34,Republican",Institutions,1969-01-01 00:00:00,Government,Dwight D. Eisenhower,Politician,Active_SE,1890-01-01 00:00:00
+1963-11-22,1961-01-20,USA,"35,Democratic",Institutions,1963-01-01 00:00:00,Government,John F. Kennedy,Politician,Active_SE,1917-01-01 00:00:00
+1969-01-20,1963-11-22,USA,"36,Democratic",Institutions,1973-01-01 00:00:00,Government,Lyndon B. Johnson,Politician,Active_SE,1908-01-01 00:00:00
+1974-08-09,1969-01-20,USA,"37,Republican",Institutions,1994-01-01 00:00:00,Government,Richard Nixon,Politician,Active_SE,1913-01-01 00:00:00
+1977-01-20,1974-08-09,USA,"38,Republican",Institutions,2006-01-01 00:00:00,Government,Gerald Ford,Politician,Active_SE,1913-01-01 00:00:00
+1981-01-20,1977-01-20,USA,"39,Democratic",Institutions,,Government,Jimmy Carter,Politician,Active_SE,1924-01-01 00:00:00
+1989-01-20,1981-01-20,USA,"40,Republican",Institutions,2004-01-01 00:00:00,Government,Ronald Reagan,Politician,Active_SE,1911-01-01 00:00:00
+1993-01-20,1989-01-20,USA,"41,Republican",Institutions,2018-01-01 00:00:00,Government,George H. W. Bush,Politician,Active_SE,1924-01-01 00:00:00
+2001-01-20,1993-01-20,USA,"42,Democratic",Institutions,,Government,Bill Clinton,Politician,Active_SE,1946-01-01 00:00:00
+2009-01-20,2001-01-20,USA,"43,Republican",Institutions,,Government,George W. Bush,Politician,Active_SE,1946-01-01 00:00:00
+2017-01-20,2009-01-20,USA,"44,Democratic",Institutions,,Government,Barack Obama,Politician,Active_SE,1961-01-01 00:00:00
+2021-01-20,2017-01-20,USA,"45,Republican",Institutions,,Government,Donald J. Trump,Politician,Active_SE,1946-01-01 00:00:00
+,2021-01-20,USA,"46,Democratic",Institutions,,Government,Joseph 'Joe' Biden,Politician,Active_SE,1942-01-01 00:00:00
+,,UNITED KINGDOM,"Laissez-faire, self-regulating markets",Science & Technology,1790,Social Sciences,Adam Smith,Economist,SE,1723
+,,Germany,"The Communist Manifesto, capitalist society is unsustainable",Science & Technology,1883,Social Sciences,Karl Marx,Economist,SE,1818
+,,UNITED KINGDOM,Stabilise the booms and busts of economic activity decrease unemployment; and prevent an economic recession,Science & Technology,1946,Social Sciences,John Maynard Keynes,Economist,SE,1883
+,,AUSTRIA,"The power of the free markets, opposed Keynes' ideas",Science & Technology,1992,Social Sciences,Friedrich Hayek,Economist,SE,1899
+,,,"Floating exchange rates, steady increase of the supply of money, less government intervention",Science & Technology,2006,Social Sciences,Milton Freedman,Economist,SE,1912
+,,United Kingdom,"Supply and demand Marginal utility, and costs of production",Science & Technology,1924,Social Sciences,Alfred Marshall,Economist,SE,1842
+,,,"Debt-Deflation Theory , Theory of Interest",Science & Technology,1947,Social Sciences,Irving Fisher,Economist,SE,1867
+,,,Marginalist Revolution,Science & Technology,1938,Social Sciences,John Bates Clark,Economist,SE,1847
+,,United States,"Rational addiction, racial discrimination, crime, human capital",Science & Technology,2014,Social Sciences,Gary Becker,Economist,SE,1930
+,,UNITED STATES,"Foundations of economic analysis, explained Keynesian economics, ",Science & Technology,2009,Social Sciences,Paul Samuelson,Economist,SE,1915
+,,UNITED STATES,"Social choice theory, general equilibrium analysis",Science & Technology,2017,Social Sciences,Kenneth Arrow,Economist,SE,1921
+,,SAINT LUCIA,"Movement of money in Ghana, Nobel prize for development economics",Science & Technology,1991,Social Sciences,Arthur Lewis,Economist,SE,1915
+,,,"Principles of population, population growth, famine and misery",Science & Technology,1834,Social Sciences,Thomas Malthus ,Economist,SE,1766
+,,United Kingdom,"Classical liberalism, theory of liberty",Science & Technology,1873,Social Sciences,John Stuart Mill,Economist,SE,1806
+,,UNITED KINGDOM,The concept of economic rent comparative advantage; and the labour theory of value,Science & Technology,1823,Social Sciences,David Ricardo,Economist,SE,1772
+,,,The concept of externality,Science & Technology,1959,Social Sciences,Arthur Pigou,Economist,SE,1877
+,,UNITED KINGDOM,"Laissez-faire, self-regulating markets",Science & Technology,1790,Social Sciences,Adam Smith,Economist,SE,1723
+,,Germany,"The Communist Manifesto, capitalist society is unsustainable",Science & Technology,1883,Social Sciences,Karl Marx,Economist,SE,1818
+,,UNITED KINGDOM,Stabilise the booms and busts of economic activity decrease unemployment; and prevent an economic recession,Science & Technology,1946,Social Sciences,John Maynard Keynes,Economist,SE,1883
+,,AUSTRIA,"The power of the free markets, opposed Keynes' ideas",Science & Technology,1992,Social Sciences,Friedrich Hayek,Economist,SE,1899
+,,,"Floating exchange rates, steady increase of the supply of money, less government intervention",Science & Technology,2006,Social Sciences,Milton Freedman,Economist,SE,1912
+,,United Kingdom,"Supply and demand Marginal utility, and costs of production",Science & Technology,1924,Social Sciences,Alfred Marshall,Economist,SE,1842
+,,,"Debt-Deflation Theory , Theory of Interest",Science & Technology,1947,Social Sciences,Irving Fisher,Economist,SE,1867
+,,,Marginalist Revolution,Science & Technology,1938,Social Sciences,John Bates Clark,Economist,SE,1847
+,,United States,"Rational addiction, racial discrimination, crime, human capital",Science & Technology,2014,Social Sciences,Gary Becker,Economist,SE,1930
+,,UNITED STATES,"Foundations of economic analysis, explained Keynesian economics, ",Science & Technology,2009,Social Sciences,Paul Samuelson,Economist,SE,1915
+,,UNITED STATES,"Social choice theory, general equilibrium analysis",Science & Technology,2017,Social Sciences,Kenneth Arrow,Economist,SE,1921
+,,SAINT LUCIA,"Movement of money in Ghana, Nobel prize for development economics",Science & Technology,1991,Social Sciences,Arthur Lewis,Economist,SE,1915
+,,,"Principles of population, population growth, famine and misery",Science & Technology,1834,Social Sciences,Thomas Malthus ,Economist,SE,1766
+,,United Kingdom,"Classical liberalism, theory of liberty",Science & Technology,1873,Social Sciences,John Stuart Mill,Economist,SE,1806
+,,UNITED KINGDOM,The concept of economic rent comparative advantage; and the labour theory of value,Science & Technology,1823,Social Sciences,David Ricardo,Economist,SE,1772
+,,,The concept of externality,Science & Technology,1959,Social Sciences,Arthur Pigou,Economist,SE,1877
