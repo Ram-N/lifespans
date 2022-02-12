@@ -76,16 +76,6 @@ function replicate(arr, rep) {
 }
 
 
-
-function irpm(n) { //int random plus minus
-    return int(random(-n, n));
-}
-
-function jitter(n) {
-    return int(random(-n, n));
-}
-
-
 //https://stackoverflow.com/questions/966225/how-can-i-create-a-two-dimensional-array-in-javascript/966938#966938
 // usage: createArray(3, 2);
 function createArray(length) {
@@ -108,9 +98,6 @@ function create2DArray(cols) {
     return arr;
 }
 
-function chooseOne(_list) {
-    return (random(_list))
-}
 
 function alphaFill(clr, alphaValue) {
     c = color(clr);
@@ -118,6 +105,13 @@ function alphaFill(clr, alphaValue) {
     fill(c);
 }
 
+//https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function shuffleArray2(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
 
 // Usage: 
 //   var arr = [2, 11, 37, 42];
