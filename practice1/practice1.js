@@ -29,49 +29,72 @@ const btnHint = maker('button', output, 'btn', 'Hint');
 const btnNext = maker('button', output, 'longbtn', 'Next');
 const btnSoln = maker('button', output, 'longbtn', 'Solution');
 
-const game = { hiddenNum: 0, inplay: false, max: 10, score: 0 };
-
+const game = { score: 0, penalty: [0, 2, 3, 5] };
+let numHints = 0;
 
 //REFRESH
 btnNext.addEventListener('click', (e) => {
+    pickNewEvent();
+})
+
+function pickNewEvent() {
     index = showRandomEvent(events);
     hintFlag = false;
+    numHints = 0;
     newEventFlag = false;
     solnFlag = false;
-    message(values[index], 'black');
+    message(main, values[index], 'black');
+    message(scoreBox, `Score: ${game.score}`, 'black');
+    displayOptions(index);
+}
 
-    prepareOptions(index);
 
-})
+for (let rep = 0; rep < 4; rep++) {
+    hintB[rep].addEventListener('click', (e) => {
+        if (!solnFlag) {
+            shown = hintB[rep].innerHTML
+            actual = keys[index]
+            if (shown == actual) {
+                game.score += 10
+                solnFlag = true; //revealed
+                message(scoreBox, `Score: ${game.score}`, 'black');
+            }
+        }
+    })
+}
 
 
 btnSoln.addEventListener('click', (e) => {
     if (!solnFlag) {
-        //showSolution(index, hintFlag, events)
         addMessage(keys[index], 'black');
         solnFlag = true;
     }
 })
 
 
+//GIVE A HINT
 btnHint.addEventListener('click', (e) => {
-    hintFlag = true;
-    done = false;
-
-    while (!done) {
-        pick = [0, 1, 2, 3].random()
-        shown = hintB[pick].innerHTML
-        actual = keys[index]
-        if (shown != actual) {
-            hintB[pick].innerHTML = ""
-            done = true;
+    if (!solnFlag) {
+        hintFlag = true;
+        numHints++;
+        game.score -= game.penalty[numHints]
+        done = false;
+        while (!done) {
+            pick = [0, 1, 2, 3].random()
+            shown = hintB[pick].innerHTML
+            actual = keys[index]
+            if (shown != actual) {
+                hintB[pick].innerHTML = ""
+                done = true;
+            }
         }
+        message(scoreBox, `Score: ${game.score}`, 'black');
     }
 })
 
 
 //come up with 3 additional spoiler options for the right solution
-function prepareOptions(index) {
+function displayOptions(index) {
     solText = keys[index];
 
     solOptions = [];
@@ -83,6 +106,7 @@ function prepareOptions(index) {
         solOptions.push(s + 20);
         shuffleArray2(solOptions); // inplace shuffle rn_utils.js
     } else {
+        //FIX
         solOptions = ["A", "300 BC", "44 BC", "NA"]
     }
 
@@ -102,9 +126,9 @@ function endGame() {
 }
 
 //writes message to the MAIN board
-function message(html, txColor) {
-    main.innerHTML = html;
-    main.style.backgroundColor = txColor;
+function message(elem, html, txColor) {
+    elem.innerHTML = html;
+    elem.style.backgroundColor = txColor;
 }
 
 
@@ -171,3 +195,14 @@ function formatLine(_str) {
     numLines = Math.ceil(formatted.length / textWidth)
     return { text: formatted, numLines: numLines }
 }
+
+function initialize() {
+    //global score to be Zero
+    game.score = 0
+
+    //Pick a New event
+    pickNewEvent();
+}
+
+
+initialize();
