@@ -9,6 +9,7 @@ const cnv = {
 var hintFlag = false;
 var newEventFlag = true;
 var solnFlag = false;
+var solnAttempted = false;
 
 var values = Object.values(events);
 var keys = Object.keys(events);
@@ -20,16 +21,16 @@ const main = maker('div', output, 'main', 'Press Button to Start');
 const optionsPanel = maker('div', output, 'main', '');
 
 
-hintB = []
+altBtn = []
 for (let rep = 0; rep < 4; rep++) {
-    hintB.push(maker('button', optionsPanel, 'optionBtn', `Sol${rep}`));
+    altBtn.push(maker('button', optionsPanel, 'optionBtn', `Sol${rep}`));
 }
 
 const btnHint = maker('button', output, 'btn', 'Hint');
 const btnNext = maker('button', output, 'longbtn', 'Next');
 const btnSoln = maker('button', output, 'longbtn', 'Solution');
 
-const game = { score: 0, penalty: [0, 2, 3, 5] };
+const game = { score: 0, qns: 0, penalty: [0, 2, 3, 5] };
 let numHints = 0;
 
 //REFRESH
@@ -38,59 +39,108 @@ btnNext.addEventListener('click', (e) => {
 })
 
 function pickNewEvent() {
-    index = showRandomEvent(events);
+
+    index = showRandomEvent();
     hintFlag = false;
     numHints = 0;
     newEventFlag = false;
     solnFlag = false;
-    message(main, values[index], 'black');
-    message(scoreBox, `Score: ${game.score}`, 'black');
+    solnAttempted = false;
+
+    //format the line here
+    _qstr = formatLine(values[index]);
+
+    message(main, _qstr.text, 'black');
+    message(scoreBox, scoreString(), 'black');
     displayOptions(index);
+    btnNext.disabled = true;
+    btnSoln.disabled = false;
+    btnHint.disabled = false;
+
+    for (let rep = 0; rep < 4; rep++) {
+        altBtn[rep].style.background = 'grey';
+        altBtn[rep].style.color = 'black';
+        //altBtn[rep].style.color = "white";
+    }
+
 }
 
 
+//An answer is attemtpted
 for (let rep = 0; rep < 4; rep++) {
-    hintB[rep].addEventListener('click', (e) => {
-        if (!solnFlag) {
-            shown = hintB[rep].innerHTML
-            actual = keys[index]
-            if (shown == actual) {
-                game.score += 10
-                solnFlag = true; //revealed
-                message(scoreBox, `Score: ${game.score}`, 'black');
-            }
-        }
+    altBtn[rep].addEventListener('click', (e) => {
+        displaySolution(rep)
     })
 }
 
-
 btnSoln.addEventListener('click', (e) => {
-    if (!solnFlag) {
-        addMessage(keys[index], 'black');
-        solnFlag = true;
-    }
+    displaySolution(-1);
 })
 
 
 //GIVE A HINT
 btnHint.addEventListener('click', (e) => {
-    if (!solnFlag) {
+    if (!solnFlag && numHints <= 2) {
         hintFlag = true;
         numHints++;
         game.score -= game.penalty[numHints]
         done = false;
         while (!done) {
             pick = [0, 1, 2, 3].random()
-            shown = hintB[pick].innerHTML
+            pressed = altBtn[pick].innerHTML
             actual = keys[index]
-            if (shown != actual) {
-                hintB[pick].innerHTML = ""
+            if (pressed != actual) {
+                altBtn[pick].innerHTML = ""
                 done = true;
             }
         }
-        message(scoreBox, `Score: ${game.score}`, 'black');
+        message(scoreBox, scoreString(), 'black');
     }
 })
+
+//rep is the option that was pressed...
+function displaySolution(rep) {
+    game.qns += 1;
+    solnAttempted = (rep == -1) ? false : true;
+    if (solnAttempted) {
+        solnFlag = true; //revealed
+        pressed = altBtn[rep].innerHTML
+        actual = keys[index]
+        if (pressed == actual) {
+            game.score += 10
+            //color the correct button green!
+        } else {
+            altBtn[rep].style.background = "red";
+            altBtn[rep].style.color = "white";
+        }
+    }
+    colorCorrectAltBtn(); //make the correct solution to be green
+    message(scoreBox, scoreString(), 'black');
+    addMessage(keys[index], 'black'); //display solution
+    btnSoln.disabled = true;
+    btnHint.disabled = true;
+    btnNext.disabled = false;
+}
+
+
+
+function colorCorrectAltBtn() {
+    for (let rep = 0; rep < 4; rep++) {
+        pressed = altBtn[rep].innerHTML
+        actual = keys[index]
+        if (pressed == actual) {
+            altBtn[rep].style.background = 'green';
+            altBtn[rep].style.color = 'white';
+        }
+    }
+}
+
+
+function scoreString() {
+    let _str = `Score: ${game.score} out of ${game.qns * 10}`
+    return _str
+}
+
 
 
 //come up with 3 additional spoiler options for the right solution
@@ -111,7 +161,7 @@ function displayOptions(index) {
     }
 
     for (let rep = 0; rep < 4; rep++) {
-        hintB[rep].innerHTML = solOptions[rep]
+        altBtn[rep].innerHTML = solOptions[rep]
     }
 
 
@@ -138,23 +188,7 @@ function addMessage(html, txColor) {
     main.style.backgroundColor = txColor;
 }
 
-
-
-
-function draw() {
-    if (newEventFlag) {
-        background(params.bgColor)
-        index = showRandomEvent(events);
-        hintFlag = false;
-        newEventFlag = false;
-    }
-    showSolution(index, hintFlag, events)
-    noLoop();
-}
-
-
-function showRandomEvent(events) {
-
+function showRandomEvent() {
     index = Math.floor(Math.random() * keys.length)
     chosen = values[index]
     //result = formatLine(chosen);
@@ -168,14 +202,6 @@ function showRandomEvent(events) {
 
 }
 
-function showSolution(index, hintFlag, events) {
-    var keys = Object.keys(events);
-
-    if (hintFlag) {
-        text(keys[index], width / 4, height - 100)
-    }
-}
-
 
 function formatLine(_str) {
 
@@ -186,19 +212,20 @@ function formatLine(_str) {
     for (var x of _str) {
         currLen++;
         if ((currLen > textWidth) && (breakers.some(el => x.includes(el)))) {
-            formatted += x + "\n"
+            formatted += x + "<br>"
             currLen = 0
         } else { formatted += x }
     }
 
-    print(formatted)
     numLines = Math.ceil(formatted.length / textWidth)
+    console.log(formatted, numLines)
     return { text: formatted, numLines: numLines }
 }
 
 function initialize() {
     //global score to be Zero
     game.score = 0
+    game.qns = 0
 
     //Pick a New event
     pickNewEvent();
