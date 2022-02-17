@@ -30,7 +30,19 @@ const btnHint = maker('button', output, 'btn', 'Hint');
 const btnNext = maker('button', output, 'longbtn', 'Next');
 const btnSoln = maker('button', output, 'longbtn', 'Solution');
 
-const game = { score: 0, qns: 0, penalty: [0, 2, 3, 5] };
+//PROGRESS BAR
+var pdiv = document.createElement('div');
+pdiv.id = 'progressDiv';
+output.append(pdiv)
+var barbase = document.createElement('div');
+barbase.id = 'progressBase';
+pdiv.append(barbase)
+var progress = document.createElement('div');
+progress.id = 'progress';
+barbase.append(progress)
+
+
+const game = { score: 0, qns: 0, penalty: [0, 2, 3, 5], maxqns: 10 };
 let numHints = 0;
 
 //REFRESH
@@ -120,8 +132,18 @@ function displaySolution(rep) {
     btnSoln.disabled = true;
     btnHint.disabled = true;
     btnNext.disabled = false;
+
+    progress.style.width = getProgress() + "%";
 }
 
+
+function getProgress() {
+    let w;
+    w = game.qns / game.maxqns * 100
+    if (w > 100) { w = 100 }
+
+    return w;
+}
 
 
 function colorCorrectAltBtn() {

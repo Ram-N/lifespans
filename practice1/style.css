@@ -67,3 +67,19 @@ header {
   margin: 0 auto;
 }
 
+#progressDiv {
+  padding: 40px;
+}
+
+#progressBase {
+  width: 100%;
+  background-color: #eee;
+}
+
+#progress {
+  width: 1%;
+  height: 30px;
+  background-color: #04AA6D;
+}
+
+
