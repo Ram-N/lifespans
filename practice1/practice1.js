@@ -28,17 +28,20 @@ for (let rep = 0; rep < 4; rep++) {
     altBtn.push(maker('button', optionsPanel, 'optionBtn', `Sol${rep}`));
 }
 
-const btnHint = maker('button', output, 'btn', 'Hint');
-const btnNext = maker('button', output, 'longbtn', 'Next');
-const btnSoln = maker('button', output, 'longbtn', 'Solution');
+//Nav Buttons
+var navdiv = maker('div', output, 'padDiv', '');
+output.append(navdiv)
+
+const btnHint = maker('button', navdiv, 'navbtn', 'Hint');
+const btnSoln = maker('button', navdiv, 'navbtn', 'Solution');
+const btnNext = maker('button', navdiv, 'navbtn', 'Next');
 
 //PROGRESS BAR
-var pdiv = document.createElement('div');
-pdiv.id = 'progressDiv';
-output.append(pdiv)
+var pdiv = maker('div', output, 'padDiv', '');
 var barbase = document.createElement('div');
 barbase.id = 'progressBase';
 pdiv.append(barbase)
+
 var progress = document.createElement('div');
 progress.id = 'progress';
 barbase.append(progress)
@@ -114,28 +117,30 @@ btnHint.addEventListener('click', (e) => {
 
 //rep is the option that was pressed...
 function displaySolution(rep) {
-    game.qns += 1;
-    solnAttempted = (rep == -1) ? false : true;
-    if (solnAttempted) {
+    if (!solnFlag) {
         solnFlag = true; //revealed
-        pressed = altBtn[rep].innerHTML
-        actual = eList[index].Date
-        if (pressed == actual) {
-            game.score += 10
-            //color the correct button green!
-        } else {
-            altBtn[rep].style.background = "red";
-            altBtn[rep].style.color = "white";
+        game.qns += 1;
+        solnAttempted = (rep == -1) ? false : true;
+        if (solnAttempted) {
+            pressed = altBtn[rep].innerHTML
+            actual = eList[index].Date
+            if (pressed == actual) {
+                game.score += 10
+                //color the correct button green!
+            } else {
+                altBtn[rep].style.background = "red";
+                altBtn[rep].style.color = "white";
+            }
         }
-    }
-    colorCorrectAltBtn(); //make the correct solution to be green
-    message(scoreBox, scoreString(), 'black');
-    addMessage(solText, 'black'); //display solution
-    btnSoln.disabled = true;
-    btnHint.disabled = true;
-    btnNext.disabled = false;
+        colorCorrectAltBtn(); //make the correct solution to be green
+        message(scoreBox, scoreString(), 'black');
+        addMessage(solText, 'black'); //display solution
+        btnSoln.disabled = true;
+        btnHint.disabled = true;
+        btnNext.disabled = false;
 
-    progress.style.width = getProgress() + "%";
+        progress.style.width = getProgress() + "%";
+    }
 }
 
 
@@ -217,7 +222,7 @@ function showRandomEvent() {
 function formatLine(_str) {
 
 
-    const breakers = [";", ".", "\n"];
+    const breakers = [";", "\n"];
     const word_break = [" "];
     const textWidth = 50;
     formatted = ""

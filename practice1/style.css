@@ -40,6 +40,15 @@
 }
 
 
+.navbtn {
+  margin: 10px;
+  width: 30%;
+  margin: auto;
+  font-size: 1.7em;
+  border-radius: 8px;
+  margin-left:10px;
+}
+
 .longbtn {
   margin: 10px;
   width: 80%;
@@ -67,7 +76,7 @@ header {
   margin: 0 auto;
 }
 
-#progressDiv {
+.padDiv {
   padding: 40px;
 }
 
