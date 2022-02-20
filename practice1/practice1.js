@@ -11,8 +11,10 @@ var newEventFlag = true;
 var solnFlag = false;
 var solnAttempted = false;
 
-var values = Object.values(events);
-var keys = Object.keys(events);
+//var values = Object.values(events);
+var eList = Object.values(events);
+
+//var keys = Object.keys(events);
 
 
 const output = document.querySelector('.output');
@@ -59,8 +61,8 @@ function pickNewEvent() {
     solnFlag = false;
     solnAttempted = false;
 
-    //format the line here
-    _qstr = formatLine(values[index]);
+    //format the question here...send in the question string
+    _qstr = formatLine(eList[index].Event);
 
     message(main, _qstr.text, 'black');
     message(scoreBox, scoreString(), 'black');
@@ -117,7 +119,7 @@ function displaySolution(rep) {
     if (solnAttempted) {
         solnFlag = true; //revealed
         pressed = altBtn[rep].innerHTML
-        actual = keys[index]
+        actual = eList[index].Date
         if (pressed == actual) {
             game.score += 10
             //color the correct button green!
@@ -128,7 +130,7 @@ function displaySolution(rep) {
     }
     colorCorrectAltBtn(); //make the correct solution to be green
     message(scoreBox, scoreString(), 'black');
-    addMessage(keys[index], 'black'); //display solution
+    addMessage(solText, 'black'); //display solution
     btnSoln.disabled = true;
     btnHint.disabled = true;
     btnNext.disabled = false;
@@ -149,7 +151,7 @@ function getProgress() {
 function colorCorrectAltBtn() {
     for (let rep = 0; rep < 4; rep++) {
         pressed = altBtn[rep].innerHTML
-        actual = keys[index]
+        actual = solText;
         if (pressed == actual) {
             altBtn[rep].style.background = 'green';
             altBtn[rep].style.color = 'white';
@@ -167,23 +169,16 @@ function scoreString() {
 
 //come up with 3 additional spoiler options for the right solution
 function displayOptions(index) {
-    solText = keys[index];
+    solText = eList[index].Date;
 
-    solOptions = [];
-    if (parseInt(solText)) {
-        s = parseInt(solText)
-        solOptions.push(s);
-        solOptions.push(s + 10);
-        solOptions.push(s - 100);
-        solOptions.push(s + 20);
-        shuffleArray2(solOptions); // inplace shuffle rn_utils.js
-    } else {
-        //FIX
-        solOptions = ["A", "300 BC", "44 BC", "NA"]
-    }
+    solOptions = eList[index].Alternatives;
+    shuffleArray2(solOptions); // inplace shuffle rn_utils.js
+
+    altList = solOptions.slice(0, 3).concat(solText)
+    shuffleArray2(altList);
 
     for (let rep = 0; rep < 4; rep++) {
-        altBtn[rep].innerHTML = solOptions[rep]
+        altBtn[rep].innerHTML = altList[rep]
     }
 
 
@@ -211,15 +206,9 @@ function addMessage(html, txColor) {
 }
 
 function showRandomEvent() {
-    index = Math.floor(Math.random() * keys.length)
-    chosen = values[index]
-    //result = formatLine(chosen);
-    //numLines = result.numLines;
+    index = Math.floor(Math.random() * eList.length)
+    chosen = eList[index] //chosen Event...has keys and alts both
     console.log(chosen)
-    // fill(0, 0, 0)
-    // textSize(20)
-    // text(result.text, x, y)
-
     return index
 
 }
@@ -227,13 +216,19 @@ function showRandomEvent() {
 
 function formatLine(_str) {
 
-    const breakers = [" ", ";", ".", "\n"];
-    const textWidth = 40;
+
+    const breakers = [";", ".", "\n"];
+    const word_break = [" "];
+    const textWidth = 50;
     formatted = ""
     currLen = 0
     for (var x of _str) {
         currLen++;
-        if ((currLen > textWidth) && (breakers.some(el => x.includes(el)))) {
+        if (breakers.some(el => x.includes(el))) {
+            formatted += x + "<br>"
+            currLen = 0
+        }
+        else if ((currLen > textWidth) && (word_break.some(el => x.includes(el)))) {
             formatted += x + "<br>"
             currLen = 0
         } else { formatted += x }
