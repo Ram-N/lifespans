@@ -47,40 +47,26 @@ progress.id = 'progress';
 barbase.append(progress)
 
 
-const game = { score: 0, qns: 0, penalty: [0, 2, 3, 5], maxqns: 10 };
+const game = { score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 3, maxscore: 100 };
+//these should be part of a current Item object
 let numHints = 0;
+
+let activeOptions = [0, 1, 2, 3];
+
 
 //REFRESH
 btnNext.addEventListener('click', (e) => {
-    pickNewEvent();
+    pickNextQuestion();
 })
 
-function pickNewEvent() {
 
-    index = showRandomEvent();
-    hintFlag = false;
-    numHints = 0;
-    newEventFlag = false;
-    solnFlag = false;
-    solnAttempted = false;
-
-    //format the question here...send in the question string
-    _qstr = formatLine(eList[index].Event);
-
-    message(main, _qstr.text, 'black');
-    message(scoreBox, scoreString(), 'black');
-    displayOptions(index);
-    btnNext.disabled = true;
-    btnSoln.disabled = false;
-    btnHint.disabled = false;
-
-    for (let rep = 0; rep < 4; rep++) {
-        altBtn[rep].style.background = 'grey';
-        altBtn[rep].style.color = 'black';
-        //altBtn[rep].style.color = "white";
-    }
-
+function resetGame() {
+    _astr = `Start a New Game. You scored ${game.score} out of ${game.maxscore}`
+    alert(_astr);
+    initialize();
+    progress.style.width = getProgress() + "%";
 }
+
 
 
 //An answer is attemtpted
@@ -97,23 +83,34 @@ btnSoln.addEventListener('click', (e) => {
 
 //GIVE A HINT
 btnHint.addEventListener('click', (e) => {
-    if (!solnFlag && numHints <= 2) {
+    giveHint()
+})
+
+function giveHint() {
+    maxHints = 3 // can only give 3 hints before solution is revealed
+    if (!solnFlag && numHints < 3) {
         hintFlag = true;
         numHints++;
-        game.score -= game.penalty[numHints]
+
         done = false;
         while (!done) {
-            pick = [0, 1, 2, 3].random()
+            pick = activeOptions.random()
             pressed = altBtn[pick].innerHTML
-            actual = keys[index]
+            actual = eList[index].Date
             if (pressed != actual) {
                 altBtn[pick].innerHTML = ""
+                //remove pick from the active options
+                activeOptions = activeOptions.filter(function (ele) {
+                    return ele != pick;
+                });
                 done = true;
             }
         }
         message(scoreBox, scoreString(), 'black');
     }
-})
+}
+
+
 
 //rep is the option that was pressed...
 function displaySolution(rep) {
@@ -125,8 +122,7 @@ function displaySolution(rep) {
             pressed = altBtn[rep].innerHTML
             actual = eList[index].Date
             if (pressed == actual) {
-                game.score += 10
-                //color the correct button green!
+                game.score += 10 - game.penalty[numHints]
             } else {
                 altBtn[rep].style.background = "red";
                 altBtn[rep].style.color = "white";
@@ -244,13 +240,49 @@ function formatLine(_str) {
     return { text: formatted, numLines: numLines }
 }
 
+
+
+function pickNextQuestion() {
+
+    if (game.qns == game.maxqns) {
+        resetGame();
+    }
+
+    hintFlag = false;
+    numHints = 0;
+    activeOptions = [0, 1, 2, 3];
+
+    newEventFlag = false;
+    solnFlag = false;
+    solnAttempted = false;
+
+    index = showRandomEvent();
+    //format the question here...send in the question string
+    _qstr = formatLine(eList[index].Event);
+
+    message(main, _qstr.text, 'black');
+    message(scoreBox, scoreString(), 'black');
+    displayOptions(index);
+    btnNext.disabled = true;
+    btnSoln.disabled = false;
+    btnHint.disabled = false;
+
+    for (let rep = 0; rep < 4; rep++) {
+        altBtn[rep].style.background = 'grey';
+        altBtn[rep].style.color = 'black';
+        //altBtn[rep].style.color = "white";
+    }
+
+}
+
+
 function initialize() {
     //global score to be Zero
     game.score = 0
     game.qns = 0
 
     //Pick a New event
-    pickNewEvent();
+    pickNextQuestion();
 }
 
 

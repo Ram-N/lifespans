@@ -7,6 +7,17 @@ Array.prototype.random = function () {
     return this[Math.floor(Math.random() * this.length)];
 }
 
+//https://love2dev.com/blog/javascript-remove-from-array/#remove-from-array-splice-value
+//Usage: var result = arrayRemove(array, 6);
+// result = [1, 2, 3, 4, 5, 7, 8, 9, 0]
+function arrayRemove(arr, value) {
+
+    return arr.filter(function (ele) {
+        return ele != value;
+    });
+}
+
+
 
 //https://github.com/lsvekis/JavaScript-Code/tree/main/JavaScript%20Projects
 function maker(eleType, elParent, eleClass, html) {
