@@ -1,22 +1,10 @@
 // History Golf Practice 1
 // Ram Narasimhan.
 
-const cnv = {
-    xMargin: 30,
-    yMargin: 30,
-}
+var eList = Object.values(events); //from eventsDB.js
+const game = { score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 6, maxscore: 100 };
 
-var hintFlag = false;
-var newEventFlag = true;
-var solnFlag = false;
-var solnAttempted = false;
-
-//var values = Object.values(events);
-var eList = Object.values(events);
-
-//var keys = Object.keys(events);
-
-
+//PAGE APPEARANCE
 const output = document.querySelector('.output');
 const scoreBox = maker('div', output, 'main', 'Scorecard');
 const main = maker('div', output, 'main', 'Press Button to Start');
@@ -36,6 +24,25 @@ const btnHint = maker('button', navdiv, 'navbtn', 'Hint');
 const btnSoln = maker('button', navdiv, 'navbtn', 'Solution');
 const btnNext = maker('button', navdiv, 'navbtn', 'Next');
 
+//TALLY BOX
+var tcon = document.createElement('div');
+tcon.id = 'tallyBoard';
+output.append(tcon)
+
+
+numTallyRows = getTallyRows();
+tallyrows = []
+tallyboxes = []
+for (row = 0; row < numTallyRows; row++) {
+    tallyrows.push(maker('div', tcon, 'tallyRow', ''))
+    for (let box = 0; box < 5; box++) {
+        tallyboxes.push(maker('div', tallyrows[row], 'tallyBox', ''))
+    }
+}
+
+
+
+
 //PROGRESS BAR
 var pdiv = maker('div', output, 'padDiv', '');
 var barbase = document.createElement('div');
@@ -46,13 +53,20 @@ var progress = document.createElement('div');
 progress.id = 'progress';
 barbase.append(progress)
 
+var hintFlag = false;
+var newEventFlag = true;
+var solnFlag = false;
+var solnAttempted = false;
 
-const game = { score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 3, maxscore: 100 };
+
+
+
 //these should be part of a current Item object
 let numHints = 0;
 
 let activeOptions = [0, 1, 2, 3];
 
+const itemColors = { 0: 'red', 5: 'yellow', 8: 'blue', 10: 'green' }
 
 //REFRESH
 btnNext.addEventListener('click', (e) => {
@@ -115,26 +129,29 @@ function giveHint() {
 //rep is the option that was pressed...
 function displaySolution(rep) {
     if (!solnFlag) {
+        itemScore = 0
         solnFlag = true; //revealed
-        game.qns += 1;
         solnAttempted = (rep == -1) ? false : true;
         if (solnAttempted) {
             pressed = altBtn[rep].innerHTML
             actual = eList[index].Date
             if (pressed == actual) {
-                game.score += 10 - game.penalty[numHints]
+                itemScore = 10 - game.penalty[numHints]
+                game.score += itemScore
             } else {
                 altBtn[rep].style.background = "red";
                 altBtn[rep].style.color = "white";
             }
         }
         colorCorrectAltBtn(); //make the correct solution to be green
-        message(scoreBox, scoreString(), 'black');
         addMessage(solText, 'black'); //display solution
         btnSoln.disabled = true;
         btnHint.disabled = true;
         btnNext.disabled = false;
+        tallyboxes[game.qns].style.background = itemColors[itemScore];
 
+        game.qns += 1;
+        message(scoreBox, scoreString(), 'black');
         progress.style.width = getProgress() + "%";
     }
 }
@@ -215,6 +232,13 @@ function showRandomEvent() {
 }
 
 
+function getTallyRows() {
+    numRows = Math.floor(game.maxqns / 5)
+    if (game.maxqns % 5) { numRows += 1 }
+    return numRows
+}
+
+
 function formatLine(_str) {
 
 
@@ -280,6 +304,11 @@ function initialize() {
     //global score to be Zero
     game.score = 0
     game.qns = 0
+
+    //clear out the tallyboxes
+    for (tb = 0; tb < tallyboxes.length; tb++) {
+        tallyboxes[tb].style.background = "";
+    }
 
     //Pick a New event
     pickNextQuestion();
