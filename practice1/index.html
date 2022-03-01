@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+  <script src="https://kit.fontawesome.com/4b10fd9b7c.js" crossorigin="anonymous"></script>
   <title>History Golf</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <meta charset="utf-8">
@@ -9,15 +10,46 @@
 </head>
 
 <body>
-  <header>
-    <h1>WORLD EVENTS - PRACTICE</h1>
-    <!--span id="gentag">PICK THE TIME</span -->
-  </header>
+  <div id="container">
+    <div id="game">
+      <header>
+        <span class="fa-icon">
+          <i class="far fa-question-circle" id="help"></i>
+        </span>
+        <h1>WORLD EVENTS</h1>
+        <span class="fa-icon">
+          <i class="fas fa-chart-bar" id="stats"></i>
+          <i class="fa-solid fa-gear"></i>
+        </span>
+      </header>
+    </div>
+  </div>
 
   <div class="output"> </div>
+
   <script src="../data/eventsDB.js"></script>
   <script src="../libraries/rn_utils.js"></script>
   <script src="practice1.js"></script>
+
+  <div id="help-modal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close" id="close-help">&times;</span>
+
+      <p>Know your History: When did these events occur?</p>
+
+      <p>
+        Click on one of the 4 options to score points.
+      </p>
+
+      <p>
+        10 points for correct guess. You will lose points, but you can use the Magic Wand to eliminate wrong answers.
+      </p>
+
+      Good luck.
+      <hr />
+    </div>
+  </div>
 
 </body>
 
