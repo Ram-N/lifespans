@@ -52,12 +52,22 @@ html, body {
 }
 
 
-.optionBtn {
+.altBtn {
   margin: 20px;
   width: 20%;
   color: black;
   margin: auto;
   font-size: 1.7em;
+  border-radius: 8px;
+  margin-left:10px;
+  cursor: pointer;
+}
+
+.Opbtn {
+  margin: 20px;
+  width: 20%;
+  margin: auto;
+  font-size: 1em;
   border-radius: 8px;
   margin-left:10px;
   cursor: pointer;
@@ -184,6 +194,13 @@ h1 {
   width: 80%;
   max-width: 500px;
   font-size: 1.5em;
+}
+
+#opWrapper {
+    /* justify-content: center; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .modal-content hr {

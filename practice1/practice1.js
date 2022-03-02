@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     altBtn = []
     for (let rep = 0; rep < 4; rep++) {
-        altBtn.push(maker('button', optionsPanel, 'optionBtn', `Sol${rep}`));
+        altBtn.push(maker('button', optionsPanel, 'altBtn', `Sol${rep}`));
     }
 
     //Nav Buttons
@@ -63,10 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
     var newEventFlag = true;
     var solnFlag = false;
     var solnAttempted = false;
-
-
-
-
 
 
     //these should be part of a current Item object
@@ -239,6 +235,81 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+    function initOptionsModal() {
+        const modal = document.getElementById("options-modal");
+        const modalcontent = document.getElementById("options-modal-content");
+
+        var h2 = document.createElement("h2");
+        h2.innerHTML = "Game Options";
+        modalcontent.appendChild(h2);
+
+
+        let owrap = document.createElement('div');
+        owrap.id = 'opWrapper'
+        modalcontent.append(owrap)
+
+        var lbl = document.createElement('div');
+        lbl.innerHTML = 'Choices '
+        owrap.append(lbl)
+
+        //Option Buttons
+        const btnEasy = maker('button', owrap, 'Opbtn', 'Easy');
+        const btnMed = maker('button', owrap, 'Opbtn', 'Medium');
+        const btnHard = maker('button', owrap, 'Opbtn', 'Hard');
+        btnEasy.style.background = 'lightgreen';
+        btnMed.style.background = 'lightblue';
+        btnHard.style.background = 'orange';
+
+
+        const btn = document.getElementById("game-options"); //on the titlebar
+        const span = document.getElementById("close-options");
+
+        // When the user clicks on the button, open the modal
+        btn.addEventListener("click", function () {
+            // update stats here
+            modal.style.display = "block";
+        });
+
+        // When the user clicks on <span> (x), close the modal
+        span.addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.addEventListener("click", function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        });
+    }
+
+    function initStatsModal() {
+        const modal = document.getElementById("stats-modal");
+
+        // Get the button that opens the modal
+        const btn = document.getElementById("stats");
+
+        // Get the <span> element that closes the modal
+        const span = document.getElementById("close-stats");
+
+        // When the user clicks on the button, open the modal
+        btn.addEventListener("click", function () {
+            // update stats here
+            modal.style.display = "block";
+        });
+
+        // When the user clicks on <span> (x), close the modal
+        span.addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.addEventListener("click", function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        });
+    }
 
     function initHelpModal() {
         const modal = document.getElementById("help-modal");
@@ -350,7 +421,10 @@ document.addEventListener("DOMContentLoaded", () => {
         pickNextQuestion();
     }
 
+    initOptionsModal();
     initHelpModal();
+    initStatsModal();
+
     initialize();
 
 });

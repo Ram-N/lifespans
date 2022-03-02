@@ -19,7 +19,7 @@
         <h1>WORLD EVENTS</h1>
         <span class="fa-icon">
           <i class="fas fa-chart-bar" id="stats"></i>
-          <i class="fa-solid fa-gear"></i>
+          <i class="fa-solid fa-gear" id="game-options"></i>
         </span>
       </header>
     </div>
@@ -50,6 +50,33 @@
       <hr />
     </div>
   </div>
+
+  <div id="stats-modal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close" id="close-stats">&times;</span>
+
+      <h2>STATISTICS</h2>
+
+      <h3><strong>Total</strong>: <span id="total-played"></span></h3>
+
+      <h3><strong>Wins</strong>: <span id="total-wins"></span></h3>
+
+      <h3><strong>Win %</strong>: <span id="win-pct"></span></h3>
+
+      <h3>
+        <strong>Current Streak</strong>: <span id="current-streak"></span>
+      </h3>
+    </div>
+  </div>
+
+  <div id="options-modal" class="modal">
+    <!-- Modal content -->
+    <div id="options-modal-content" class="modal-content">
+      <span class="close" id="close-options">&times;</span>
+    </div>
+  </div>
+
 
 </body>
 
