@@ -1,12 +1,13 @@
-// History Golf Practice 1
-// Ram Narasimhan.
+// Quando
+// Created by Ram Narasimhan
+// March 2022
 
 
 document.addEventListener("DOMContentLoaded", () => {
 
 
     var eList = Object.values(events); //from eventsDB.js
-    const game = { score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 6, maxscore: 100 };
+    const game = { score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 2, maxscore: 100 };
 
     //PAGE APPEARANCE
     const output = document.querySelector('.output');
@@ -57,7 +58,32 @@ document.addEventListener("DOMContentLoaded", () => {
     progress.id = 'progress';
     barbase.append(progress)
 
+
+
+    const resmodal = maker('div', output, 'modal', '');
+    const rescontainer = maker('div', resmodal, 'modal-content', '');
+    const resclose = maker('span', rescontainer, 'close', "&times");
+    resmodal.id = "results-modal"
+    resclose.id = "close-results"
+
+    var resh3 = document.createElement("h3");
+    resh3.innerHTML = "";
+    resh3.id = 'res-h3';
+    rescontainer.appendChild(resh3);
+
+    //RESULTS MODAL Buttons
+    const btnDone = maker('button', rescontainer, 'Opbtn', 'Go Back');
+    const btnAnother = maker('button', rescontainer, 'Opbtn', 'Another');
+    btnDone.style.background = 'blue';
+    btnDone.style.color = 'white';
+    btnAnother.style.background = 'lightgreen';
+    btnAnother.id = 'btnAnother';
+    btnDone.id = 'btnDone';
+
+
+
     // END of html appearance
+    // --------------------------------------    
 
     var hintFlag = false;
     var newEventFlag = true;
@@ -79,12 +105,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     function resetGame() {
-        _astr = `Start a New Game. You scored ${game.score} out of ${game.maxscore}`
-        alert(_astr);
-        initialize();
+
+        const resmodal = document.getElementById("results-modal");
+        //const modalcontent = document.getElementById("options-modal-content");
+        const resclose = document.getElementById("close-results");
+        const resh3 = document.getElementById("res-h3");
+
+        resmodal.style.display = "block";
+        resh3.innerHTML = getResultsText();
+
+        // When the user clicks on <span> (x), close the modal
+        resclose.addEventListener("click", function () {
+            resmodal.style.display = "none";
+        });
+
+        initialize(); //initialize only if Another is clicked 
+        //clear screen if Done
         progress.style.width = getProgress() + "%";
+
     }
 
+
+    function getResultsText() {
+        //TODO: Based on the %age score, make a suitably encouraging comment
+
+        _astr = `You scored ${game.score} out of ${game.maxqns * 10}!`
+        return _astr
+    }
 
 
     //An answer is attemtpted
@@ -266,7 +313,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // When the user clicks on the button, open the modal
         btn.addEventListener("click", function () {
-            // update stats here
             modal.style.display = "block";
         });
 
