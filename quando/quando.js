@@ -2,12 +2,19 @@
 // Created by Ram Narasimhan
 // March 2022
 
+successGreen = "#28a745";
+warningOrange = "#ffc107";
+dangerRed = "#dc3545";
 
 document.addEventListener("DOMContentLoaded", () => {
 
 
     var eList = Object.values(events); //from eventsDB.js
-    const game = { score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 2, maxscore: 100 };
+    const game = {
+        score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 2, maxscore: 100,
+        averageDifficulty: 5,
+        category: 'All Events'
+    };
 
     //PAGE APPEARANCE
     const output = document.querySelector('.output');
@@ -25,9 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
     var navdiv = maker('div', output, 'padDiv', '');
     output.append(navdiv)
 
-    const btnHint = maker('button', navdiv, 'navbtn', 'Hint');
-    const btnSoln = maker('button', navdiv, 'navbtn', 'Solution');
     const btnNext = maker('button', navdiv, 'navbtn', 'Next');
+    btnNext.style.width = '60%';
+    btnNext.style.height = "2.5em";
+
+    var navdiv2 = maker('div', output, 'padDiv', '');
+    output.append(navdiv2)
+    const btnHint = maker('button', navdiv2, 'navbtn', 'Hint');
+    const btnSoln = maker('button', navdiv2, 'navbtn', 'Solution');
+
 
     //TALLY BOX
     var tcon = document.createElement('div');
@@ -72,14 +85,16 @@ document.addEventListener("DOMContentLoaded", () => {
     rescontainer.appendChild(resh3);
 
     //RESULTS MODAL Buttons
-    const btnDone = maker('button', rescontainer, 'Opbtn', 'Go Back');
-    const btnAnother = maker('button', rescontainer, 'Opbtn', 'Another');
-    btnDone.style.background = 'blue';
-    btnDone.style.color = 'white';
-    btnAnother.style.background = 'lightgreen';
+    const btnAnother = maker('button', rescontainer, 'Opbtn', 'Another Round');
+    const btnShare = maker('button', rescontainer, 'Opbtn', 'Share');
+    const btnDone = maker('button', rescontainer, 'Opbtn', 'Leave');
+    btnAnother.style.background = '#007bff';
+    btnAnother.style.color = 'white';
+    btnDone.style.background = '#dc3545';
     btnAnother.id = 'btnAnother';
     btnDone.id = 'btnDone';
-
+    btnShare.id = 'btnShare';
+    btnShare.style.background = successGreen
 
 
     // END of html appearance
@@ -96,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let activeOptions = [0, 1, 2, 3];
 
-    const itemColors = { 0: 'red', 5: 'yellow', 8: 'blue', 10: 'green' }
+    const itemColors = { 0: 'red', 5: 'yellow', 8: 'blue', 10: successGreen }
 
     //REFRESH
     btnNext.addEventListener('click', (e) => {
@@ -110,6 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
         //const modalcontent = document.getElementById("options-modal-content");
         const resclose = document.getElementById("close-results");
         const resh3 = document.getElementById("res-h3");
+        const btnAnother = document.getElementById("btnAnother");
+        const btnDone = document.getElementById("btnDone");
 
         resmodal.style.display = "block";
         resh3.innerHTML = getResultsText();
@@ -119,9 +136,21 @@ document.addEventListener("DOMContentLoaded", () => {
             resmodal.style.display = "none";
         });
 
-        initialize(); //initialize only if Another is clicked 
-        //clear screen if Done
-        progress.style.width = getProgress() + "%";
+        btnAnother.addEventListener("click", function () {
+            resmodal.style.display = "none";
+            initialize(); //initialize only if Another is clicked 
+            progress.style.width = getProgress() + "%";
+        });
+
+        btnDone.addEventListener("click", function () {
+            //clear screen if Done
+            resmodal.style.display = "none";
+            output.remove();
+            hehead = document.getElementById("h2-game-category");
+            hehead.innerHTML = 'Thank you for playing Quando!'
+
+        });
+
 
     }
 
@@ -129,7 +158,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function getResultsText() {
         //TODO: Based on the %age score, make a suitably encouraging comment
 
-        _astr = `You scored ${game.score} out of ${game.maxqns * 10}!`
+        _astr = ""
+        _astr += `Category: ${game.category} <br>`
+        _astr += `You scored ${game.score} out of ${game.maxqns * 10}! <br>`
+        _astr += `<br> Average difficulty ${game.averageDifficulty}`
         return _astr
     }
 
@@ -222,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
             pressed = altBtn[rep].innerHTML
             actual = solText;
             if (pressed == actual) {
-                altBtn[rep].style.background = 'green';
+                altBtn[rep].style.background = successGreen;
                 altBtn[rep].style.color = 'white';
             }
         }
@@ -236,8 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-    //come up with 3 additional spoiler options for the right solution
-    function displayOptions(index) {
+    function displayAlternatives(index) {
         solText = eList[index].Date;
 
         solOptions = eList[index].Alternatives;
@@ -290,12 +321,30 @@ document.addEventListener("DOMContentLoaded", () => {
         h2.innerHTML = "Game Options";
         modalcontent.appendChild(h2);
 
+        //Question Difficulty row
+        let qrow = document.createElement('div');
+        qrow.id = 'opWrapper'
+        modalcontent.append(qrow)
+
+        let lbl = document.createElement('div');
+        lbl.innerHTML = 'Questions '
+        qrow.append(lbl)
+
+        //Option Buttons
+        const questEasy = maker('button', qrow, 'Opbtn', 'Easy');
+        const questMed = maker('button', qrow, 'Opbtn', 'Medium');
+        const questHard = maker('button', qrow, 'Opbtn', 'Hard');
+        questEasy.style.background = successGreen;
+        questMed.style.background = warningOrange;
+        questHard.style.background = dangerRed;
+
+
 
         let owrap = document.createElement('div');
         owrap.id = 'opWrapper'
         modalcontent.append(owrap)
 
-        var lbl = document.createElement('div');
+        lbl = document.createElement('div');
         lbl.innerHTML = 'Choices '
         owrap.append(lbl)
 
@@ -434,12 +483,11 @@ document.addEventListener("DOMContentLoaded", () => {
         solnAttempted = false;
 
         index = showRandomEvent();
-        //format the question here...send in the question string
         _qstr = formatLine(eList[index].Event);
 
         message(main, _qstr.text, 'black');
         message(scoreBox, scoreString(), 'black');
-        displayOptions(index);
+        displayAlternatives(index);
         btnNext.disabled = true;
         btnSoln.disabled = false;
         btnHint.disabled = false;

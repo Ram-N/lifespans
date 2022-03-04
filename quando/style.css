@@ -137,7 +137,7 @@ h1 {
 }
 
 .padDiv {
-  padding: 40px;
+  padding: 20px;
 }
 
 #progressBase {
@@ -203,6 +203,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-top:0.5em;
 }
 
 .modal-content hr {
