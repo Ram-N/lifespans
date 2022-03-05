@@ -8,8 +8,8 @@ dangerRed = "#dc3545";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-
     var eList = Object.values(events); //from eventsDB.js
+
     const game = {
         score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 2, maxscore: 100,
         averageDifficulty: 5,
@@ -271,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function displayAlternatives(index) {
         solText = eList[index].Date;
 
-        solOptions = eList[index].Alternatives;
+        solOptions = eList[index].AltsEasy;
         shuffleArray2(solOptions); // inplace shuffle rn_utils.js
 
         altList = solOptions.slice(0, 3).concat(solText)
