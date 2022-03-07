@@ -5,6 +5,9 @@
 successGreen = "#28a745";
 warningOrange = "#ffc107";
 dangerRed = "#dc3545";
+BtnActiveColor = "#1c3494"
+BtnOffColor = "#e6f3f8";
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -13,7 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const game = {
         score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 2, maxscore: 100,
         averageDifficulty: 5,
-        category: 'All Events'
+        chosenQuestionDifficulty: "E",
+        chosenAltsDifficulty: "M",
+        category: 'All Events',
     };
 
     //PAGE APPEARANCE
@@ -119,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
 
-    function resetGame() {
+    function closeoutGame() {
 
         const resmodal = document.getElementById("results-modal");
         //const modalcontent = document.getElementById("options-modal-content");
@@ -138,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         btnAnother.addEventListener("click", function () {
             resmodal.style.display = "none";
-            initialize(); //initialize only if Another is clicked 
+            startNewGame(); //startNewGame only if Another is clicked 
             progress.style.width = getProgress() + "%";
         });
 
@@ -193,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
             while (!done) {
                 pick = activeOptions.random()
                 pressed = altBtn[pick].innerHTML
-                actual = eList[index].Date
+                actual = gameQuestions[index].Date
                 if (pressed != actual) {
                     altBtn[pick].innerHTML = ""
                     //remove pick from the active options
@@ -217,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
             solnAttempted = (rep == -1) ? false : true;
             if (solnAttempted) {
                 pressed = altBtn[rep].innerHTML
-                actual = eList[index].Date
+                actual = gameQuestions[index].Date
                 if (pressed == actual) {
                     itemScore = 10 - game.penalty[numHints]
                     game.score += itemScore
@@ -269,9 +274,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     function displayAlternatives(index) {
-        solText = eList[index].Date;
+        solText = gameQuestions[index].Date;
 
-        solOptions = eList[index].AltsEasy;
+        switch (game.chosenAltsDifficulty) {
+            case 'E': solOptions = gameQuestions[index].AltsEasy;
+                break;
+            case 'M': solOptions = gameQuestions[index].AltsMid;
+                break;
+            case 'H': solOptions = gameQuestions[index].AltsHard;
+                break;
+
+            default: solOptions = gameQuestions[index].AltsMid;
+        }
+
         shuffleArray2(solOptions); // inplace shuffle rn_utils.js
 
         altList = solOptions.slice(0, 3).concat(solText)
@@ -305,11 +320,26 @@ document.addEventListener("DOMContentLoaded", () => {
         main.style.backgroundColor = txColor;
     }
 
-    function showRandomEvent() {
-        index = Math.floor(Math.random() * eList.length)
-        chosen = eList[index] //chosen Event...has keys and alts both
-        console.log(chosen)
-        return index
+    function pickNextEventIndex() {
+
+        index = Math.floor(Math.random() * gameQuestions.length)
+        return index;
+
+        // done = false;
+        // circuitBreaker = 0
+        // while (!done && (circuitBreaker < 1000)) {
+        //     index = Math.floor(Math.random() * eList.length)
+        //     chosen = eList[index] //chosen Event...has keys and alts both
+        //     //console.log(chosen.DiffCat, game.chosenQuestionDifficulty)
+        //     if (chosen.DiffCat == game.chosenQuestionDifficulty) {
+        //         done = true;
+        //         return index
+        //     }
+        //     circuitBreaker++;
+        // }
+
+        // console.log(game.chosenQuestionDifficulty, "not found")
+        // return null
 
     }
 
@@ -326,7 +356,8 @@ document.addEventListener("DOMContentLoaded", () => {
         qrow.id = 'opWrapper'
         modalcontent.append(qrow)
 
-        let lbl = document.createElement('div');
+        let lbl = document.createElement('span');
+        lbl.classList.add('tspan');
         lbl.innerHTML = 'Questions '
         qrow.append(lbl)
 
@@ -334,34 +365,48 @@ document.addEventListener("DOMContentLoaded", () => {
         const questEasy = maker('button', qrow, 'Opbtn', 'Easy');
         const questMed = maker('button', qrow, 'Opbtn', 'Medium');
         const questHard = maker('button', qrow, 'Opbtn', 'Hard');
-        questEasy.style.background = successGreen;
-        questMed.style.background = warningOrange;
-        questHard.style.background = dangerRed;
 
+        qbtns = [[questEasy, "E"], [questMed, "M"], [questHard, "H"]]
+        for (qb of qbtns) {
+            qb[0].dataset.qdiff = qb[1]
+            qb[0].style.background = BtnOffColor;
+        }
 
-
+        //C H O I C E S
         let owrap = document.createElement('div');
         owrap.id = 'opWrapper'
         modalcontent.append(owrap)
 
-        lbl = document.createElement('div');
-        lbl.innerHTML = 'Choices '
+        lbl = document.createElement('span');
+        lbl.innerHTML = 'Choices'
+        lbl.classList.add('tspan');
         owrap.append(lbl)
 
         //Option Buttons
         const btnEasy = maker('button', owrap, 'Opbtn', 'Easy');
         const btnMed = maker('button', owrap, 'Opbtn', 'Medium');
         const btnHard = maker('button', owrap, 'Opbtn', 'Hard');
-        btnEasy.style.background = 'lightgreen';
-        btnMed.style.background = 'lightblue';
-        btnHard.style.background = 'orange';
+        abtns = [[btnEasy, "E"], [btnMed, "M"], [btnHard, "H"]]
+        for (ab of abtns) {
+            ab[0].dataset.altsdiff = ab[1]
+            ab[0].style.background = BtnOffColor;
+        }
 
+        //START BUTTON
+        let gowrap = document.createElement('div');
+        modalcontent.append(gowrap)
+        const btnStart = maker('button', gowrap, 'Opbtn', 'Start');
+        btnStart.id = 'goBtn'
+        btnStart.style.background = successGreen;
+        btnStart.style.color = "white"
 
-        const btn = document.getElementById("game-options"); //on the titlebar
+        // END OF MODAL APPEARANCE
+
+        const gearBtn = document.getElementById("game-options"); //on the titlebar
         const span = document.getElementById("close-options");
 
         // When the user clicks on the button, open the modal
-        btn.addEventListener("click", function () {
+        gearBtn.addEventListener("click", function () {
             modal.style.display = "block";
         });
 
@@ -376,7 +421,68 @@ document.addEventListener("DOMContentLoaded", () => {
                 modal.style.display = "none";
             }
         });
+
+        for (ab of abtns) {
+            handleAltsButtonClick(ab, abtns);
+        }
+
+        for (qb of qbtns) {
+            handleQuestionButtonClick(qb, qbtns);
+        }
+
+        btnStart.addEventListener("click", function () {
+            startNewGame();
+            modal.style.display = "none";
+        })
+
     }
+
+    function handleAltsButtonClick(ab, abtns) {
+        let aBtn = ab[0]
+        aBtn.addEventListener("click", function () {
+            for (b of abtns) {
+                b[0].style.background = BtnOffColor;
+                b[0].style.color = "black";
+            }
+            setGameAltsDiffLevel(ab[1]);
+        });
+    }
+
+
+    function handleQuestionButtonClick(qb, qbtns) {
+        let questBtn = qb[0]
+        questBtn.addEventListener("click", function () {
+            for (b of qbtns) {
+                b[0].style.background = BtnOffColor;
+                b[0].style.color = "black";
+            }
+            setGameQDiffLevel(qb[1]);
+        });
+    }
+
+    function setGameAltsDiffLevel(letter) {
+        game.chosenAltsDifficulty = letter;
+        console.log("Alts Chosen", game.chosenAltsDifficulty)
+
+        aDiffBtn = document.querySelector(`[data-altsdiff="${letter}"]`)
+        aDiffBtn.style.background = BtnActiveColor;
+        aDiffBtn.style.color = "white";
+    }
+
+
+    function setGameQDiffLevel(letter) {
+        game.chosenQuestionDifficulty = letter;
+        console.log("Chosen", game.chosenQuestionDifficulty)
+
+        gameQuestions = eList.filter(ev =>
+            ev.DiffCat == letter
+        );
+
+        questBtn = document.querySelector(`[data-qdiff="${letter}"]`)
+        questBtn.style.background = BtnActiveColor;
+        questBtn.style.color = "white";
+    }
+
 
     function initStatsModal() {
         const modal = document.getElementById("stats-modal");
@@ -471,7 +577,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function pickNextQuestion() {
 
         if (game.qns == game.maxqns) {
-            resetGame();
+            closeoutGame();
         }
 
         hintFlag = false;
@@ -482,8 +588,8 @@ document.addEventListener("DOMContentLoaded", () => {
         solnFlag = false;
         solnAttempted = false;
 
-        index = showRandomEvent();
-        _qstr = formatLine(eList[index].Event);
+        index = pickNextEventIndex();
+        _qstr = formatLine(gameQuestions[index].Event);
 
         message(main, _qstr.text, 'black');
         message(scoreBox, scoreString(), 'black');
@@ -501,7 +607,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    function initialize() {
+    function startNewGame() {
         //global score to be Zero
         game.score = 0
         game.qns = 0
@@ -511,6 +617,8 @@ document.addEventListener("DOMContentLoaded", () => {
             tallyboxes[tb].style.background = "";
         }
 
+        setGameAltsDiffLevel(game.chosenAltsDifficulty);
+        setGameQDiffLevel(game.chosenQuestionDifficulty);
         //Pick a New event
         pickNextQuestion();
     }
@@ -519,6 +627,10 @@ document.addEventListener("DOMContentLoaded", () => {
     initHelpModal();
     initStatsModal();
 
-    initialize();
+
+    const modal = document.getElementById("options-modal");
+    modal.style.display = "block";
+
+    startNewGame();
 
 });
