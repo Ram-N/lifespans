@@ -8,24 +8,34 @@ dangerRed = "#dc3545";
 BtnActiveColor = "#1c3494"
 BtnOffColor = "#e6f3f8";
 
+const game = {
+    score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 2, maxscore: 100,
+    averageDifficulty: 5,
+    chosenQuestionDifficulty: "E",
+    chosenAltsDifficulty: "M",
+    category: 'All Events',
+    hintFlag: false,
+    numHints: 0,
+    activeOptions: [0, 1, 2, 3],
+
+    newEventFlag: true,
+    solnFlag: false,
+    solnAttempted: false,
+
+};
+
+var eList = Object.values(events); //from eventsDB.js
 
 document.addEventListener("DOMContentLoaded", () => {
-
-    var eList = Object.values(events); //from eventsDB.js
-
-    const game = {
-        score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 2, maxscore: 100,
-        averageDifficulty: 5,
-        chosenQuestionDifficulty: "E",
-        chosenAltsDifficulty: "M",
-        category: 'All Events',
-    };
 
     //PAGE APPEARANCE
     const output = document.querySelector('.output');
     const scoreBox = maker('div', output, 'main', 'Scorecard');
     const main = maker('div', output, 'main', 'Press Button to Start');
     const optionsPanel = maker('div', output, 'main', '');
+    main.id = "mainDiv";
+    scoreBox.id = "scoreDiv";
+    output.id = "output";
 
 
     altBtn = []
@@ -38,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     output.append(navdiv)
 
     const btnNext = maker('button', navdiv, 'navbtn', 'Next');
+    btnNext.id = 'btnNext';
     btnNext.style.width = '60%';
     btnNext.style.height = "2.5em";
 
@@ -45,6 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
     output.append(navdiv2)
     const btnHint = maker('button', navdiv2, 'navbtn', 'Hint');
     const btnSoln = maker('button', navdiv2, 'navbtn', 'Solution');
+    btnHint.id = 'btnHint';
+    btnSoln.id = 'btnSoln';
 
 
     //TALLY BOX
@@ -105,75 +118,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // END of html appearance
     // --------------------------------------    
 
-    var hintFlag = false;
-    var newEventFlag = true;
-    var solnFlag = false;
-    var solnAttempted = false;
-
-
-    //these should be part of a current Item object
-    let numHints = 0;
-
-    let activeOptions = [0, 1, 2, 3];
-
-    const itemColors = { 0: 'red', 5: 'yellow', 8: 'blue', 10: successGreen }
 
     //REFRESH
     btnNext.addEventListener('click', (e) => {
-        pickNextQuestion();
+        pickNextQuestion(game);
     })
-
-
-    function closeoutGame() {
-
-        const resmodal = document.getElementById("results-modal");
-        //const modalcontent = document.getElementById("options-modal-content");
-        const resclose = document.getElementById("close-results");
-        const resh3 = document.getElementById("res-h3");
-        const btnAnother = document.getElementById("btnAnother");
-        const btnDone = document.getElementById("btnDone");
-
-        resmodal.style.display = "block";
-        resh3.innerHTML = getResultsText();
-
-        // When the user clicks on <span> (x), close the modal
-        resclose.addEventListener("click", function () {
-            resmodal.style.display = "none";
-        });
-
-        btnAnother.addEventListener("click", function () {
-            resmodal.style.display = "none";
-            startNewGame(); //startNewGame only if Another is clicked 
-            progress.style.width = getProgress() + "%";
-        });
-
-        btnDone.addEventListener("click", function () {
-            //clear screen if Done
-            resmodal.style.display = "none";
-            output.remove();
-            hehead = document.getElementById("h2-game-category");
-            hehead.innerHTML = 'Thank you for playing Quando!'
-
-        });
-
-
-    }
-
-
-    function getResultsText() {
-        //TODO: Based on the %age score, make a suitably encouraging comment
-
-        _astr = ""
-        _astr += `Category: ${game.category} <br>`
-        _astr += `You scored ${game.score} out of ${game.maxqns * 10}! <br>`
-        _astr += `<br> Average difficulty ${game.averageDifficulty}`
-        return _astr
-    }
 
 
     //An answer is attemtpted
     for (let rep = 0; rep < 4; rep++) {
         altBtn[rep].addEventListener('click', (e) => {
+            console.log('pressed ', rep)
             displaySolution(rep)
         })
     }
@@ -190,19 +145,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function giveHint() {
         maxHints = 3 // can only give 3 hints before solution is revealed
-        if (!solnFlag && numHints < 3) {
-            hintFlag = true;
-            numHints++;
+        if (!game.solnFlag && game.numHints < 3) {
+            game.hintFlag = true;
+            game.numHints++;
 
             done = false;
             while (!done) {
-                pick = activeOptions.random()
+                pick = game.activeOptions.random()
                 pressed = altBtn[pick].innerHTML
-                actual = gameQuestions[index].Date
+                actual = gameQuestions[game.index].Date
                 if (pressed != actual) {
                     altBtn[pick].innerHTML = ""
                     //remove pick from the active options
-                    activeOptions = activeOptions.filter(function (ele) {
+                    game.activeOptions = game.activeOptions.filter(function (ele) {
                         return ele != pick;
                     });
                     done = true;
@@ -212,136 +167,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
-
-    //rep is the option that was pressed...
-    function displaySolution(rep) {
-        if (!solnFlag) {
-            itemScore = 0
-            solnFlag = true; //revealed
-            solnAttempted = (rep == -1) ? false : true;
-            if (solnAttempted) {
-                pressed = altBtn[rep].innerHTML
-                actual = gameQuestions[index].Date
-                if (pressed == actual) {
-                    itemScore = 10 - game.penalty[numHints]
-                    game.score += itemScore
-                } else {
-                    altBtn[rep].style.background = "red";
-                    altBtn[rep].style.color = "white";
-                }
-            }
-            colorCorrectAltBtn(); //make the correct solution to be green
-            addMessage(solText, 'black'); //display solution
-            btnSoln.disabled = true;
-            btnHint.disabled = true;
-            btnNext.disabled = false;
-            tallyboxes[game.qns].style.background = itemColors[itemScore];
-
-            game.qns += 1;
-            message(scoreBox, scoreString(), 'black');
-            progress.style.width = getProgress() + "%";
-        }
-    }
-
-
-    function getProgress() {
-        let w;
-        w = game.qns / game.maxqns * 100
-        if (w > 100) { w = 100 }
-
-        return w;
-    }
-
-
-    function colorCorrectAltBtn() {
-        for (let rep = 0; rep < 4; rep++) {
-            pressed = altBtn[rep].innerHTML
-            actual = solText;
-            if (pressed == actual) {
-                altBtn[rep].style.background = successGreen;
-                altBtn[rep].style.color = 'white';
-            }
-        }
-    }
-
-
-    function scoreString() {
-        let _str = `Score: ${game.score} out of ${game.qns * 10}`
-        return _str
-    }
-
-
-
-    function displayAlternatives(index) {
-        solText = gameQuestions[index].Date;
-
-        switch (game.chosenAltsDifficulty) {
-            case 'E': solOptions = gameQuestions[index].AltsEasy;
-                break;
-            case 'M': solOptions = gameQuestions[index].AltsMid;
-                break;
-            case 'H': solOptions = gameQuestions[index].AltsHard;
-                break;
-
-            default: solOptions = gameQuestions[index].AltsMid;
-        }
-
-        shuffleArray2(solOptions); // inplace shuffle rn_utils.js
-
-        altList = solOptions.slice(0, 3).concat(solText)
-        shuffleArray2(altList);
-
-        for (let rep = 0; rep < 4; rep++) {
-            altBtn[rep].innerHTML = altList[rep]
-        }
-
-
-    }
-
-
-    function endGame() {
-        btn.textContent = "Restart Game";
-        game.inplay = false;
-        guess.style.display = 'none';
-        game.max = genNumber(100);
-    }
-
-    //writes message to the MAIN board
-    function message(elem, html, txColor) {
-        elem.innerHTML = html;
-        elem.style.backgroundColor = txColor;
-    }
-
-
-    //writes message to the MAIN board
-    function addMessage(html, txColor) {
-        main.innerHTML += "<br><br>" + html;
-        main.style.backgroundColor = txColor;
-    }
-
-    function pickNextEventIndex() {
-
-        index = Math.floor(Math.random() * gameQuestions.length)
-        return index;
-
-        // done = false;
-        // circuitBreaker = 0
-        // while (!done && (circuitBreaker < 1000)) {
-        //     index = Math.floor(Math.random() * eList.length)
-        //     chosen = eList[index] //chosen Event...has keys and alts both
-        //     //console.log(chosen.DiffCat, game.chosenQuestionDifficulty)
-        //     if (chosen.DiffCat == game.chosenQuestionDifficulty) {
-        //         done = true;
-        //         return index
-        //     }
-        //     circuitBreaker++;
-        // }
-
-        // console.log(game.chosenQuestionDifficulty, "not found")
-        // return null
-
-    }
 
     function initOptionsModal() {
         const modal = document.getElementById("options-modal");
@@ -431,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         btnStart.addEventListener("click", function () {
-            startNewGame();
+            startNewGame(game);
             modal.style.display = "none";
         })
 
@@ -458,29 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             setGameQDiffLevel(qb[1]);
         });
-    }
-
-    function setGameAltsDiffLevel(letter) {
-        game.chosenAltsDifficulty = letter;
-        console.log("Alts Chosen", game.chosenAltsDifficulty)
-
-        aDiffBtn = document.querySelector(`[data-altsdiff="${letter}"]`)
-        aDiffBtn.style.background = BtnActiveColor;
-        aDiffBtn.style.color = "white";
-    }
-
-
-    function setGameQDiffLevel(letter) {
-        game.chosenQuestionDifficulty = letter;
-        console.log("Chosen", game.chosenQuestionDifficulty)
-
-        gameQuestions = eList.filter(ev =>
-            ev.DiffCat == letter
-        );
-
-        questBtn = document.querySelector(`[data-qdiff="${letter}"]`)
-        questBtn.style.background = BtnActiveColor;
-        questBtn.style.color = "white";
     }
 
 
@@ -547,90 +349,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    function formatLine(_str) {
-
-
-        const breakers = [";", "\n"];
-        const word_break = [" "];
-        const textWidth = 50;
-        formatted = ""
-        currLen = 0
-        for (var x of _str) {
-            currLen++;
-            if (breakers.some(el => x.includes(el))) {
-                formatted += x + "<br>"
-                currLen = 0
-            }
-            else if ((currLen > textWidth) && (word_break.some(el => x.includes(el)))) {
-                formatted += x + "<br>"
-                currLen = 0
-            } else { formatted += x }
-        }
-
-        numLines = Math.ceil(formatted.length / textWidth)
-        console.log(formatted, numLines)
-        return { text: formatted, numLines: numLines }
-    }
-
-
-
-    function pickNextQuestion() {
-
-        if (game.qns == game.maxqns) {
-            closeoutGame();
-        }
-
-        hintFlag = false;
-        numHints = 0;
-        activeOptions = [0, 1, 2, 3];
-
-        newEventFlag = false;
-        solnFlag = false;
-        solnAttempted = false;
-
-        index = pickNextEventIndex();
-        _qstr = formatLine(gameQuestions[index].Event);
-
-        message(main, _qstr.text, 'black');
-        message(scoreBox, scoreString(), 'black');
-        displayAlternatives(index);
-        btnNext.disabled = true;
-        btnSoln.disabled = false;
-        btnHint.disabled = false;
-
-        for (let rep = 0; rep < 4; rep++) {
-            altBtn[rep].style.background = 'grey';
-            altBtn[rep].style.color = 'black';
-            //altBtn[rep].style.color = "white";
-        }
-
-    }
-
-
-    function startNewGame() {
-        //global score to be Zero
-        game.score = 0
-        game.qns = 0
-
-        //clear out the tallyboxes
-        for (tb = 0; tb < tallyboxes.length; tb++) {
-            tallyboxes[tb].style.background = "";
-        }
-
-        setGameAltsDiffLevel(game.chosenAltsDifficulty);
-        setGameQDiffLevel(game.chosenQuestionDifficulty);
-        //Pick a New event
-        pickNextQuestion();
-    }
-
     initOptionsModal();
     initHelpModal();
     initStatsModal();
+    initSettingsModal();
 
 
     const modal = document.getElementById("options-modal");
     modal.style.display = "block";
 
-    startNewGame();
+    startNewGame(game);
 
 });

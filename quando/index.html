@@ -15,12 +15,13 @@
       <h1>QUANDO</h1>
       <header>
         <span class="fa-icon">
-          <i class="far fa-question-circle" id="help"></i>
+          <i class="fa-solid fa-bars" id="settings" title="Settings"></i>
+          <i class="far fa-question-circle" title="Help" id="help"></i>
         </span>
         <h2 id="h2-game-category">WORLD EVENTS</h2>
         <span class="fa-icon">
-          <i class="fas fa-chart-bar" id="stats"></i>
-          <i class="fa-solid fa-gear" id="game-options"></i>
+          <i class="fas fa-chart-bar" id="stats" title="Stats"></i>
+          <i class="fa-solid fa-gear" id="game-options" title="Game Options"></i>
         </span>
       </header>
     </div>
@@ -30,6 +31,7 @@
 
   <script src="../data/eventsDB.js"></script>
   <script src="../libraries/rn_utils.js"></script>
+  <script src="q_modals.js"></script>
   <script src="quando.js"></script>
 
   <div id="help-modal" class="modal">
@@ -76,6 +78,13 @@
       <span class="close" id="close-options">&times;</span>
     </div>
   </div>
+
+  <div id="settings-sidebar">
+    <div id="settings-modal-content" class="modal-content">
+      <span class="close" id="close-settings">&times;</span>
+    </div>
+  </div>
+
 
 
 </body>

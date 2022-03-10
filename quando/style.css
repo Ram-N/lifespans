@@ -57,10 +57,13 @@ html, body {
   width: 20%;
   color: black;
   margin: auto;
+  margin-bottom:10px;
   font-size: 1.7em;
   border-radius: 8px;
-  margin-left:10px;
+  /* margin-left:10px; */
   cursor: pointer;
+  display: block; /* Make the buttons appear below each other */
+  text-align: center;
 }
 
 
@@ -242,4 +245,43 @@ h1 {
 
 .hidden {
   display: none;
+}
+
+#settings-sidebar {
+  display: none;
+  position: absolute;
+  z-index: 1;  
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 40%;
+  padding: 5%;
+  background-color: white;
+  border-radius: 1em 0 0 1em;
+  border: 2px solid black;
+}
+.slide-in {
+  animation-duration: 0.8s;
+  animation-name: slidein;
+}
+@keyframes slidein {
+  from {
+    left: -60%;
+  }
+  to {
+    left: 0%
+  }
+}
+
+.slide-out {
+  animation-duration: 0.8s;
+  animation-name: slideout;
+}
+@keyframes slideout {
+  from {
+    left: 0%
+  }
+  to {
+    left: -60%;
+  }
 }
