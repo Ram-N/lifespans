@@ -9,7 +9,8 @@ BtnActiveColor = "#1c3494"
 BtnOffColor = "#e6f3f8";
 
 const game = {
-    score: 0, qns: 0, penalty: [0, 2, 5, 10], maxqns: 2, maxscore: 100,
+    score: 0, qns: 0, penalty: [0, 2, 5, 10],
+    numQns: 2, maxscore: 100,
     averageDifficulty: 5,
     chosenQuestionDifficulty: "E",
     chosenAltsDifficulty: "M",
@@ -51,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnNext.id = 'btnNext';
     btnNext.style.width = '60%';
     btnNext.style.height = "2.5em";
+    btnNext.style.background = BtnActiveColor
 
     var navdiv2 = maker('div', output, 'padDiv', '');
     output.append(navdiv2)
@@ -220,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //START BUTTON
         let gowrap = document.createElement('div');
         modalcontent.append(gowrap)
-        const btnStart = maker('button', gowrap, 'Opbtn', 'Start');
+        const btnStart = maker('button', gowrap, 'Opbtn', 'Okay');
         btnStart.id = 'goBtn'
         btnStart.style.background = successGreen;
         btnStart.style.color = "white"
@@ -256,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         btnStart.addEventListener("click", function () {
-            startNewGame(game);
+            //startNewGame(game);
             modal.style.display = "none";
         })
 
@@ -343,8 +345,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     function getTallyRows() {
-        numRows = Math.floor(game.maxqns / 5)
-        if (game.maxqns % 5) { numRows += 1 }
+        numRows = Math.floor(game.numQns / 5)
+        if (game.numQns % 5) { numRows += 1 }
         return numRows
     }
 
@@ -352,11 +354,12 @@ document.addEventListener("DOMContentLoaded", () => {
     initOptionsModal();
     initHelpModal();
     initStatsModal();
-    initSettingsModal();
+    initSidebar();
 
 
-    const modal = document.getElementById("options-modal");
-    modal.style.display = "block";
+    const sidebar = document.getElementById("settings-sidebar");
+    sidebar.className = "slide-in";
+    sidebar.style.display = "block";
 
     startNewGame(game);
 

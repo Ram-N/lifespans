@@ -12,7 +12,8 @@ BtnOffColor = "#e6f3f8";
 const itemColors = { 0: 'red', 5: 'yellow', 8: 'blue', 10: successGreen }
 
 
-function initSettingsModal() {
+//SIDEBAR
+function initSidebar() {
     const sidebar = document.getElementById("settings-sidebar");
     const modalcontent = document.getElementById("settings-modal-content");
 
@@ -20,26 +21,17 @@ function initSettingsModal() {
     h2.innerHTML = "Game Settings";
     modalcontent.appendChild(h2);
 
-    //Question Difficulty row
-    let qrow = document.createElement('div');
-    qrow.id = 'opWrapper'
-    modalcontent.append(qrow)
+    var values = [1, 2, 5, 6, 10];
+    let promptText = "Number of questions per set: "
+    let selectID = "selectNumQ";
+    let promptFor = "numQ"
+    addDropdown(values, selectID, promptText, promptFor, modalcontent);
 
-    let lbl = document.createElement('span');
-    lbl.classList.add('tspan');
-    lbl.innerHTML = 'Questions '
-    qrow.append(lbl)
+    var h2 = document.createElement("h2");
+    sID = document.getElementById(selectID);
+    h2.innerHTML = `NumQuestions ${sID.options[sID.selectedIndex].text}`;
+    modalcontent.appendChild(h2);
 
-    //Option Buttons
-    const questEasy = maker('button', qrow, 'Opbtn', 'Easy');
-    const questMed = maker('button', qrow, 'Opbtn', 'Medium');
-    const questHard = maker('button', qrow, 'Opbtn', 'Hard');
-
-    qbtns = [[questEasy, "E"], [questMed, "M"], [questHard, "H"]]
-    for (qb of qbtns) {
-        qb[0].dataset.qdiff = qb[1]
-        qb[0].style.background = BtnOffColor;
-    }
 
 
     //START BUTTON
@@ -59,37 +51,64 @@ function initSettingsModal() {
     settingsBtn.addEventListener("click", function () {
         sidebar.className = "slide-in";
         sidebar.style.display = "block";
-
     });
 
     // When the user clicks on <span> (x), close the modal
     span.addEventListener("click", function () {
         //sidebar.style.display = "none";
-        removeSidebar(sidebar);
+        slidebackSidebar(sidebar);
     });
 
     // When the user clicks anywhere outside of the modal, close it
     window.addEventListener("click", function (event) {
         if (event.target == sidebar) {
             //sidebar.style.display = "none";
-            removeSidebar(sidebar);
+            slidebackSidebar(sidebar);
         }
     });
 
-
-    // for (qb of qbtns) {
-    //     handleQuestionButtonClick(qb, qbtns);
-    // }
-
     btnStart.addEventListener("click", function () {
         startNewGame(game);
-        removeSidebar(sidebar);
+        slidebackSidebar(sidebar);
         //sidebar.style.display = "none";
+        console.log(sID.selectedIndex, 'selected')
+        game.numQns = parseInt(sID.options[sID.selectedIndex].text)
+        console.log(game.numQns)
+
     })
 
 }
 
-function removeSidebar(sidebar) {
+
+function getDropdown(sID) {
+    sID.options[sID.selectedIndex].value;
+    sID.options[sID.selectedIndex].text;
+}
+
+function addDropdown(values, selectID, promptText, promptFor, modalcontent) {
+
+    var select = document.createElement("select");
+    //select.name = "numQ";
+    select.id = selectID;
+
+    //each option has a value and text.
+    for (const v of values) {
+        let val = v.toString();
+        var option = document.createElement("option");
+        option.value = val;
+        option.text = val.charAt(0).toUpperCase() + val.slice(1);
+        select.appendChild(option);
+    }
+
+    var label = document.createElement("label");
+    label.innerHTML = promptText
+    label.htmlFor = promptFor;
+
+    select.selectedIndex = 2;
+    modalcontent.appendChild(label).appendChild(select);
+}
+
+function slidebackSidebar(sidebar) {
     sidebar.className = "slide-out"
     setTimeout(() => sidebar.style.display = "none", 775)
 }
@@ -137,7 +156,7 @@ function getResultsText() {
 
     _astr = ""
     _astr += `Category: ${game.category} <br>`
-    _astr += `You scored ${game.score} out of ${game.maxqns * 10}! <br>`
+    _astr += `You scored ${game.score} out of ${game.numQns * 10}! <br>`
     _astr += `<br> Average difficulty ${game.averageDifficulty}`
     return _astr
 }
@@ -212,7 +231,7 @@ function pickNextQuestion(game) {
     btnSoln = document.getElementById("btnSoln");
 
 
-    if (game.qns == game.maxqns) {
+    if (game.qns == game.numQns) {
         closeoutGame();
     }
 
@@ -232,6 +251,7 @@ function pickNextQuestion(game) {
     displayAlternatives(index);
     //console.log('btnNext', btnNext)
     btnNext.disabled = true;
+    btnNext.style.backgroundColor = BtnOffColor;
     btnSoln.disabled = false;
     btnHint.disabled = false;
 
@@ -273,16 +293,6 @@ function displayAlternatives(index) {
 
 
 }
-
-
-function endGame() {
-    btn.textContent = "Restart Game";
-    game.inplay = false;
-    guess.style.display = 'none';
-    game.max = genNumber(100);
-}
-
-
 
 function formatLine(_str) {
 
@@ -328,7 +338,7 @@ function addMessage(html, txColor) {
 
 function getProgress() {
     let w;
-    w = game.qns / game.maxqns * 100
+    w = game.qns / game.numQns * 100
     if (w > 100) { w = 100 }
 
     return w;
@@ -347,7 +357,7 @@ function colorCorrectAltBtn() {
 }
 
 
-//rep is the option that was pressed...
+//rep is the Alt that was pressed...
 function displaySolution(rep) {
     if (!game.solnFlag) {
         itemScore = 0
@@ -369,6 +379,9 @@ function displaySolution(rep) {
         btnSoln.disabled = true;
         btnHint.disabled = true;
         btnNext.disabled = false;
+        btnNext.style.backgroundColor = BtnActiveColor;
+        btnNext.style.color = 'white';
+
         tallyboxes[game.qns].style.background = itemColors[itemScore];
 
         game.qns += 1;
