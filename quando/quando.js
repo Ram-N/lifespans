@@ -26,6 +26,7 @@ const game = {
 };
 
 var eList = Object.values(events); //from eventsDB.js
+var gameQuestions = eList;
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -63,6 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     //TALLY BOX
+    //TODO: This has to become a function, called from Start New Game
+    //It needs game.numQns as an input. Attach it to output eventually
     var tcon = document.createElement('div');
     tcon.id = 'tallyBoard';
     output.append(tcon)
@@ -73,11 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
     tallyboxes = []
     for (row = 0; row < numTallyRows; row++) {
         tallyrows.push(maker('div', tcon, 'tallyRow', ''))
-        for (let box = 0; box < 5; box++) {
+        for (let box = 0; box < 10; box++) {
             tallyboxes.push(maker('div', tallyrows[row], 'tallyBox', ''))
         }
     }
-
 
 
 
@@ -168,181 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
             message(scoreBox, scoreString(), 'black');
         }
     }
-
-
-    function initOptionsModal() {
-        const modal = document.getElementById("options-modal");
-        const modalcontent = document.getElementById("options-modal-content");
-
-        var h2 = document.createElement("h2");
-        h2.innerHTML = "Game Options";
-        modalcontent.appendChild(h2);
-
-        //Question Difficulty row
-        let qrow = document.createElement('div');
-        qrow.id = 'opWrapper'
-        modalcontent.append(qrow)
-
-        let lbl = document.createElement('span');
-        lbl.classList.add('tspan');
-        lbl.innerHTML = 'Questions '
-        qrow.append(lbl)
-
-        //Option Buttons
-        const questEasy = maker('button', qrow, 'Opbtn', 'Easy');
-        const questMed = maker('button', qrow, 'Opbtn', 'Medium');
-        const questHard = maker('button', qrow, 'Opbtn', 'Hard');
-
-        qbtns = [[questEasy, "E"], [questMed, "M"], [questHard, "H"]]
-        for (qb of qbtns) {
-            qb[0].dataset.qdiff = qb[1]
-            qb[0].style.background = BtnOffColor;
-        }
-
-        //C H O I C E S
-        let owrap = document.createElement('div');
-        owrap.id = 'opWrapper'
-        modalcontent.append(owrap)
-
-        lbl = document.createElement('span');
-        lbl.innerHTML = 'Choices'
-        lbl.classList.add('tspan');
-        owrap.append(lbl)
-
-        //Option Buttons
-        const btnEasy = maker('button', owrap, 'Opbtn', 'Easy');
-        const btnMed = maker('button', owrap, 'Opbtn', 'Medium');
-        const btnHard = maker('button', owrap, 'Opbtn', 'Hard');
-        abtns = [[btnEasy, "E"], [btnMed, "M"], [btnHard, "H"]]
-        for (ab of abtns) {
-            ab[0].dataset.altsdiff = ab[1]
-            ab[0].style.background = BtnOffColor;
-        }
-
-        //START BUTTON
-        let gowrap = document.createElement('div');
-        modalcontent.append(gowrap)
-        const btnStart = maker('button', gowrap, 'Opbtn', 'Okay');
-        btnStart.id = 'goBtn'
-        btnStart.style.background = successGreen;
-        btnStart.style.color = "white"
-
-        // END OF MODAL APPEARANCE
-
-        const gearBtn = document.getElementById("game-options"); //on the titlebar
-        const span = document.getElementById("close-options");
-
-        // When the user clicks on the button, open the modal
-        gearBtn.addEventListener("click", function () {
-            modal.style.display = "block";
-        });
-
-        // When the user clicks on <span> (x), close the modal
-        span.addEventListener("click", function () {
-            modal.style.display = "none";
-        });
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.addEventListener("click", function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        });
-
-        for (ab of abtns) {
-            handleAltsButtonClick(ab, abtns);
-        }
-
-        for (qb of qbtns) {
-            handleQuestionButtonClick(qb, qbtns);
-        }
-
-        btnStart.addEventListener("click", function () {
-            //startNewGame(game);
-            modal.style.display = "none";
-        })
-
-    }
-
-    function handleAltsButtonClick(ab, abtns) {
-        let aBtn = ab[0]
-        aBtn.addEventListener("click", function () {
-            for (b of abtns) {
-                b[0].style.background = BtnOffColor;
-                b[0].style.color = "black";
-            }
-            setGameAltsDiffLevel(ab[1]);
-        });
-    }
-
-
-    function handleQuestionButtonClick(qb, qbtns) {
-        let questBtn = qb[0]
-        questBtn.addEventListener("click", function () {
-            for (b of qbtns) {
-                b[0].style.background = BtnOffColor;
-                b[0].style.color = "black";
-            }
-            setGameQDiffLevel(qb[1]);
-        });
-    }
-
-
-    function initStatsModal() {
-        const modal = document.getElementById("stats-modal");
-
-        // Get the button that opens the modal
-        const btn = document.getElementById("stats");
-
-        // Get the <span> element that closes the modal
-        const span = document.getElementById("close-stats");
-
-        // When the user clicks on the button, open the modal
-        btn.addEventListener("click", function () {
-            // update stats here
-            modal.style.display = "block";
-        });
-
-        // When the user clicks on <span> (x), close the modal
-        span.addEventListener("click", function () {
-            modal.style.display = "none";
-        });
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.addEventListener("click", function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        });
-    }
-
-    function initHelpModal() {
-        const modal = document.getElementById("help-modal");
-
-        // Get the button that opens the modal
-        const helpbtn = document.getElementById("help");
-
-        // Get the <span> element that closes the modal
-        const span = document.getElementById("close-help");
-
-        // When the user clicks on the button, open the modal
-        helpbtn.addEventListener("click", function () {
-            modal.style.display = "block";
-        });
-
-        // When the user clicks on <span> (x), close the modal
-        span.addEventListener("click", function () {
-            modal.style.display = "none";
-        });
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.addEventListener("click", function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        });
-    }
-
 
     function getTallyRows() {
         numRows = Math.floor(game.numQns / 5)

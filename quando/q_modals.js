@@ -9,7 +9,9 @@ dangerRed = "#dc3545";
 BtnActiveColor = "#1c3494"
 BtnOffColor = "#e6f3f8";
 
+const categoryValues = ["All", "World", "USA/America", "Europe", "Asia", "Africa", "UK/Great Britain", "France", "Germany", "China", "India"];
 const itemColors = { 0: 'red', 5: 'yellow', 8: 'blue', 10: successGreen }
+const timePeriodValues = ["All", "1900-2000AD", "1800s", "1500AD-Present", "1000AD-1500AD", "0-1000AD", "BCE"];
 
 
 //SIDEBAR
@@ -22,16 +24,78 @@ function initSidebar() {
     modalcontent.appendChild(h2);
 
     var values = [1, 2, 5, 6, 10];
-    let promptText = "Number of questions per set: "
+    let promptText = "<br>" + "Number of questions per set: "
     let selectID = "selectNumQ";
     let promptFor = "numQ"
-    addDropdown(values, selectID, promptText, promptFor, modalcontent);
+    selIndex = 2;
+    addDropdown(values, selIndex, selectID, promptText, promptFor, modalcontent);
 
-    var h2 = document.createElement("h2");
-    sID = document.getElementById(selectID);
-    h2.innerHTML = `NumQuestions ${sID.options[sID.selectedIndex].text}`;
-    modalcontent.appendChild(h2);
+    //Major Cat
+    promptText = "<br>" + "Region/Category: "
+    selectID = "selectCat";
+    promptFor = "cat"
+    selIndex = 0;
+    addDropdown(categoryValues, selIndex, selectID, promptText, promptFor, modalcontent);
 
+    values = ["None", "Catastrophes", "Discoveries", "Inventions", "Literature", "Wars"];
+    selIndex = 0;
+    promptText = "<br>" + "Specific Topics: "
+    selectID = "ddSpecial";
+    promptFor = "scat"
+    addDropdown(values, selIndex, selectID, promptText, promptFor, modalcontent);
+
+    promptText = "<br>" + "Time Period: "
+    selectID = "ddTP";
+    promptFor = "TP";
+    selIndex = 0;
+    addDropdown(timePeriodValues, selIndex, selectID, promptText, promptFor, modalcontent);
+
+
+    //QDIFF Buttons    Question Difficulty row
+    let qrow = document.createElement('div');
+    qrow.id = 'opWrapper'
+    modalcontent.append(qrow)
+
+    let lbl = document.createElement('span');
+    lbl.classList.add('tspan');
+    lbl.innerHTML = 'Questions '
+    qrow.append(lbl)
+
+    const questEasy = maker('button', qrow, 'Opbtn', 'Easy');
+    const questMed = maker('button', qrow, 'Opbtn', 'Medium');
+    const questHard = maker('button', qrow, 'Opbtn', 'Hard');
+
+    qbtns = [[questEasy, "E"], [questMed, "M"], [questHard, "H"]]
+    for (qb of qbtns) {
+        qb[0].dataset.qdiff = qb[1]
+        qb[0].style.background = BtnOffColor;
+    }
+
+    //C H O I C E S
+    let owrap = document.createElement('div');
+    owrap.id = 'opWrapper'
+    modalcontent.append(owrap)
+
+    lbl = document.createElement('span');
+    lbl.innerHTML = 'Choices'
+    lbl.classList.add('tspan');
+    owrap.append(lbl)
+
+    //Option Buttons
+    const btnEasy = maker('button', owrap, 'Opbtn', 'Easy');
+    const btnMed = maker('button', owrap, 'Opbtn', 'Medium');
+    const btnHard = maker('button', owrap, 'Opbtn', 'Hard');
+    abtns = [[btnEasy, "E"], [btnMed, "M"], [btnHard, "H"]]
+    for (ab of abtns) {
+        ab[0].dataset.altsdiff = ab[1]
+        ab[0].style.background = BtnOffColor;
+    }
+
+
+
+    // var h2 = document.createElement("h2");
+    // h2.innerHTML = `NumQuestions ${sID.options[sID.selectedIndex].text}`;
+    // modalcontent.appendChild(h2);
 
 
     //START BUTTON
@@ -43,6 +107,7 @@ function initSidebar() {
     btnStart.style.color = "white"
 
     // END OF SIDEBAR APPEARANCE
+
 
     const settingsBtn = document.getElementById("settings"); //on the titlebar
     const span = document.getElementById("close-settings");
@@ -67,12 +132,20 @@ function initSidebar() {
         }
     });
 
+    //INTERNAL FUNCTIONALTIY
+    for (ab of abtns) {
+        handleAltsButtonClick(ab, abtns);
+    }
+
+    for (qb of qbtns) {
+        handleQuestionButtonClick(qb, qbtns);
+    }
+
+
     btnStart.addEventListener("click", function () {
         startNewGame(game);
         slidebackSidebar(sidebar);
-        //sidebar.style.display = "none";
-        console.log(sID.selectedIndex, 'selected')
-        game.numQns = parseInt(sID.options[sID.selectedIndex].text)
+        console.log(ddNumQ.selectedIndex, 'Num Qs selected')
         console.log(game.numQns)
 
     })
@@ -80,15 +153,35 @@ function initSidebar() {
 }
 
 
-function getDropdown(sID) {
-    sID.options[sID.selectedIndex].value;
-    sID.options[sID.selectedIndex].text;
+
+function subsetEventsbySelectedCategory(dd) {
+    let catMap = {};
+    for (catText of categoryValues) {
+        catMap[catText] = catText
+    }
+    catMap['USA/America'] = 'America'
+    catMap['UK/Great Britain'] = 'Britain'
+
+    txt = dd.options[dd.selectedIndex].text
+    console.log(txt, "chosen cat")
+    if (txt == "All") { return } //no need to filter
+    gameQuestions = gameQuestions.filter(ev =>
+        ev[catMap[txt]] == 1.0
+    );
+
 }
 
-function addDropdown(values, selectID, promptText, promptFor, modalcontent) {
 
+function slidebackSidebar(sidebar) {
+    sidebar.className = "slide-out"
+    setTimeout(() => sidebar.style.display = "none", 775)
+}
+
+//Appearance of dropdown
+function addDropdown(values, selIndex, selectID, promptText, promptFor, modalcontent) {
+
+    var dddiv = document.createElement("div");
     var select = document.createElement("select");
-    //select.name = "numQ";
     select.id = selectID;
 
     //each option has a value and text.
@@ -104,14 +197,35 @@ function addDropdown(values, selectID, promptText, promptFor, modalcontent) {
     label.innerHTML = promptText
     label.htmlFor = promptFor;
 
-    select.selectedIndex = 2;
-    modalcontent.appendChild(label).appendChild(select);
+    select.selectedIndex = selIndex;
+    modalcontent.append(dddiv);
+    dddiv.appendChild(label).appendChild(select);
 }
 
-function slidebackSidebar(sidebar) {
-    sidebar.className = "slide-out"
-    setTimeout(() => sidebar.style.display = "none", 775)
+function handleAltsButtonClick(ab, abtns) {
+    let aBtn = ab[0]
+    aBtn.addEventListener("click", function () {
+        for (b of abtns) {
+            b[0].style.background = BtnOffColor;
+            b[0].style.color = "black";
+        }
+        setGameAltsDiffLevel(ab[1]); //functionality
+    });
 }
+
+
+function handleQuestionButtonClick(qb, qbtns) {
+    let questBtn = qb[0]
+    questBtn.addEventListener("click", function () {
+        for (b of qbtns) {
+            b[0].style.background = BtnOffColor;
+            b[0].style.color = "black";
+        }
+        setGameQDiffLevel(qb[1]);
+    });
+}
+
+
 
 
 function closeoutGame() {
@@ -162,15 +276,27 @@ function getResultsText() {
 }
 
 function startNewGame(game) {
+    ddIDnames = ["selectNumQ", "selectCat", "ddSpecial", "ddTP"]
+    ddNumQ = document.getElementById(ddIDnames[0]);
+    ddCat = document.getElementById(ddIDnames[1]);
+    ddSpecial = document.getElementById(ddIDnames[2]);
+    ddTP = document.getElementById(ddIDnames[3]);
+
     //global score to be Zero
     game.score = 0
     game.qns = 0
+    game.numQns = parseInt(ddNumQ.options[ddNumQ.selectedIndex].text)
+    gameQuestions = eList;
+
 
     //clear out the tallyboxes
-    for (tb = 0; tb < tallyboxes.length; tb++) {
+    for (tb = 0; tb < game.numQns; tb++) {
         tallyboxes[tb].style.background = "";
     }
 
+    //subsetting questions
+    subsetEventsbySelectedCategory(ddCat);
+    //subsetEventsbySpecific(ddSpecial);
     setGameAltsDiffLevel(game.chosenAltsDifficulty);
     setGameQDiffLevel(game.chosenQuestionDifficulty);
     //Pick a New event
@@ -190,7 +316,7 @@ function setGameQDiffLevel(letter) {
     game.chosenQuestionDifficulty = letter;
     console.log("Chosen", game.chosenQuestionDifficulty)
 
-    gameQuestions = eList.filter(ev =>
+    gameQuestions = gameQuestions.filter(ev =>
         ev.DiffCat == letter
     );
 
@@ -264,7 +390,7 @@ function pickNextQuestion(game) {
 }
 
 function scoreString() {
-    let _str = `Score: ${game.score} out of ${game.qns * 10}`
+    let _str = `Score: ${game.score} out of ${game.qns * 10} (Total: ${game.numQns})`
     return _str
 }
 
@@ -382,12 +508,117 @@ function displaySolution(rep) {
         btnNext.style.backgroundColor = BtnActiveColor;
         btnNext.style.color = 'white';
 
-        tallyboxes[game.qns].style.background = itemColors[itemScore];
-
         game.qns += 1;
+
+        try {
+            tallyboxes[game.qns].style.background = itemColors[itemScore];
+            throw 'myException'; // generates an exception
+        } catch (e) {
+            console.log(e, game.qns, game.numQns)
+        }
+
 
         const scoreBox = document.getElementById("scoreDiv");
         message(scoreBox, scoreString(), 'black');
         progress.style.width = getProgress() + "%";
     }
 }
+
+// OPTIONS MODAL
+
+function initOptionsModal() {
+    const modal = document.getElementById("options-modal");
+    const modalcontent = document.getElementById("options-modal-content");
+
+    var h2 = document.createElement("h2");
+    h2.innerHTML = "Game Options";
+    modalcontent.appendChild(h2);
+
+
+    //START BUTTON
+    let gowrap = document.createElement('div');
+    modalcontent.append(gowrap)
+    const btnStart = maker('button', gowrap, 'Opbtn', 'Okay');
+    btnStart.id = 'goBtn'
+    btnStart.style.background = successGreen;
+    btnStart.style.color = "white"
+
+    // END OF MODAL APPEARANCE
+
+    const gearBtn = document.getElementById("game-options"); //on the titlebar
+    const span = document.getElementById("close-options");
+
+    // When the user clicks on the button, open the modal
+    gearBtn.addEventListener("click", function () {
+        modal.style.display = "block";
+    });
+
+    // When the user clicks on <span> (x), close the modal
+    span.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener("click", function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+
+
+    btnStart.addEventListener("click", function () {
+        //startNewGame(game);
+        modal.style.display = "none";
+    })
+
+}
+
+
+function initStatsModal() {
+    const modal = document.getElementById("stats-modal");
+
+    // Get the button that opens the modal
+    const btn = document.getElementById("stats");
+
+    // Get the <span> element that closes the modal
+    const span = document.getElementById("close-stats");
+
+    // When the user clicks on the button, open the modal
+    btn.addEventListener("click", function () {
+        // update stats here
+        modal.style.display = "block";
+    });
+
+    // When the user clicks on <span> (x), close the modal
+    span.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener("click", function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+}
+
+function initHelpModal() {
+    const modal = document.getElementById("help-modal");
+    const helpbtn = document.getElementById("help");
+    const span = document.getElementById("close-help");
+
+    helpbtn.addEventListener("click", function () {
+        modal.style.display = "block";
+    });
+
+    span.addEventListener("click", function () {
+        modal.style.display = "none"; //close the modal
+    });
+
+    window.addEventListener("click", function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none"; //close the modal
+        }
+    });
+}
+
