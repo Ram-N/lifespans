@@ -10,15 +10,16 @@ BtnOffColor = "#e6f3f8";
 
 const game = {
     score: 0, qns: 0, penalty: [0, 2, 5, 10],
-    numQns: 2, maxscore: 100,
+    numQns: 5, //[1,2,5,6,10]
+    maxscore: 100,
     averageDifficulty: 5,
     chosenQuestionDifficulty: "E",
     chosenAltsDifficulty: "M",
-    category: 'All Events',
+    category: "All",
     hintFlag: false,
     numHints: 0,
     activeOptions: [0, 1, 2, 3],
-
+    timePeriod: "All",
     newEventFlag: true,
     solnFlag: false,
     solnAttempted: false,
@@ -157,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
             while (!done) {
                 pick = game.activeOptions.random()
                 pressed = altBtn[pick].innerHTML
-                actual = gameQuestions[game.index].Date
+                actual = gameQuestions[game.index].stem
                 if (pressed != actual) {
                     altBtn[pick].innerHTML = ""
                     //remove pick from the active options

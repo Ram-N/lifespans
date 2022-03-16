@@ -11,7 +11,7 @@ BtnOffColor = "#e6f3f8";
 
 const categoryValues = ["All", "World", "USA/America", "Europe", "Asia", "Africa", "UK/Great Britain", "France", "Germany", "China", "India"];
 const itemColors = { 0: 'red', 5: 'yellow', 8: 'blue', 10: successGreen }
-const timePeriodValues = ["All", "1900-2000AD", "1800s", "1500AD-Present", "1000AD-1500AD", "0-1000AD", "BCE"];
+const timePeriodValues = ["All", "0 AD - Present", "1900-2000 AD", "1800s", "1500 AD-Present", "1000 AD-1500 AD", "0 AD -1000 AD", "BCE"];
 
 
 //SIDEBAR
@@ -23,12 +23,13 @@ function initSidebar() {
     h2.innerHTML = "Game Settings";
     modalcontent.appendChild(h2);
 
-    var values = [1, 2, 5, 6, 10];
+    var numQValues = [1, 2, 5, 6, 10];
     let promptText = "<br>" + "Number of questions per set: "
     let selectID = "selectNumQ";
     let promptFor = "numQ"
-    selIndex = 2;
-    addDropdown(values, selIndex, selectID, promptText, promptFor, modalcontent);
+    selIndex = numQValues.indexOf(game.numQns);
+    console.log(game.numQns, "while creating DD index is", selIndex,)
+    addDropdown(numQValues, selIndex, selectID, promptText, promptFor, modalcontent);
 
     //Major Cat
     promptText = "<br>" + "Region/Category: "
@@ -43,6 +44,7 @@ function initSidebar() {
     selectID = "ddSpecial";
     promptFor = "scat"
     addDropdown(values, selIndex, selectID, promptText, promptFor, modalcontent);
+    document.getElementById(selectID).disabled = true;
 
     promptText = "<br>" + "Time Period: "
     selectID = "ddTP";
@@ -81,7 +83,7 @@ function initSidebar() {
     lbl.classList.add('tspan');
     owrap.append(lbl)
 
-    //Option Buttons
+    //Choice Difficulty Buttons
     const btnEasy = maker('button', owrap, 'Opbtn', 'Easy');
     const btnMed = maker('button', owrap, 'Opbtn', 'Medium');
     const btnHard = maker('button', owrap, 'Opbtn', 'Hard');
@@ -91,17 +93,20 @@ function initSidebar() {
         ab[0].style.background = BtnOffColor;
     }
 
+    //SELECTION TEXT (shows the selections)
+    owrap = document.createElement('div');
+    owrap.id = 'selText';
+    modalcontent.append(owrap)
+    updateSelText();
+    //owrap.innerHTML = selectionText();
 
-
-    // var h2 = document.createElement("h2");
-    // h2.innerHTML = `NumQuestions ${sID.options[sID.selectedIndex].text}`;
-    // modalcontent.appendChild(h2);
+    const resetBtn = maker('button', modalcontent, 'Opbtn', 'Reset All');
 
 
     //START BUTTON
     let gowrap = document.createElement('div');
     modalcontent.append(gowrap)
-    const btnStart = maker('button', gowrap, 'Opbtn', 'Start Game');
+    const btnStart = maker('button', gowrap, 'Opbtn', 'New Quando');
     btnStart.id = 'goBtn'
     btnStart.style.background = successGreen;
     btnStart.style.color = "white"
@@ -109,6 +114,7 @@ function initSidebar() {
     // END OF SIDEBAR APPEARANCE
 
 
+    //ELEMENT ACTIONS
     const settingsBtn = document.getElementById("settings"); //on the titlebar
     const span = document.getElementById("close-settings");
 
@@ -132,15 +138,15 @@ function initSidebar() {
         }
     });
 
-    //INTERNAL FUNCTIONALTIY
+    //FUNCTIONALTIY
     for (ab of abtns) {
         handleAltsButtonClick(ab, abtns);
+        updateSelText();
     }
 
     for (qb of qbtns) {
         handleQuestionButtonClick(qb, qbtns);
     }
-
 
     btnStart.addEventListener("click", function () {
         startNewGame(game);
@@ -150,23 +156,70 @@ function initSidebar() {
 
     })
 
+    ddNumQ = document.getElementById('selectNumQ')
+    ddNumQ.onchange = function () {
+        console.log(this.value, 'numQ');
+        game.numQns = parseInt(this.options[this.selectedIndex].text)
+        updateSelText();
+    }
+
+    ddCat = document.getElementById('selectCat')
+    ddCat.onchange = function () {
+        console.log(this.value, 'Category Selected');
+        assignGameCategory(ddCat)
+        updateSelText();
+    }
+
+    ddTP = document.getElementById('ddTP')
+    ddTP.onchange = function () {
+        console.log(this.value, 'TP ');
+        assignGameTimePeriod(ddTP)
+        updateSelText();
+    }
+
 }
 
+function updateSelText() {
+    console.log('update')
+    sel = document.getElementById('selText');
+    sel.innerHTML = selectionText();
+}
 
+function selectionText() {
+    console.log(game)
+    ddict = { "E": "Easy", "M": "Medium", "H": "Hard" }
+    let qd = ddict[game.chosenQuestionDifficulty];
+    let ad = ddict[game.chosenAltsDifficulty];
+    selText = `<br>For this round: ${game.numQns} questions 
+    <br> Category: ${game.category}
+    <br> Time period: ${game.timePeriod}
+     <br> Question Difficulty: ${qd} <br> Choices: ${ad} `
+    return selText
+}
 
-function subsetEventsbySelectedCategory(dd) {
+function assignGameCategory(dd) {
+    txt = dd.options[dd.selectedIndex].text
+    console.log(txt, "chosen Cat")
+    game.category = txt;
+}
+
+function assignGameTimePeriod(dd) {
+    txt = dd.options[dd.selectedIndex].text
+    game.timePeriod = txt;
+    console.log(txt, "chosen TP", game.timePeriod)
+
+}
+
+function subsetEventsbySelectedCategory() {
+    if (game.category == "All") { return } //no need to filter
     let catMap = {};
     for (catText of categoryValues) {
         catMap[catText] = catText
     }
     catMap['USA/America'] = 'America'
     catMap['UK/Great Britain'] = 'Britain'
-
-    txt = dd.options[dd.selectedIndex].text
-    console.log(txt, "chosen cat")
-    if (txt == "All") { return } //no need to filter
     gameQuestions = gameQuestions.filter(ev =>
-        ev[catMap[txt]] == 1.0
+        ev[catMap[game.category]] == 1.0
     );
 
 }
@@ -210,6 +263,7 @@ function handleAltsButtonClick(ab, abtns) {
             b[0].style.color = "black";
         }
         setGameAltsDiffLevel(ab[1]); //functionality
+        updateSelText();
     });
 }
 
@@ -222,6 +276,7 @@ function handleQuestionButtonClick(qb, qbtns) {
             b[0].style.color = "black";
         }
         setGameQDiffLevel(qb[1]);
+        updateSelText();
     });
 }
 
@@ -295,7 +350,8 @@ function startNewGame(game) {
     }
 
     //subsetting questions
-    subsetEventsbySelectedCategory(ddCat);
+    // subsetEventsbySelectedCategory(ddCat);
+    subsetEventsbySelectedCategory(); //actual subsetting happens now.
     //subsetEventsbySpecific(ddSpecial);
     setGameAltsDiffLevel(game.chosenAltsDifficulty);
     setGameQDiffLevel(game.chosenQuestionDifficulty);
@@ -317,7 +373,7 @@ function setGameQDiffLevel(letter) {
     console.log("Chosen", game.chosenQuestionDifficulty)
 
     gameQuestions = gameQuestions.filter(ev =>
-        ev.DiffCat == letter
+        ev.diffCat == letter
     );
 
     questBtn = document.querySelector(`[data-qdiff="${letter}"]`)
@@ -326,26 +382,8 @@ function setGameQDiffLevel(letter) {
 }
 
 function pickNextEventIndex() {
-
     index = Math.floor(Math.random() * gameQuestions.length)
     return index;
-
-    // done = false;
-    // circuitBreaker = 0
-    // while (!done && (circuitBreaker < 1000)) {
-    //     index = Math.floor(Math.random() * eList.length)
-    //     chosen = eList[index] //chosen Event...has keys and alts both
-    //     //console.log(chosen.DiffCat, game.chosenQuestionDifficulty)
-    //     if (chosen.DiffCat == game.chosenQuestionDifficulty) {
-    //         done = true;
-    //         return index
-    //     }
-    //     circuitBreaker++;
-    // }
-
-    // console.log(game.chosenQuestionDifficulty, "not found")
-    // return null
-
 }
 
 function pickNextQuestion(game) {
@@ -370,7 +408,8 @@ function pickNextQuestion(game) {
     game.solnAttempted = false;
 
     game.index = pickNextEventIndex(); //should be item level not game
-    _qstr = formatLine(gameQuestions[index].Event);
+    console.log(game.index);
+    let _qstr = formatLine(gameQuestions[index].event);
 
     message(main, _qstr.text, 'black');
     message(scoreBox, scoreString(), 'black');
@@ -390,22 +429,22 @@ function pickNextQuestion(game) {
 }
 
 function scoreString() {
-    let _str = `Score: ${game.score} out of ${game.qns * 10} (Total: ${game.numQns})`
+    let _str = `Score: ${game.score} out of ${game.qns * 10} \t\t(${game.qns} of ${game.numQns} Questions)`
     return _str
 }
 
 function displayAlternatives(index) {
-    solText = gameQuestions[index].Date;
+    solText = gameQuestions[index].stem;
 
     switch (game.chosenAltsDifficulty) {
-        case 'E': solOptions = gameQuestions[index].AltsEasy;
+        case 'E': solOptions = gameQuestions[index].altsEasy;
             break;
-        case 'M': solOptions = gameQuestions[index].AltsMid;
+        case 'M': solOptions = gameQuestions[index].altsMid;
             break;
-        case 'H': solOptions = gameQuestions[index].AltsHard;
+        case 'H': solOptions = gameQuestions[index].altsHard;
             break;
 
-        default: solOptions = gameQuestions[index].AltsMid;
+        default: solOptions = gameQuestions[index].altsMid;
     }
 
     shuffleArray2(solOptions); // inplace shuffle rn_utils.js
@@ -420,30 +459,6 @@ function displayAlternatives(index) {
 
 }
 
-function formatLine(_str) {
-
-
-    const breakers = [";", "\n"];
-    const word_break = [" "];
-    const textWidth = 50;
-    formatted = ""
-    currLen = 0
-    for (var x of _str) {
-        currLen++;
-        if (breakers.some(el => x.includes(el))) {
-            formatted += x + "<br>"
-            currLen = 0
-        }
-        else if ((currLen > textWidth) && (word_break.some(el => x.includes(el)))) {
-            formatted += x + "<br>"
-            currLen = 0
-        } else { formatted += x }
-    }
-
-    numLines = Math.ceil(formatted.length / textWidth)
-    console.log(formatted, numLines)
-    return { text: formatted, numLines: numLines }
-}
 
 //writes message to the MAIN board
 function message(elem, html, txColor) {
@@ -458,16 +473,6 @@ function addMessage(html, txColor) {
 
     main.innerHTML += "<br><br>" + html;
     main.style.backgroundColor = txColor;
-}
-
-
-
-function getProgress() {
-    let w;
-    w = game.qns / game.numQns * 100
-    if (w > 100) { w = 100 }
-
-    return w;
 }
 
 
@@ -491,7 +496,7 @@ function displaySolution(rep) {
         game.solnAttempted = (rep == -1) ? false : true;
         if (game.solnAttempted) {
             pressed = altBtn[rep].innerHTML
-            actual = gameQuestions[index].Date
+            actual = gameQuestions[index].stem
             if (pressed == actual) {
                 itemScore = 10 - game.penalty[game.numHints]
                 game.score += itemScore
