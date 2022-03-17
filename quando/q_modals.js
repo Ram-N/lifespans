@@ -11,7 +11,7 @@ BtnOffColor = "#e6f3f8";
 
 const categoryValues = ["All", "World", "USA/America", "Europe", "Asia", "Africa", "UK/Great Britain", "France", "Germany", "China", "India"];
 const itemColors = { 0: 'red', 5: 'yellow', 8: 'blue', 10: successGreen }
-const timePeriodValues = ["All", "0 AD - Present", "1900-2000 AD", "1800s", "1500 AD-Present", "1000 AD-1500 AD", "0 AD -1000 AD", "BCE"];
+const timePeriodValues = ["All", "0AD-Present", "1900-Present", "1800s", "1700s", "1500AD-Present", "1000AD-1500AD", "0AD-1000AD", "0AD-500AD", "BCE"];
 
 
 //SIDEBAR
@@ -31,6 +31,12 @@ function initSidebar() {
     console.log(game.numQns, "while creating DD index is", selIndex,)
     addDropdown(numQValues, selIndex, selectID, promptText, promptFor, modalcontent);
 
+    promptText = "<br>" + "Time Period: "
+    selectID = "ddTP";
+    promptFor = "TP";
+    selIndex = 0;
+    addDropdown(timePeriodValues, selIndex, selectID, promptText, promptFor, modalcontent);
+
     //Major Cat
     promptText = "<br>" + "Region/Category: "
     selectID = "selectCat";
@@ -45,12 +51,6 @@ function initSidebar() {
     promptFor = "scat"
     addDropdown(values, selIndex, selectID, promptText, promptFor, modalcontent);
     document.getElementById(selectID).disabled = true;
-
-    promptText = "<br>" + "Time Period: "
-    selectID = "ddTP";
-    promptFor = "TP";
-    selIndex = 0;
-    addDropdown(timePeriodValues, selIndex, selectID, promptText, promptFor, modalcontent);
 
 
     //QDIFF Buttons    Question Difficulty row
@@ -223,6 +223,45 @@ function subsetEventsbySelectedCategory() {
     );
 
 }
+
+//const timePeriodValues = ["All", "0AD-Present", "1900-Present", "1800s", "1700s", "1500AD-Present", "1000AD-1500 AD", "0AD-1000 AD", "0AD-500AD", "BCE"];
+
+function subsetEventsbySelectedTP() {
+    if (game.timePeriod == "All") { return } //no need to filter
+    let tPMap = {};
+    for (ddText of timePeriodValues) {
+        tPMap[ddText] = ddText
+    }
+
+    console.log('going to filter for', game.timePeriod)
+    if (game.timePeriod == "0AD-Present") {
+        gameQuestions = gameQuestions.filter(ev =>
+            ev["timePeriod"] != 'BCE'
+        );
+        return
+    }
+
+    if (game.timePeriod == "1500AD-Present") {
+        gameQuestions = gameQuestions.filter(ev =>
+            ['1500AD-1700AD', "1800s", "1900s", "1900-Present"].includes(ev["timePeriod"])
+        );
+        return
+    }
+
+    if (game.timePeriod == "0AD-1000AD") {
+        gameQuestions = gameQuestions.filter(ev =>
+            ['500AD-1000AD', '0AD-500AD'].includes(ev["timePeriod"])
+        );
+        return
+    }
+
+    gameQuestions = gameQuestions.filter(ev =>
+        ev["timePeriod"] == game.timePeriod
+    );
+
+
+}
+
 
 
 function slidebackSidebar(sidebar) {
@@ -623,6 +662,10 @@ function startNewGame(game) {
     // subsetEventsbySelectedCategory(ddCat);
     subsetEventsbySelectedCategory(); //actual subsetting happens now.
     console.log(gameQuestions.length, "after Cat", eList.length)
+
+    subsetEventsbySelectedTP(); //actual subsetting happens now.
+    console.log(eList.length, "After TP - ", gameQuestions.length);
+
     //subsetEventsbySpecific(ddSpecial);
     setGameAltsDiffLevel(game.chosenAltsDifficulty);
     console.log(gameQuestions.length, "after AltsD", eList.length)
