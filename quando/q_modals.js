@@ -330,35 +330,6 @@ function getResultsText() {
     return _astr
 }
 
-function startNewGame(game) {
-    ddIDnames = ["selectNumQ", "selectCat", "ddSpecial", "ddTP"]
-    ddNumQ = document.getElementById(ddIDnames[0]);
-    ddCat = document.getElementById(ddIDnames[1]);
-    ddSpecial = document.getElementById(ddIDnames[2]);
-    ddTP = document.getElementById(ddIDnames[3]);
-
-    //global score to be Zero
-    game.score = 0
-    game.qns = 0
-    game.numQns = parseInt(ddNumQ.options[ddNumQ.selectedIndex].text)
-    gameQuestions = eList;
-
-
-    //clear out the tallyboxes
-    for (tb = 0; tb < game.numQns; tb++) {
-        tallyboxes[tb].style.background = "";
-    }
-
-    //subsetting questions
-    // subsetEventsbySelectedCategory(ddCat);
-    subsetEventsbySelectedCategory(); //actual subsetting happens now.
-    //subsetEventsbySpecific(ddSpecial);
-    setGameAltsDiffLevel(game.chosenAltsDifficulty);
-    setGameQDiffLevel(game.chosenQuestionDifficulty);
-    //Pick a New event
-    pickNextQuestion(game);
-}
-
 function setGameAltsDiffLevel(letter) {
     game.chosenAltsDifficulty = letter;
     console.log("Alts Chosen", game.chosenAltsDifficulty)
@@ -370,7 +341,7 @@ function setGameAltsDiffLevel(letter) {
 
 function setGameQDiffLevel(letter) {
     game.chosenQuestionDifficulty = letter;
-    console.log("Chosen", game.chosenQuestionDifficulty)
+    console.log("Chosen QD", game.chosenQuestionDifficulty)
 
     gameQuestions = gameQuestions.filter(ev =>
         ev.diffCat == letter
@@ -409,6 +380,8 @@ function pickNextQuestion(game) {
 
     game.index = pickNextEventIndex(); //should be item level not game
     console.log(game.index);
+
+    //check if there are enough questions...message accordingly
     let _qstr = formatLine(gameQuestions[index].event);
 
     message(main, _qstr.text, 'black');
@@ -625,5 +598,40 @@ function initHelpModal() {
             modal.style.display = "none"; //close the modal
         }
     });
+}
+
+function startNewGame(game) {
+    ddIDnames = ["selectNumQ", "selectCat", "ddSpecial", "ddTP"]
+    ddNumQ = document.getElementById(ddIDnames[0]);
+    ddCat = document.getElementById(ddIDnames[1]);
+    ddSpecial = document.getElementById(ddIDnames[2]);
+    ddTP = document.getElementById(ddIDnames[3]);
+
+    //global score to be Zero
+    game.score = 0
+    game.qns = 0
+    game.numQns = parseInt(ddNumQ.options[ddNumQ.selectedIndex].text)
+    gameQuestions = eList;
+
+
+    //clear out the tallyboxes
+    for (tb = 0; tb < game.numQns; tb++) {
+        tallyboxes[tb].style.background = "";
+    }
+
+    //subsetting questions
+    // subsetEventsbySelectedCategory(ddCat);
+    subsetEventsbySelectedCategory(); //actual subsetting happens now.
+    console.log(gameQuestions.length, "after Cat", eList.length)
+    //subsetEventsbySpecific(ddSpecial);
+    setGameAltsDiffLevel(game.chosenAltsDifficulty);
+    console.log(gameQuestions.length, "after AltsD", eList.length)
+    setGameQDiffLevel(game.chosenQuestionDifficulty);
+
+    //check if there are enough questions...message accordingly
+    console.log(gameQuestions.length, "numDB after QDiff", eList.length)
+
+    //Pick a New event
+    pickNextQuestion(game);
 }
 
