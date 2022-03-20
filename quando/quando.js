@@ -13,7 +13,7 @@ const game = {
     numQns: 5, //[1,2,5,6,10]
     maxscore: 100,
     averageDifficulty: 5,
-    chosenQuestionDifficulty: "E",
+    chosenQuestionDifficulty: "A",
     chosenAltsDifficulty: "M",
     category: "All",
     hintFlag: false,

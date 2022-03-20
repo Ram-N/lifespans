@@ -63,11 +63,12 @@ function initSidebar() {
     lbl.innerHTML = 'Questions '
     qrow.append(lbl)
 
+    const questAny = maker('button', qrow, 'Opbtn', 'Any');
     const questEasy = maker('button', qrow, 'Opbtn', 'Easy');
     const questMed = maker('button', qrow, 'Opbtn', 'Medium');
     const questHard = maker('button', qrow, 'Opbtn', 'Hard');
 
-    qbtns = [[questEasy, "E"], [questMed, "M"], [questHard, "H"]]
+    qbtns = [[questEasy, "E"], [questMed, "M"], [questHard, "H"], [questAny, "A"]]
     for (qb of qbtns) {
         qb[0].dataset.qdiff = qb[1]
         qb[0].style.background = BtnOffColor;
@@ -148,13 +149,6 @@ function initSidebar() {
         handleQuestionButtonClick(qb, qbtns);
     }
 
-    btnStart.addEventListener("click", function () {
-        startNewGame(game);
-        slidebackSidebar(sidebar);
-        console.log(ddNumQ.selectedIndex, 'Num Qs selected')
-        console.log(game.numQns)
-
-    })
 
     ddNumQ = document.getElementById('selectNumQ')
     ddNumQ.onchange = function () {
@@ -177,6 +171,48 @@ function initSidebar() {
         updateSelText();
     }
 
+    btnStart.addEventListener("click", function () {
+        startNewGame(game);
+        slidebackSidebar(sidebar);
+        console.log(ddNumQ.selectedIndex, 'Num Qs selected')
+        console.log(game.numQns)
+
+    })
+
+    defaultOptions = { numQns: 5, category: 0, timePeriod: 0 }
+    resetBtn.addEventListener("click", function () {
+        game.numQns = defaultOptions.numQns;
+        game.category = "All";
+        game.timePeriod = "All";
+
+        game.chosenQuestionDifficulty = "A";
+        game.chosenAltsDifficulty = "M";
+        ddNumQ.selectedIndex = numQValues.indexOf(game.numQns);
+        ddTP.selectedIndex = defaultOptions.timePeriod;
+        ddSpecial.disabled = true;
+        ddCat.selectedIndex = defaultOptions.category;
+
+        for (b of qbtns) {
+            b[0].style.background = BtnOffColor;
+            b[0].style.color = "black";
+        }
+        questAny.style.background = BtnActiveColor;
+        questAny.style.color = "White";
+
+        for (b of abtns) {
+            b[0].style.background = BtnOffColor;
+            b[0].style.color = "black";
+        }
+        btnMed.style.background = BtnActiveColor;
+        btnMed.style.color = "White";
+
+        console.log('Resetting all options')
+
+        updateSelText();
+
+    })
+
+
 }
 
 function updateSelText() {
@@ -187,7 +223,7 @@ function updateSelText() {
 
 function selectionText() {
     console.log(game)
-    ddict = { "E": "Easy", "M": "Medium", "H": "Hard" }
+    ddict = { "E": "Easy", "M": "Medium", "H": "Hard", "A": "All" }
     let qd = ddict[game.chosenQuestionDifficulty];
     let ad = ddict[game.chosenAltsDifficulty];
     selText = `<br>For this round: ${game.numQns} questions 
@@ -382,10 +418,11 @@ function setGameQDiffLevel(letter) {
     game.chosenQuestionDifficulty = letter;
     console.log("Chosen QD", game.chosenQuestionDifficulty)
 
-    gameQuestions = gameQuestions.filter(ev =>
-        ev.diffCat == letter
-    );
-
+    if (letter != "A") {//do not subset questions if "Any" was chosen
+        gameQuestions = gameQuestions.filter(ev =>
+            ev.diffCat == letter
+        );
+    }
     questBtn = document.querySelector(`[data-qdiff="${letter}"]`)
     questBtn.style.background = BtnActiveColor;
     questBtn.style.color = "white";
