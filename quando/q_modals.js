@@ -196,18 +196,14 @@ function initSidebar() {
             b[0].style.background = BtnOffColor;
             b[0].style.color = "black";
         }
-        questAny.style.background = BtnActiveColor;
-        questAny.style.color = "White";
+        buttonSelected(questAny);
 
         for (b of abtns) {
             b[0].style.background = BtnOffColor;
             b[0].style.color = "black";
         }
-        btnMed.style.background = BtnActiveColor;
-        btnMed.style.color = "White";
-
+        buttonSelected(btnMed);//look and feel
         console.log('Resetting all options')
-
         updateSelText();
 
     })
@@ -259,8 +255,6 @@ function subsetEventsbySelectedCategory() {
     );
 
 }
-
-//const timePeriodValues = ["All", "0AD-Present", "1900-Present", "1800s", "1700s", "1500AD-Present", "1000AD-1500 AD", "0AD-1000 AD", "0AD-500AD", "BCE"];
 
 function subsetEventsbySelectedTP() {
     if (game.timePeriod == "All") { return } //no need to filter
@@ -358,52 +352,6 @@ function handleQuestionButtonClick(qb, qbtns) {
 
 
 
-function closeoutGame() {
-
-    const output = document.getElementById("output");
-    const resmodal = document.getElementById("results-modal");
-    //const modalcontent = document.getElementById("options-modal-content");
-    const resclose = document.getElementById("close-results");
-    const resh3 = document.getElementById("res-h3");
-    const btnAnother = document.getElementById("btnAnother");
-    const btnDone = document.getElementById("btnDone");
-
-    resmodal.style.display = "block";
-    resh3.innerHTML = getResultsText();
-
-    // When the user clicks on <span> (x), close the modal
-    resclose.addEventListener("click", function () {
-        resmodal.style.display = "none";
-    });
-
-    btnAnother.addEventListener("click", function () {
-        resmodal.style.display = "none";
-        startNewGame(game); //startNewGame only if Another is clicked 
-        progress.style.width = getProgress() + "%";
-    });
-
-    btnDone.addEventListener("click", function () {
-        //clear screen if Done
-        resmodal.style.display = "none";
-        output.remove();
-        hehead = document.getElementById("h2-game-category");
-        hehead.innerHTML = 'Thank you for playing Quando!'
-
-    });
-
-}
-
-
-
-function getResultsText() {
-    //TODO: Based on the %age score, make a suitably encouraging comment
-
-    _astr = ""
-    _astr += `Category: ${game.category} <br>`
-    _astr += `You scored ${game.score} out of ${game.numQns * 10}! <br>`
-    _astr += `<br> Average difficulty ${game.averageDifficulty}`
-    return _astr
-}
 
 function setGameAltsDiffLevel(letter) {
     game.chosenAltsDifficulty = letter;
@@ -428,54 +376,6 @@ function setGameQDiffLevel(letter) {
     questBtn.style.color = "white";
 }
 
-function pickNextEventIndex() {
-    index = Math.floor(Math.random() * gameQuestions.length)
-    return index;
-}
-
-function pickNextQuestion(game) {
-
-    const main = document.getElementById("mainDiv");
-    const scoreBox = document.getElementById("scoreDiv");
-    btnNext = document.getElementById("btnNext");
-    btnHint = document.getElementById("btnHint");
-    btnSoln = document.getElementById("btnSoln");
-
-
-    if (game.qns == game.numQns) {
-        closeoutGame();
-    }
-
-    game.hintFlag = false;
-    game.numHints = 0;
-    game.activeOptions = [0, 1, 2, 3];
-
-    game.newEventFlag = false;
-    game.solnFlag = false;
-    game.solnAttempted = false;
-
-    game.index = pickNextEventIndex(); //should be item level not game
-    console.log(game.index);
-
-    //check if there are enough questions...message accordingly
-    let _qstr = formatLine(gameQuestions[index].event);
-
-    message(main, _qstr.text, 'black');
-    message(scoreBox, scoreString(), 'black');
-    displayAlternatives(index);
-    //console.log('btnNext', btnNext)
-    btnNext.disabled = true;
-    btnNext.style.backgroundColor = BtnOffColor;
-    btnSoln.disabled = false;
-    btnHint.disabled = false;
-
-    for (let rep = 0; rep < 4; rep++) {
-        altBtn[rep].style.background = 'grey';
-        altBtn[rep].style.color = 'black';
-        //altBtn[rep].style.color = "white";
-    }
-
-}
 
 function scoreString() {
     let _str = `Score: ${game.score} out of ${game.qns * 10} \t\t(${game.qns} of ${game.numQns} Questions)`
@@ -536,47 +436,6 @@ function colorCorrectAltBtn() {
     }
 }
 
-
-//rep is the Alt that was pressed...
-function displaySolution(rep) {
-    if (!game.solnFlag) {
-        itemScore = 0
-        game.solnFlag = true; //revealed
-        game.solnAttempted = (rep == -1) ? false : true;
-        if (game.solnAttempted) {
-            pressed = altBtn[rep].innerHTML
-            actual = gameQuestions[index].stem
-            if (pressed == actual) {
-                itemScore = 10 - game.penalty[game.numHints]
-                game.score += itemScore
-            } else {
-                altBtn[rep].style.background = "red";
-                altBtn[rep].style.color = "white";
-            }
-        }
-        colorCorrectAltBtn(); //make the correct solution to be green
-        addMessage(solText, 'black'); //display solution
-        btnSoln.disabled = true;
-        btnHint.disabled = true;
-        btnNext.disabled = false;
-        btnNext.style.backgroundColor = BtnActiveColor;
-        btnNext.style.color = 'white';
-
-        game.qns += 1;
-
-        try {
-            tallyboxes[game.qns].style.background = itemColors[itemScore];
-            throw 'myException'; // generates an exception
-        } catch (e) {
-            console.log(e, game.qns, game.numQns)
-        }
-
-
-        const scoreBox = document.getElementById("scoreDiv");
-        message(scoreBox, scoreString(), 'black');
-        progress.style.width = getProgress() + "%";
-    }
-}
 
 // OPTIONS MODAL
 
@@ -675,6 +534,87 @@ function initHelpModal() {
         }
     });
 }
+
+function initResultsModal() {
+    const resmodal = maker('div', output, 'modal', '');
+    const rescontainer = maker('div', resmodal, 'modal-content', '');
+    const resclose = maker('span', rescontainer, 'close', "&times");
+    resmodal.id = "results-modal"
+    resclose.id = "close-results"
+
+    const resChoiceBox = maker('div', rescontainer, 'info-box', "");
+    const resChoiceTitle = maker('div', resChoiceBox, 'info-box-title', "Game Options");
+    resChoiceText = maker('span', resChoiceBox, 'info-box-text', "");
+    resChoiceText.id = 'res-choices';
+    resChoiceText = maker('span', resChoiceBox, 'info-box-text', "");
+    resChoiceText.id = 'res-text';
+
+
+    //RESULTS MODAL Buttons
+    const btnAnother = maker('button', rescontainer, 'Opbtn', 'Another Round');
+    const btnShare = maker('button', rescontainer, 'Opbtn', 'Share');
+    const btnDone = maker('button', rescontainer, 'Opbtn', 'Leave');
+    btnAnother.style.background = '#007bff';
+    btnAnother.style.color = 'white';
+    btnDone.style.background = '#dc3545';
+    btnAnother.id = 'btnAnother';
+    btnDone.id = 'btnDone';
+    btnShare.id = 'btnShare';
+    btnShare.style.background = successGreen
+
+}
+
+
+function getResultsText() {
+    //TODO: Based on the %age score, make a suitably encouraging comment
+
+    _astr = "<br>"
+    //    _astr += selectionText() + '<br>'
+    _astr += `You scored ${game.score} out of ${game.numQns * 10}!`
+    _astr += `<br> Average difficulty ${game.averageDifficulty}`
+    return _astr
+}
+
+
+
+function closeoutGame() {
+
+    const output = document.getElementById("output");
+    const resmodal = document.getElementById("results-modal");
+    //const modalcontent = document.getElementById("options-modal-content");
+    const resclose = document.getElementById("close-results");
+    const resBox = document.getElementById('results-box');
+    const resChText = document.getElementById('res-choices');
+    const resText = document.getElementById("res-text");
+    const btnAnother = document.getElementById("btnAnother");
+    const btnDone = document.getElementById("btnDone");
+
+    resmodal.style.display = "block";
+    resChText.innerHTML = selectionText();
+    resText.innerHTML = getResultsText();
+
+    // When the user clicks on <span> (x), close the modal
+    resclose.addEventListener("click", function () {
+        resmodal.style.display = "none";
+    });
+
+    btnAnother.addEventListener("click", function () {
+        resmodal.style.display = "none";
+        startNewGame(game); //startNewGame only if Another is clicked 
+        progress.style.width = getProgress() + "%";
+    });
+
+    btnDone.addEventListener("click", function () {
+        //clear screen if Done
+        resmodal.style.display = "none";
+        output.remove();
+        hehead = document.getElementById("h2-game-category");
+        hehead.innerHTML = 'Thank you for playing Quando!'
+
+    });
+
+}
+
 
 function startNewGame(game) {
     ddIDnames = ["selectNumQ", "selectCat", "ddSpecial", "ddTP"]

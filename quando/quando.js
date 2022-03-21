@@ -94,32 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
     progress.id = 'progress';
     barbase.append(progress)
 
-
-
-    const resmodal = maker('div', output, 'modal', '');
-    const rescontainer = maker('div', resmodal, 'modal-content', '');
-    const resclose = maker('span', rescontainer, 'close', "&times");
-    resmodal.id = "results-modal"
-    resclose.id = "close-results"
-
-    var resh3 = document.createElement("h3");
-    resh3.innerHTML = "";
-    resh3.id = 'res-h3';
-    rescontainer.appendChild(resh3);
-
-    //RESULTS MODAL Buttons
-    const btnAnother = maker('button', rescontainer, 'Opbtn', 'Another Round');
-    const btnShare = maker('button', rescontainer, 'Opbtn', 'Share');
-    const btnDone = maker('button', rescontainer, 'Opbtn', 'Leave');
-    btnAnother.style.background = '#007bff';
-    btnAnother.style.color = 'white';
-    btnDone.style.background = '#dc3545';
-    btnAnother.id = 'btnAnother';
-    btnDone.id = 'btnDone';
-    btnShare.id = 'btnShare';
-    btnShare.style.background = successGreen
-
-
     // END of html appearance
     // --------------------------------------    
 
@@ -148,29 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
         giveHint()
     })
 
-    function giveHint() {
-        maxHints = 3 // can only give 3 hints before solution is revealed
-        if (!game.solnFlag && game.numHints < 3) {
-            game.hintFlag = true;
-            game.numHints++;
-
-            done = false;
-            while (!done) {
-                pick = game.activeOptions.random()
-                pressed = altBtn[pick].innerHTML
-                actual = gameQuestions[game.index].stem
-                if (pressed != actual) {
-                    altBtn[pick].innerHTML = ""
-                    //remove pick from the active options
-                    game.activeOptions = game.activeOptions.filter(function (ele) {
-                        return ele != pick;
-                    });
-                    done = true;
-                }
-            }
-            message(scoreBox, scoreString(), 'black');
-        }
-    }
 
     function getTallyRows() {
         numRows = Math.floor(game.numQns / 5)
@@ -182,6 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initOptionsModal();
     initHelpModal();
     initStatsModal();
+    initResultsModal();
     initSidebar();
 
 
@@ -192,3 +144,4 @@ document.addEventListener("DOMContentLoaded", () => {
     startNewGame(game);
 
 });
+

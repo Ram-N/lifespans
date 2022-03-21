@@ -285,3 +285,26 @@ h1 {
     left: -60%;
   }
 }
+
+.info-box {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 16px 24px;
+  border-radius: 6px;
+  background-color: #fffaf2;
+  box-shadow: inset 4px 0 0 0 #ffdc99;
+}
+
+.info-box-title {
+  margin-left: 4px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #f09300;
+}
+
+.info-box-text {
+  margin: 10px;
+}
