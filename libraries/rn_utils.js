@@ -18,6 +18,46 @@ function arrayRemove(arr, value) {
 }
 
 
+function buttonSelected(btn) {
+    btn.style.background = BtnActiveColor;
+    btn.style.color = "White";
+}
+
+
+//Appearance of dropdown
+function addDropdown(values, selIndex, selectID, promptText, promptFor, modalcontent) {
+
+    var dddiv = document.createElement("div");
+    var select = document.createElement("select");
+    select.id = selectID;
+
+    //each option has a value and text.
+    for (const v of values) {
+        let val = v.toString();
+        var option = document.createElement("option");
+        option.value = val;
+        option.text = val.charAt(0).toUpperCase() + val.slice(1);
+        select.appendChild(option);
+    }
+
+    var label = document.createElement("label");
+    label.innerHTML = promptText
+    label.htmlFor = promptFor;
+
+    select.selectedIndex = selIndex;
+    modalcontent.append(dddiv);
+    dddiv.appendChild(label).appendChild(select);
+}
+
+
+function addTextBox(parent, elClass, _id = null) {
+    const ele = document.createElement('div');
+    ele.className = elClass; //could be multiple classes separated by space
+    if (_id) { ele.id = _id; }
+    parent.append(ele);
+    return ele;
+}
+
 
 //https://github.com/lsvekis/JavaScript-Code/tree/main/JavaScript%20Projects
 function maker(eleType, elParent, eleClass, html) {
