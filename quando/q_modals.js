@@ -23,6 +23,10 @@ function initSidebar() {
     h2.innerHTML = "Game Settings";
     modalcontent.appendChild(h2);
 
+    qAlertBox = addTextBox(parent = modalcontent, elClass = "alert error", _id = 'qAlertBox');
+    qAlertBox.innerHTML = "";
+    qAlertBox.style.display = 'none'
+
     var numQValues = [1, 2, 5, 6, 10];
     let promptText = "<br>" + "Number of questions per set: "
     let selectID = "selectNumQ";
@@ -172,11 +176,12 @@ function initSidebar() {
     }
 
     btnStart.addEventListener("click", function () {
-        startNewGame(game);
-        slidebackSidebar(sidebar);
-        console.log(ddNumQ.selectedIndex, 'Num Qs selected')
-        console.log(game.numQns)
-
+        statusOkay = startNewGame(game);
+        if (statusOkay) {
+            slidebackSidebar(sidebar);
+            console.log(ddNumQ.selectedIndex, 'Num Qs selected')
+            console.log(game.numQns)
+        }
     })
 
     defaultOptions = { numQns: 5, category: 0, timePeriod: 0 }
@@ -205,6 +210,8 @@ function initSidebar() {
         buttonSelected(btnMed);//look and feel
         console.log('Resetting all options')
         updateSelText();
+        qAlertBox.style.display = 'none'
+
 
     })
 
@@ -212,7 +219,8 @@ function initSidebar() {
 }
 
 function updateSelText() {
-    console.log('update')
+    console.log('Some option in sidepanel updated')
+    qAlertBox.style.display = 'none'
     sel = document.getElementById('selText');
     sel.innerHTML = selectionText();
 }
@@ -231,7 +239,7 @@ function selectionText() {
 
 function assignGameCategory(dd) {
     txt = dd.options[dd.selectedIndex].text
-    console.log(txt, "chosen Cat")
+    //console.log(txt, "chosen Cat")
     game.category = txt;
 }
 
@@ -299,31 +307,6 @@ function slidebackSidebar(sidebar) {
     setTimeout(() => sidebar.style.display = "none", 775)
 }
 
-//Appearance of dropdown
-function addDropdown(values, selIndex, selectID, promptText, promptFor, modalcontent) {
-
-    var dddiv = document.createElement("div");
-    var select = document.createElement("select");
-    select.id = selectID;
-
-    //each option has a value and text.
-    for (const v of values) {
-        let val = v.toString();
-        var option = document.createElement("option");
-        option.value = val;
-        option.text = val.charAt(0).toUpperCase() + val.slice(1);
-        select.appendChild(option);
-    }
-
-    var label = document.createElement("label");
-    label.innerHTML = promptText
-    label.htmlFor = promptFor;
-
-    select.selectedIndex = selIndex;
-    modalcontent.append(dddiv);
-    dddiv.appendChild(label).appendChild(select);
-}
-
 function handleAltsButtonClick(ab, abtns) {
     let aBtn = ab[0]
     aBtn.addEventListener("click", function () {
@@ -380,48 +363,6 @@ function setGameQDiffLevel(letter) {
 function scoreString() {
     let _str = `Score: ${game.score} out of ${game.qns * 10} \t\t(${game.qns} of ${game.numQns} Questions)`
     return _str
-}
-
-function displayAlternatives(index) {
-    solText = gameQuestions[index].stem;
-
-    switch (game.chosenAltsDifficulty) {
-        case 'E': solOptions = gameQuestions[index].altsEasy;
-            break;
-        case 'M': solOptions = gameQuestions[index].altsMid;
-            break;
-        case 'H': solOptions = gameQuestions[index].altsHard;
-            break;
-
-        default: solOptions = gameQuestions[index].altsMid;
-    }
-
-    shuffleArray2(solOptions); // inplace shuffle rn_utils.js
-
-    altList = solOptions.slice(0, 3).concat(solText)
-    shuffleArray2(altList);
-
-    for (let rep = 0; rep < 4; rep++) {
-        altBtn[rep].innerHTML = altList[rep]
-    }
-
-
-}
-
-
-//writes message to the MAIN board
-function message(elem, html, txColor) {
-    elem.innerHTML = html;
-    elem.style.backgroundColor = txColor;
-}
-
-
-//writes message to the MAIN board
-function addMessage(html, txColor) {
-    const main = document.getElementById("mainDiv");
-
-    main.innerHTML += "<br><br>" + html;
-    main.style.backgroundColor = txColor;
 }
 
 
@@ -610,9 +551,10 @@ function closeoutGame() {
         output.remove();
         hehead = document.getElementById("h2-game-category");
         hehead.innerHTML = 'Thank you for playing Quando!'
-
     });
 
+    tcon = document.getElementById('tallyBoard');
+    tcon.replaceChildren(); //get rid of the tallyBoxes, children of tallyBoard
 }
 
 
@@ -629,7 +571,11 @@ function startNewGame(game) {
     game.numQns = parseInt(ddNumQ.options[ddNumQ.selectedIndex].text)
     gameQuestions = eList;
 
+    tcon = document.getElementById('tallyBoard');
+    tcon.replaceChildren(); //get rid of the old tallyBoxes, children of tallyBoard
+    tallyboxes = createTallyBoxes(game);
 
+    console.log('numQns', game.numQns)
     //clear out the tallyboxes
     for (tb = 0; tb < game.numQns; tb++) {
         tallyboxes[tb].style.background = "";
@@ -649,9 +595,19 @@ function startNewGame(game) {
     setGameQDiffLevel(game.chosenQuestionDifficulty);
 
     //check if there are enough questions...message accordingly
-    console.log(gameQuestions.length, "numDB after QDiff", eList.length)
+    console.log(gameQuestions.length, "numDB after QDiff")
 
-    //Pick a New event
-    pickNextQuestion(game);
+    //verify that there are a sufficient number of questions
+    if (gameQuestions.length < game.numQns) {
+        console.log('Error insuff questions')
+        qAlertBox.innerHTML = "Options have made the scope of questions too narrow. \n Please broaden your filtering in the Side panel";
+        qAlertBox.style.display = 'block'
+        return 0 //statusOkay
+    }
+    else {
+        //Pick a New event
+        pickNextQuestion(game);
+        return 1 //statusOkay
+    }
 }
 

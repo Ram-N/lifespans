@@ -29,6 +29,22 @@ const game = {
 var eList = Object.values(events); //from eventsDB.js
 var gameQuestions = eList;
 
+
+//writes message to the MAIN board
+function message(elem, html, txColor) {
+    elem.innerHTML = html;
+    elem.style.backgroundColor = txColor;
+}
+
+
+//writes message to the MAIN board
+function addMessage(html, txColor) {
+    const main = document.getElementById("mainDiv");
+
+    main.innerHTML += "<br><br>" + html;
+    main.style.backgroundColor = txColor;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
     //PAGE APPEARANCE
@@ -63,26 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnHint.id = 'btnHint';
     btnSoln.id = 'btnSoln';
 
-
-    //TALLY BOX
-    //TODO: This has to become a function, called from Start New Game
-    //It needs game.numQns as an input. Attach it to output eventually
-    var tcon = document.createElement('div');
-    tcon.id = 'tallyBoard';
-    output.append(tcon)
-
-
-    numTallyRows = getTallyRows();
-    tallyrows = []
-    tallyboxes = []
-    for (row = 0; row < numTallyRows; row++) {
-        tallyrows.push(maker('div', tcon, 'tallyRow', ''))
-        for (let box = 0; box < 10; box++) {
-            tallyboxes.push(maker('div', tallyrows[row], 'tallyBox', ''))
-        }
-    }
-
-
+    createTallyBoxRow(output);
 
     //PROGRESS BAR
     var pdiv = maker('div', output, 'padDiv', '');
@@ -121,14 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
     btnHint.addEventListener('click', (e) => {
         giveHint()
     })
-
-
-    function getTallyRows() {
-        numRows = Math.floor(game.numQns / 5)
-        if (game.numQns % 5) { numRows += 1 }
-        return numRows
-    }
-
 
     initOptionsModal();
     initHelpModal();

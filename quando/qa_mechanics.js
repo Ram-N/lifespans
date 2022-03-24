@@ -77,6 +77,31 @@ function giveHint() {
 
 
 
+function getTallyRows() {
+    return 1
+    // numRows = Math.floor(game.numQns / 5)
+    // if (game.numQns % 5) { numRows += 1 }
+    // return numRows
+}
+
+//this function is called once, when creating "main"
+function createTallyBoxRow(output) {
+    var tcon = document.createElement('div');
+    tcon.id = 'tallyBoard';
+    output.append(tcon);
+}
+
+
+function createTallyBoxes(game) {
+    tcon = document.getElementById('tallyBoard');
+    numTallyRows = getTallyRows();
+    tallyboxes = [];
+    for (let box = 0; box < game.numQns; box++) {
+        tallyboxes.push(maker('div', tcon, 'tallyBox', ''))
+    }
+    return tallyboxes;
+}
+
 
 function formatLine(_str) {
 
@@ -136,7 +161,6 @@ function displaySolution(rep) {
         btnNext.style.backgroundColor = BtnActiveColor;
         btnNext.style.color = 'white';
 
-        game.qns += 1;
 
         try {
             tallyboxes[game.qns].style.background = itemColors[itemScore];
@@ -144,6 +168,7 @@ function displaySolution(rep) {
         } catch (e) {
             console.log(e, game.qns, game.numQns)
         }
+        game.qns += 1;
 
 
         const scoreBox = document.getElementById("scoreDiv");
@@ -151,3 +176,31 @@ function displaySolution(rep) {
         progress.style.width = getProgress() + "%";
     }
 }
+
+
+function displayAlternatives(index) {
+    solText = gameQuestions[index].stem;
+
+    switch (game.chosenAltsDifficulty) {
+        case 'E': solOptions = gameQuestions[index].altsEasy;
+            break;
+        case 'M': solOptions = gameQuestions[index].altsMid;
+            break;
+        case 'H': solOptions = gameQuestions[index].altsHard;
+            break;
+
+        default: solOptions = gameQuestions[index].altsMid;
+    }
+
+    shuffleArray2(solOptions); // inplace shuffle rn_utils.js
+
+    altList = solOptions.slice(0, 3).concat(solText)
+    shuffleArray2(altList);
+
+    for (let rep = 0; rep < 4; rep++) {
+        altBtn[rep].innerHTML = altList[rep]
+    }
+
+
+}
+
