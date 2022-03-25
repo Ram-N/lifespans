@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnHint.id = 'btnHint';
     btnSoln.id = 'btnSoln';
 
-    createTallyBoxRow(output);
+    createTallyBoxRow(output, 'tallyBoard');
 
     //PROGRESS BAR
     var pdiv = maker('div', output, 'padDiv', '');

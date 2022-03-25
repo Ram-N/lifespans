@@ -487,8 +487,12 @@ function initResultsModal() {
     const resChoiceTitle = maker('div', resChoiceBox, 'info-box-title', "Game Options");
     resChoiceText = maker('span', resChoiceBox, 'info-box-text', "");
     resChoiceText.id = 'res-choices';
-    resChoiceText = maker('span', resChoiceBox, 'info-box-text', "");
-    resChoiceText.id = 'res-text';
+
+    //placeholder for res tally boxes
+    createTallyBoxRow(resChoiceBox, "resTBRow");
+
+    resText = maker('span', resChoiceBox, 'info-box-text', "");
+    resText.id = 'res-text';
 
 
     //RESULTS MODAL Buttons
@@ -532,6 +536,17 @@ function closeoutGame() {
 
     resmodal.style.display = "block";
     resChText.innerHTML = selectionText();
+
+    //show results tally boxes
+    tcon = document.getElementById('resTBRow');
+    tcon.replaceChildren();
+    tallyboxes = createTallyBoxes(game, "resTBRow");
+
+    game.results.forEach((e, idx) => {
+        colorTallyBox(idx, e)
+    });
+
+    console.log(game.results, "results")
     resText.innerHTML = getResultsText();
 
     // When the user clicks on <span> (x), close the modal
@@ -565,15 +580,16 @@ function startNewGame(game) {
     ddSpecial = document.getElementById(ddIDnames[2]);
     ddTP = document.getElementById(ddIDnames[3]);
 
-    //global score to be Zero
+    //Reset Game attributes
     game.score = 0
     game.qns = 0
     game.numQns = parseInt(ddNumQ.options[ddNumQ.selectedIndex].text)
     gameQuestions = eList;
+    game.results = [];
 
     tcon = document.getElementById('tallyBoard');
     tcon.replaceChildren(); //get rid of the old tallyBoxes, children of tallyBoard
-    tallyboxes = createTallyBoxes(game);
+    tallyboxes = createTallyBoxes(game, 'tallyBoard');
 
     console.log('numQns', game.numQns)
     //clear out the tallyboxes

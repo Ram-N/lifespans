@@ -85,15 +85,19 @@ function getTallyRows() {
 }
 
 //this function is called once, when creating "main"
-function createTallyBoxRow(output) {
-    var tcon = document.createElement('div');
-    tcon.id = 'tallyBoard';
-    output.append(tcon);
+function createTallyBoxRow(parent, _tid) {
+    //var tcon = document.createElement('div');
+    var tcon = maker('div', parent, 'tallyRow', "")
+    tcon.id = _tid;
+    parent.append(tcon);
 }
 
 
-function createTallyBoxes(game) {
-    tcon = document.getElementById('tallyBoard');
+//called twice. 
+//Once from startNewGame.
+//Once more from resultsmodal
+function createTallyBoxes(game, _tid) {
+    tcon = document.getElementById(_tid);
     numTallyRows = getTallyRows();
     tallyboxes = [];
     for (let box = 0; box < game.numQns; box++) {
@@ -153,6 +157,7 @@ function displaySolution(rep) {
                 altBtn[rep].style.color = "white";
             }
         }
+        game.results.push(itemScore)
         colorCorrectAltBtn(); //make the correct solution to be green
         addMessage(solText, 'black'); //display solution
         btnSoln.disabled = true;
@@ -161,13 +166,7 @@ function displaySolution(rep) {
         btnNext.style.backgroundColor = BtnActiveColor;
         btnNext.style.color = 'white';
 
-
-        try {
-            tallyboxes[game.qns].style.background = itemColors[itemScore];
-            throw 'myException'; // generates an exception
-        } catch (e) {
-            console.log(e, game.qns, game.numQns)
-        }
+        colorTallyBox(game.qns, itemScore)
         game.qns += 1;
 
 
@@ -175,6 +174,16 @@ function displaySolution(rep) {
         message(scoreBox, scoreString(), 'black');
         progress.style.width = getProgress() + "%";
     }
+}
+
+function colorTallyBox(idx, itemScore) {
+    try {
+        tallyboxes[idx].style.background = itemColors[itemScore];
+        //throw 'tallyBoxException'; // generates an exception
+    } catch (e) {
+        console.log(e, game.qns, game.numQns, tallyboxes)
+    }
+
 }
 
 
