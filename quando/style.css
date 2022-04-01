@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 }
@@ -9,8 +10,8 @@ html, body {
   height: 100%;
   align-items: center;
   flex-direction: column;
-  width:90%;
-  margin:auto;
+  width: 90%;
+  margin: auto;
 }
 
 #game-head {
@@ -32,15 +33,8 @@ html, body {
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
-.content h1 span.fa { top: 0; }
-
-.output {
-  width: 90%;
-  margin: auto;
-  background-color: beige;
-  text-align: center;
-  padding: 20px;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+.content h1 span.fa {
+  top: 0;
 }
 
 .main {
@@ -57,12 +51,13 @@ html, body {
   width: 90%;
   color: black;
   margin: auto;
-  margin-bottom:10px;
+  margin-bottom: 10px;
   font-size: 1.7em;
   border-radius: 8px;
   /* margin-left:10px; */
   cursor: pointer;
-  display: block; /* Make the buttons appear below each other */
+  display: block;
+  /* Make the buttons appear below each other */
   text-align: center;
 }
 
@@ -73,7 +68,7 @@ html, body {
   margin: auto;
   font-size: 1.7em;
   border-radius: 8px;
-  margin-left:10px;
+  margin-left: 10px;
   cursor: pointer;
 }
 
@@ -112,17 +107,17 @@ header {
   vertical-align: middle;
 } */
 
-.fa-icon   { 
-  align-self: center; 
+.fa-icon {
+  align-self: center;
   cursor: pointer;
 }
 
 h1 {
-  color:white;
+  color: white;
   text-align: center;
   font-size: 2em;
   line-height: 0.5em;
-  margin:40px
+  margin: 40px
 }
 
 .left10 {
@@ -145,8 +140,8 @@ h1 {
 }
 
 
-#tallyBoard{
-  padding:10px;
+#tallyBoard {
+  padding: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,7 +182,7 @@ h1 {
 }
 
 .modal-content {
-  background-color: gainsboro; 
+  background-color: gainsboro;
   color: rgb(18, 18, 19);
   margin: 5% auto;
   padding: 20px;
@@ -206,23 +201,23 @@ h1 {
   /* margin: auto; */
   font-size: 1em;
   border-radius: 8px;
-  margin-left:auto;
+  margin-left: auto;
   cursor: pointer;
 }
 
 #goBtn {
   width: 60%;
   height: 2.5em;
-  margin:20px auto;
-  display:block;
+  margin: 20px auto;
+  display: block;
 }
 
 #opWrapper {
-    /* justify-content: center; */
+  /* justify-content: center; */
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-top:0.5em;
+  padding-top: 0.5em;
 }
 
 .modal-content hr {
@@ -255,7 +250,7 @@ h1 {
 #settings-sidebar {
   display: none;
   position: absolute;
-  z-index: 1;  
+  z-index: 1;
   left: 0;
   top: 0;
   height: 100vh;
@@ -265,14 +260,17 @@ h1 {
   border-radius: 1em 0 0 1em;
   border: 2px solid black;
 }
+
 .slide-in {
   animation-duration: 0.8s;
   animation-name: slidein;
 }
+
 @keyframes slidein {
   from {
     left: -60%;
   }
+
   to {
     left: 0%
   }
@@ -282,10 +280,12 @@ h1 {
   animation-duration: 0.8s;
   animation-name: slideout;
 }
+
 @keyframes slideout {
   from {
     left: 0%
   }
+
   to {
     left: -60%;
   }
