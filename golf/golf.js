@@ -11,7 +11,12 @@
 //score it
 //show the score
 
-game = {};
+const game = {
+    score: 0, qns: 0, penalty: [0, 2, 5, 10],
+    numQns: 5, //[1,2,5,6,10]
+    qList: [],
+    qNum: -1
+}
 
 successGreen = "#28a745";
 warningOrange = "#ffc107";
@@ -21,17 +26,21 @@ BtnOffColor = "#e6f3f8";
 
 var eList = Object.values(events); //from eventsDB.js
 var gameQuestions = eList;
+let ddValues = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     //PAGE APPEARANCE
     const output = document.querySelector('.output');
 
-    values = ["None", "Catastrophes", "Discoveries", "Inventions", "Literature", "Wars"];
+    //values = ["None", "Catastrophes", "Discoveries", "Inventions", "Literature", "Wars"];
 
-    let ddValues = []
+    //ddValues defined here
     Object.entries(gameQuestions).forEach(([key, val]) => ddValues.push(val.event));
 
-    results = maker('div', output, 'main', "")
+    scoreCard = maker('div', output, 'card', "")
+    scoreCard.id = "sCard"
+    scoreCard.classList.add("wide")
+    scoreCard.classList.add("slate")
 
     // selIndex = 0;
     // promptText = "<br>" + "Select an Event that is closest to the Year above: "
@@ -58,19 +67,54 @@ document.addEventListener("DOMContentLoaded", () => {
     qdiv.append(evDataList)
 
     const btnSubmit = maker('button', qdiv, 'navbtn', 'Submit');
-    btnSubmit.addEventListener('click', (e) => {
-        pickNextQuestion(game);
-    })
-
     const btnNext = maker('button', output, 'navbtn', 'Next');
-    btnNext.addEventListener('click', (e) => {
-        pickNextQuestion(game);
+
+
+    btnSubmit.addEventListener('click', (e) => {
+        if (validEventEntered(evInput)) {
+            console.log(`evList ${evInput.value}`)
+            scoreResponse(evInput.value, game)
+        }
     })
 
+    btnNext.addEventListener('click', (e) => {
+        nextQuestion(game);
+        evInput.value = ""; //clear it
+    })
 
+    evInput.addEventListener('input', (e) => {
+        evInput.style.backgroundColor = ''; //reset background color
+    });
 
+    startNewGame(game);
 });
 
+
+function validEventEntered(inputField) {
+    var isValid = ddValues.includes(inputField.value)
+
+    if (!isValid) {
+        // inputField.style.backgroundColor = '#bfa';
+        inputField.style.backgroundColor = '#fba';
+    }
+
+    return isValid;
+}
+
+function scoreResponse(response, game) {
+    actual = game.qList[game.qNum];
+    res = getResponseYear(response, gameQuestions);
+    scard = document.getElementById('sCard')
+
+    scard.innerHTML = `${actual} ${res} Score:${res - actual}`
+    console.log(actual, res)
+}
+
+function getResponseYear(response, gameQuestions) {
+    idx = ddValues.indexOf(response);
+    console.log(`idx ${idx}`)
+    return gameQuestions[idx].YearNum
+}
 
 // Loads the list of events to the dynamic list...
 function prepareEventStr(ddValues) {
@@ -106,14 +150,30 @@ function filterData(data, searchText) {
 }
 
 
-function pickNextQuestion(game) {
-    updateYearCard()
-    game = {}
-}
 
-function updateYearCard() {
+function updateYearCard(game) {
     qCard = document.getElementById("qCard");
     let rndYear = Math.floor(Math.random() * 2001)
 
+    game.qList.push(rndYear)
+
     qCard.innerHTML = rndYear + " AD"
+}
+
+function clearScoreCard() {
+    scard = document.getElementById('sCard')
+    scard.innerHTML = ""
+}
+
+function nextQuestion(game) {
+    clearScoreCard();
+    updateYearCard(game);
+    game.qNum += 1;
+
+}
+
+function startNewGame(game) {
+    game.qList = [];
+    game.qNum = -1;
+    nextQuestion(game)
 }

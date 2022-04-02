@@ -13,18 +13,29 @@
   padding: 5px;
   margin: auto;
   margin-bottom: 5%;
-  /* width: 50%; */
-  background-color: slateblue;
   color: aliceblue;
-  cursor: pointer;
 }
+
+.card.slate {
+  background-color: slateblue;
+}
+
+.card.wide {
+  width: 100%;
+  min-height: 10%;
+}
+
 
 .card h1 {
   font-size: 4.5em;
 }
 
+.card.hover {
+  cursor: pointer;
+}
+
 /* On mouse-over, add a deeper shadow */
-.card:hover {
+.card.hover:hover {
   box-shadow: 2px 8px 16px 0 rgba(0, 0, 0, 0.2);
   background-color: rgba(100, 20, 220, 0.8);
   color: antiquewhite;
