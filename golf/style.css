@@ -25,7 +25,6 @@ body {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    margin-top: 5%;
 }
 
 #qCard {
@@ -33,10 +32,50 @@ body {
     font-weight: bold;
 }
 
+#qText {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
 
 h1 {
     text-align: center;
 }
+
+.modal {
+    /* padding: 1em; */
+    /* max-width: 50ch; */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+
+    /* // border: 0; */
+    /* // box-shadow: 0 0 1em rgb(0 0 0 / .3); */
+
+    &>* {
+        margin: 0 0 0.5rem 0;
+    }
+}
+
+.modal::backdrop {
+    background: rgb(0 0 0 / 0.4);
+}
+
+
+
+.modal-content {
+    background-color: gainsboro;
+    color: rgb(18, 18, 19);
+    margin: 5% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 500px;
+    font-size: 1.5em;
+}
+
 
 .autocomplete-input {
     padding: 25px 15px;

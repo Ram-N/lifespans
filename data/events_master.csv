@@ -19,9 +19,9 @@ eventID,stem,event,details,wikipedia,mnemonic,itemDifficulty,categories,America,
 17,490 BC,"Greeks defeated the Persians at the Battle of Marathon.Battle of Marathon: the Greeks repel a Persian invasion, securing the survival of Greek culture and science",,,,7,"[prehistory,]",,,,,,,,,,,,,1,,,,,,,,-490
 18,490 BC,Greeks win against the Persians in Battle of Marathon.,,,,5,,,,,,,,,,1,,,,,,,,,,1,,-490
 19,486 BC,"Birth of Buddha, founder of one of the world's major religions",,,,7,,,,,,,,,,,1,,,1,1,,,,,,,-486
-20,483 BC,Indian philosopher Siddhartha Gautama Buddha (563483) dies and his followers begin to organize a religious movement based on his teachings.,,,,7,,,,,,,,,,,1,,,,,,,,,,,-483
+20,483 BC,Indian philosopher Siddhartha Gautama Buddha dies and his followers begin to organize a religious movement based on his teachings.,,,,7,,,,,,,,,,,1,,,,,,,,,,,-483
 21,360 BC,The period of Aristotle and Plato.,,,,7,,,,,,,,,,1,,,,1,,,,,,,,-360
-22,336 BC,Philip's son Alexander the Great (356323) rules Macedonia.,,,,7,,,,,,,,,,1,,,,,,,1,,,,,-336
+22,336 BC,Philip's son Alexander the Great rules Macedonia.,,,,7,,,,,,,,,,1,,,,,,,1,,,,,-336
 23,334 BC,Alexander fights and wins against the Persians at the Battle of Granicus in Anatolia.,,,,6,,,,,,,,,,1,,,,,,,,,,1,,-334
 24,333 BC,Macedonian forces under Alexander defeat the Persians at the Battle of Issus.,,,,6,,,,,,,,,,1,,,,,,,,,,1,,-333
 25,332 BC,Egypt conquered by Alexander.,,,,8,,,,,,,,,,1,,,,1,,,,,,,,-332
@@ -33,20 +33,20 @@ eventID,stem,event,details,wikipedia,mnemonic,itemDifficulty,categories,America,
 31,323 BC,"Alexander dies, and his empire falls apart as his generals, the diadochi, battle one another for supremacy.",,,,4,,,,,,,,,,1,,,,,,,1,,,,,-323
 32,323 BC,Alexander dies at Babylon.,,,,5,,,,,,,,,,1,,,,1,,,,,,,,-323
 33,305 BC,"The first Greek pharaoh of Egypt, Ptolemy I, takes over the reins and establishes the Ptolemaic dynasty.",,,,8,,,,,,,,,,1,,,,,,,,,,,,-305
-34,240 BC,Greek mathematician Eratosthenes (276194) measures the Earth's circumference.,,,,7,,,,,,,,,,1,,,,,,,,,,,,-240
+34,240 BC,Greek mathematician Eratosthenes measures the Earth's circumference.,,,,7,,,,,,,,,,1,,,,,,,,,,,,-240
 35,214 BC,Work on the Great Wall of China begins.,,,,8,,,,,,1,,,,,,,,1,,,,,,,,-214
 36,202 BC,Hannibal is defeated by Rome: the victory is essential to secure the survival and expansion of Roman civilisation,,,,7,"[prehistory, Roman,]",,1,,,,,,,,,,,1,,1,,,,,,-202
-37,60 BC,"Roman leaders Pompey, Crassus, and Julius Caesar form the ""First Triumvirate.""","The First Triumvirate (6053 BC) was an informal alliance among three prominent politicians in the late Roman Republic: Gaius Julius Caesar, Gnaeus Pompeius Magnus and Marcus  Crassus.",https://en.wikipedia.org/wiki/First_Triumvirate,,7,,,,,,,,,,,,,,,,1,,,,,,-60
+37,60 BC,"Roman leaders Pompey, Crassus, and Julius Caesar form the First Triumvirate.","The First Triumvirate was an informal alliance among three prominent politicians in the late Roman Republic: Gaius Julius Caesar, Gnaeus Pompeius Magnus and Marcus  Crassus.",https://en.wikipedia.org/wiki/First_Triumvirate,,7,,,,,,,,,,,,,,,,1,,,,,,-60
 38,55 BC,Julius Caesar invades Britain.,,,,6,,,,,,,,,,,,,,,,1,,,,,,-55
 39,55 BC,Julius Ceasar attacks Great Britain.,,,,5,"[prehistory, Roman,]",,1,,,,,,,,,,,1,,1,,,,,,-55
 40,49 BC,"Caesar crosses the Rubicon, precipitating the Roman Civil War.",,,,4,,,,,,,,,,,,,,,,1,,,,1,,-49
-41,48 BC,Battle of Pharsalus (Ceaser vs Pompey),"The�Battle of Pharsalus�was the decisive battle of�Caesar's Civil War�fought on 9 August 48�BC near Pharsalus�in central Greece.Julius Caesar�and his allies formed up opposite the army of the�Roman Republic�under the command of�Pompey. Pompey had the backing of a majority of Roman senators and his army significantly outnumbered the veteran Caesarian legions, but Pompey lost, fled to Egypt and was murdered there.",https://en.wikipedia.org/wiki/Battle_of_Pharsalus,,5,,,,,,,,,,,,,,1,,1,,,,1,,-48
+41,48 BC,Battle of Pharsalus (Ceaser vs Pompey),"The"Battle of Pharsalus"was the decisive battle of Caesar's Civil War fought on 9 August 48 BC near Pharsalus in central Greece.Julius Caesar and his allies formed up opposite the army of the Roman Republic under the command of Pompey. Pompey had the backing of a majority of Roman senators and his army significantly outnumbered the veteran Caesarian legions, but Pompey lost, fled to Egypt and was murdered there.",https://en.wikipedia.org/wiki/Battle_of_Pharsalus,,5,,,,,,,,,,,,,,1,,1,,,,1,,-48
 42,44 BC,"On the Ides of March (March 15), Caesar is assassinated.",,,,6,,,,,,,,,,,,,,,,1,,,,,,-44
 43,43 BC,"The 2nd Triumvirate, that of Marc Antony, Octavian, and M Aemillius Lepidus, is established.",,,,9,,,,,,,,,,,,,,,,1,,,,,,-43
 44,27 BC,Founding of the Roman Empire: this is the start of the classic period of Roman domination in Europe and the Mediterranean,,,,6,"[prehistory, Roman,]",,1,,,,,,,,,,,1,,1,,,,,,-27
 45,c.5 BC,"Birth of Jesus Christ, founder of the many branches of Christianity. The exact date is disputed",,,,3,,,,,,,,,,,,,,,1,,,,,,,-5
 46,29,Crucifixion of Jesus Christ.,,,,3,,,,,,,,,,,,,,,1,1,,,,,,29
-47,33,Judean philosopher Jesus (3 BCE33 CE) is executed by Rome and his followers continue.,"According to the canonical gospels, Jesus was arrested and tried by the Sanhedrin, and then by Pontius Pilate, who sentenced him to be scourged, and finally crucified by the Romans",https://en.wikipedia.org/wiki/Crucifixion_of_Jesus,"Believed to be April 3, 33. Friday a day of lunar eclipse.",3,,,,,,,,,,,,,,,1,1,,,,,1,33
+47,33,Judean philosopher Jesus is executed by Rome and his followers continue.,"According to the canonical gospels, Jesus was arrested and tried by the Sanhedrin, and then by Pontius Pilate, who sentenced him to be scourged, and finally crucified by the Romans",https://en.wikipedia.org/wiki/Crucifixion_of_Jesus,"Believed to be April 3, 33. Friday a day of lunar eclipse.",3,,,,,,,,,,,,,,,1,1,,,,,1,33
 48,64,Rome burns while Nero (supposedly) fiddles.,"The popular legend that Nero played the fiddle while Rome burned ""is at least partly a literary construct of Flavian propaganda. Nero was egotistical, unpopular and built a temple to himself on the site of the fire, leading to this assertion about him ""fiddling.""",https://en.wikipedia.org/wiki/Nero#Great_Fire_of_Rome,Fire started in 64. Nero was done by 68,6,,,1,,,,,,,,,,,,,1,,,,,,64
 49,79,Mount Vesuvius erupts burying the Roman cities of Pompeii and Herculaneum.,"In the autumn of 79 AD, Mount Vesuvius violently spewed forth a deadly cloud of super-heated gases to a height of 33 km (21 mi), ejecting molten rock, pulverized pumice and hot ash, ultimately releasing 100,000 times the thermal energy of the Hiroshima bomb.",https://en.wikipedia.org/wiki/Eruption_of_Mount_Vesuvius_in_79_AD,"Emperor Titus started his rule in 79, and a coin found in Pompeii was from that time. ",3,,,1,,,,,,,,,,,,,1,,,,,1,79
 50,105,"First use of modern paper: this replaced stone, slate, papyrus and vellum as a cheap and convenient medium",,,,8,,,,,,,,,,,,,,,,,,,,,,105

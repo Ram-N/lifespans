@@ -8,11 +8,25 @@
 }
 
 .main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px;
   background-color: black;
   color: white;
   font-size: 1.5em;
   margin: 10px 0;
+}
+
+
+.stdBtn {
+  /* margin: 20px; */
+  /* width: 20%; */
+  /* margin: auto; */
+  font-size: 1em;
+  border-radius: 8px;
+  margin-left: auto;
+  cursor: pointer;
 }
 
 
@@ -57,4 +71,28 @@
 
 .closebtn:hover {
   color: black;
+}
+
+
+.info-box {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 16px 24px;
+  border-radius: 6px;
+  background-color: #fffaf2;
+  box-shadow: inset 4px 0 0 0 #ffdc99;
+}
+
+.info-box-title {
+  margin-left: 4px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #f09300;
+}
+
+.info-box-text {
+  margin: 10px;
 }

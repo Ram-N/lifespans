@@ -12,8 +12,12 @@
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
   padding: 5px;
   margin: auto;
-  margin-bottom: 5%;
+  /* margin-bottom: 5%; */
   color: aliceblue;
+}
+
+.card.black {
+  background-color: black;
 }
 
 .card.slate {
@@ -42,7 +46,16 @@
   transform: scale(1.1);
 }
 
-/* Add some padding inside the card container */
+.card-text-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-text {
+  text-align: center;
+  font-size: 2em;
+}
+
 .card-container {
   text-align: center;
 }

@@ -16,7 +16,7 @@ function pickNextQuestion(game) {
     btnSoln = document.getElementById("btnSoln");
 
 
-    if (game.qns == game.numQns) {
+    if (game.qNum == game.maxQns) {
         closeoutGame();
     }
 
@@ -79,8 +79,8 @@ function giveHint() {
 
 function getTallyRows() {
     return 1
-    // numRows = Math.floor(game.numQns / 5)
-    // if (game.numQns % 5) { numRows += 1 }
+    // numRows = Math.floor(game.maxQns / 5)
+    // if (game.maxQns % 5) { numRows += 1 }
     // return numRows
 }
 
@@ -100,7 +100,7 @@ function createTallyBoxes(game, _tid) {
     tcon = document.getElementById(_tid);
     numTallyRows = getTallyRows();
     tallyboxes = [];
-    for (let box = 0; box < game.numQns; box++) {
+    for (let box = 0; box < game.maxQns; box++) {
         tallyboxes.push(maker('div', tcon, 'tallyBox', ''))
     }
     return tallyboxes;
@@ -134,7 +134,7 @@ function formatLine(_str) {
 
 function getProgress() {
     let w;
-    w = game.qns / game.numQns * 100
+    w = game.qNum / game.maxQns * 100
     if (w > 100) { w = 100 }
 
     return w;
@@ -166,8 +166,8 @@ function displaySolution(rep) {
         btnNext.style.backgroundColor = BtnActiveColor;
         btnNext.style.color = 'white';
 
-        colorTallyBox(game.qns, itemScore)
-        game.qns += 1;
+        colorTallyBox(game.qNum, itemScore)
+        game.qNum += 1;
 
 
         const scoreBox = document.getElementById("scoreDiv");
@@ -181,7 +181,7 @@ function colorTallyBox(idx, itemScore) {
         tallyboxes[idx].style.background = itemColors[itemScore];
         //throw 'tallyBoxException'; // generates an exception
     } catch (e) {
-        console.log(e, game.qns, game.numQns, tallyboxes)
+        console.log(e, game.qNum, game.maxQns, tallyboxes)
     }
 
 }

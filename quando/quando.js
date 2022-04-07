@@ -9,8 +9,9 @@ BtnActiveColor = "#1c3494"
 BtnOffColor = "#e6f3f8";
 
 const game = {
-    score: 0, qns: 0, penalty: [0, 2, 5, 10],
-    numQns: 5, //[1,2,5,6,10]
+    score: 0,
+    qNum: 0, penalty: [0, 2, 5, 10],
+    maxQns: 5, //Default, though this comes from the options modal
     maxscore: 100,
     averageDifficulty: 5,
     chosenQuestionDifficulty: "A",

@@ -31,8 +31,8 @@ function initSidebar() {
     let promptText = "<br>" + "Number of questions per set: "
     let selectID = "selectNumQ";
     let promptFor = "numQ"
-    selIndex = numQValues.indexOf(game.numQns);
-    console.log(game.numQns, "while creating DD index is", selIndex,)
+    selIndex = numQValues.indexOf(game.maxQns);
+    console.log(game.maxQns, "while creating DD index is", selIndex,)
     addDropdown(numQValues, selIndex, selectID, promptText, promptFor, modalcontent);
 
     promptText = "<br>" + "Time Period: "
@@ -157,7 +157,7 @@ function initSidebar() {
     ddNumQ = document.getElementById('selectNumQ')
     ddNumQ.onchange = function () {
         console.log(this.value, 'numQ');
-        game.numQns = parseInt(this.options[this.selectedIndex].text)
+        game.maxQns = parseInt(this.options[this.selectedIndex].text)
         updateSelText();
     }
 
@@ -180,19 +180,19 @@ function initSidebar() {
         if (statusOkay) {
             slidebackSidebar(sidebar);
             console.log(ddNumQ.selectedIndex, 'Num Qs selected')
-            console.log(game.numQns)
+            console.log(game.maxQns)
         }
     })
 
-    defaultOptions = { numQns: 5, category: 0, timePeriod: 0 }
+    defaultOptions = { maxQns: 5, category: 0, timePeriod: 0 }
     resetBtn.addEventListener("click", function () {
-        game.numQns = defaultOptions.numQns;
+        game.maxQns = defaultOptions.maxQns;
         game.category = "All";
         game.timePeriod = "All";
 
         game.chosenQuestionDifficulty = "A";
         game.chosenAltsDifficulty = "M";
-        ddNumQ.selectedIndex = numQValues.indexOf(game.numQns);
+        ddNumQ.selectedIndex = numQValues.indexOf(game.maxQns);
         ddTP.selectedIndex = defaultOptions.timePeriod;
         ddSpecial.disabled = true;
         ddCat.selectedIndex = defaultOptions.category;
@@ -230,7 +230,7 @@ function selectionText() {
     ddict = { "E": "Easy", "M": "Medium", "H": "Hard", "A": "All" }
     let qd = ddict[game.chosenQuestionDifficulty];
     let ad = ddict[game.chosenAltsDifficulty];
-    selText = `<br>For this round: ${game.numQns} questions 
+    selText = `<br>For this round: ${game.maxQns} questions 
     <br> Category: ${game.category}
     <br> Time period: ${game.timePeriod}
      <br> Question Difficulty: ${qd} <br> Choices: ${ad} `
@@ -361,7 +361,7 @@ function setGameQDiffLevel(letter) {
 
 
 function scoreString() {
-    let _str = `Score: ${game.score} out of ${game.qns * 10} \t\t(${game.qns} of ${game.numQns} Questions)`
+    let _str = `Score: ${game.score} out of ${game.qNum * 10} \t\t(${game.qNum} of ${game.maxQns} Questions)`
     return _str
 }
 
@@ -515,7 +515,7 @@ function getResultsText() {
 
     _astr = "<br>"
     //    _astr += selectionText() + '<br>'
-    _astr += `You scored ${game.score} out of ${game.numQns * 10}!`
+    _astr += `You scored ${game.score} out of ${game.maxQns * 10}!`
     _astr += `<br> Average difficulty ${game.averageDifficulty}`
     return _astr
 }
@@ -541,7 +541,7 @@ function closeoutGame() {
     tcon = document.getElementById('resTBRow');
     tcon.replaceChildren();
     tallyboxes = createTallyBoxes(game, "resTBRow");
-
+    //Show tallyBoxes in ResultsModal
     game.results.forEach((e, idx) => {
         colorTallyBox(idx, e)
     });
@@ -582,8 +582,8 @@ function startNewGame(game) {
 
     //Reset Game attributes
     game.score = 0
-    game.qns = 0
-    game.numQns = parseInt(ddNumQ.options[ddNumQ.selectedIndex].text)
+    game.qNum = 0
+    game.maxQns = parseInt(ddNumQ.options[ddNumQ.selectedIndex].text)
     gameQuestions = eList;
     game.results = [];
 
@@ -591,9 +591,9 @@ function startNewGame(game) {
     tcon.replaceChildren(); //get rid of the old tallyBoxes, children of tallyBoard
     tallyboxes = createTallyBoxes(game, 'tallyBoard');
 
-    console.log('numQns', game.numQns)
+    console.log('maxQns', game.maxQns)
     //clear out the tallyboxes
-    for (tb = 0; tb < game.numQns; tb++) {
+    for (tb = 0; tb < game.maxQns; tb++) {
         tallyboxes[tb].style.background = "";
     }
 
@@ -614,7 +614,7 @@ function startNewGame(game) {
     console.log(gameQuestions.length, "numDB after QDiff")
 
     //verify that there are a sufficient number of questions
-    if (gameQuestions.length < game.numQns) {
+    if (gameQuestions.length < game.maxQns) {
         console.log('Error insuff questions')
         qAlertBox.innerHTML = "Options have made the scope of questions too narrow. \n Please broaden your filtering in the Side panel";
         qAlertBox.style.display = 'block'
