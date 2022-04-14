@@ -76,7 +76,7 @@ function giveHint() {
 }
 
 
-
+//Only needed when more than one tallyRow may be required
 function getTallyRows() {
     return 1
     // numRows = Math.floor(game.maxQns / 5)
@@ -85,8 +85,7 @@ function getTallyRows() {
 }
 
 //this function is called once, when creating "main"
-function createTallyBoxRow(parent, _tid) {
-    //var tcon = document.createElement('div');
+function createTallyBoxesContainer(parent, _tid) {
     var tcon = maker('div', parent, 'tallyRow', "")
     tcon.id = _tid;
     parent.append(tcon);
@@ -166,7 +165,8 @@ function displaySolution(rep) {
         btnNext.style.backgroundColor = BtnActiveColor;
         btnNext.style.color = 'white';
 
-        colorTallyBox(game.qNum, itemScore)
+        _tcolor = itemColors[itemScore];
+        colorTallyBox(game.qNum, _tcolor)
         game.qNum += 1;
 
 
@@ -176,9 +176,9 @@ function displaySolution(rep) {
     }
 }
 
-function colorTallyBox(idx, itemScore) {
+function colorTallyBox(idx, _tcolor) {
     try {
-        tallyboxes[idx].style.background = itemColors[itemScore];
+        tallyboxes[idx].style.background = _tcolor;
         //throw 'tallyBoxException'; // generates an exception
     } catch (e) {
         console.log(e, game.qNum, game.maxQns, tallyboxes)

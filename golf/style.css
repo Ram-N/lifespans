@@ -85,6 +85,7 @@ h1 {
     outline: none;
     color: blueviolet;
     background-color: #fff;
+    font-size: 1.2rem;
 }
 
 .autocomplete-input::placeholder {
@@ -98,6 +99,7 @@ h1 {
     width: 100%;
     background-color: #fff;
     max-height: 200px;
+    color: blueviolet;
 
 }
 

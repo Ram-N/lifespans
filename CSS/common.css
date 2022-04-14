@@ -1,3 +1,13 @@
+:root {
+  --color-ui-02: #efefef;
+  --color-text-01: #3A3A3A;
+  --color-text-inverse-01: #FFFFFF;
+  --color-success: #148010;
+  --color-warning: #F2B931;
+  --color-danger: #CC0100;
+}
+
+
 .output {
   width: 90%;
   /* margin: auto; */
@@ -95,4 +105,88 @@
 
 .info-box-text {
   margin: 10px;
+}
+
+/* PROGRESS BARS */
+
+
+.score-progress-container {
+  display: flex;
+  border-radius: 10px;
+  background-color: var(--color-ui-02, #efefef);
+  margin-bottom: 1rem;
+  height: 0.75rem;
+  width: 100%
+}
+
+.score-progress-bar {
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center; */
+  overflow: hidden;
+  color: var(--color-text-inverse-01, #ffffff);
+  text-align: center;
+  font-size: 0.625rem;
+  white-space: nowrap;
+  transition: width .6s ease;
+  /* border-radius: 10px; */
+  height: 0.75rem;
+
+}
+
+.score-sub-field-label {
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 100;
+  color: var(--color-text-01, #3A3A3A);
+  line-height: 16px;
+}
+
+.score-progress-container .score-sub-field-label {
+  margin-top: 2px;
+}
+
+.score-success {
+  background-color: var(--color-success, #148010);
+}
+
+.score-warning {
+  color: var(--color-warning, #148010);
+  background-color: var(--color-warning, #148010);
+
+}
+
+.score-danger {
+  background-color: var(--color-danger, #CC0100);
+}
+
+
+/* Tally Boxes */
+#tallyBoard {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tallyRow {
+  display: flex;
+  justify-content: center;
+  width: 130px;
+  margin: 0 auto 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.tallyBox {
+  display: flex;
+  border: 2px solid rgb(58, 58, 60);
+  font-family: inherit;
+  font-weight: bold;
+  padding: 0;
+  height: 20px;
+  width: 20px;
+  margin-right: 6px;
+  user-select: none;
 }

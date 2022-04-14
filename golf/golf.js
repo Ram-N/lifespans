@@ -48,6 +48,11 @@ document.addEventListener("DOMContentLoaded", () => {
     txt = maker('span', tickerTextContainer, "card-text", "");
     txt.id = "tickerRight"
 
+    _tid = "tallyBoard"
+    // createTallyBoxesContainer(tickerTextContainer, _tid); //qa_mechanics.js
+    createTallyBoxesContainer(scoreCard, _tid); //qa_mechanics.js
+
+
 
     crow = maker('div', output, 'card-row', "")
     cslate = maker('div', crow, 'card', "")
@@ -60,12 +65,40 @@ document.addEventListener("DOMContentLoaded", () => {
     //ddValues defined here
     Object.entries(gameQuestions).forEach(([key, val]) => ddValues.push(val.event));
 
-    scoreCard = maker('div', output, 'card', "")
-    scoreCard.id = "sCard"
-    scoreCard.classList.add("wide")
-    scoreCard.classList.add("slate")
-    qdiv = maker('div', output, 'main', "")
+    crow2 = maker('div', output, 'card-row', "")
+    crow2.style.minHeight = 100 + "px";
+    crow2.style.background = "slateblue";
+    let sCard = maker('div', crow2, 'card', "")
+    sCard.id = "sCard"
+    sCard.classList.add("wide")
+    sCard.classList.add("slate")
 
+    //PROGRESS BAR
+    var pdiv = document.createElement('div');
+    pdiv.classList.add("score-progress-container");
+    crow2.append(pdiv);
+
+    console.log(pdiv)
+    var barbase = document.createElement('div');
+    barbase.classList.add('score-progress-bar');
+    barbase.id = 'progressBase';
+    barbase.style.display = "flex";
+    pdiv.append(barbase)
+
+    var progress = document.createElement('div');
+    progress.classList.add('score-progress-bar');
+    progress.id = 'progress';
+    barbase.append(progress)
+
+    progress = document.createElement('div');
+    progress.classList.add('score-progress-bar');
+    progress.id = 'progress2';
+    barbase.append(progress)
+
+
+    //Style datalist using the following:
+    //https://dev.to/siddev/customise-datalist-45p0
+    qdiv = maker('div', output, 'main', "")
     const evInput = document.createElement("input");
     evInput.type = "text";
     evInput.classList.add("autocomplete-input");
@@ -79,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     evDataList.id = "event-list"
     optionsList = prepareEventStr(ddValues);
     evDataList.innerHTML = optionsList;
+    console.log(optionsList)
     qdiv.append(evDataList)
 
     subDiv = document.createElement('div');
@@ -95,10 +129,10 @@ document.addEventListener("DOMContentLoaded", () => {
     btnSubmit.addEventListener('click', (e) => {
         if (validEventEntered(evInput)) {
             console.log(`evList ${evInput.value}`)
-            scoreResponse(evInput.value, game)
+            scoreResponse(evInput.value, game);
+            btnSubmit.disabled = true;
+            btnNext.disabled = false;
         }
-        btnSubmit.disabled = true;
-        btnNext.disabled = false;
     })
 
     btnNext.addEventListener('click', (e) => {
@@ -136,15 +170,42 @@ function scoreResponse(response, game) {
     qScore = Math.abs(actual - res);
     game.score += qScore;
 
-    scard = document.getElementById('sCard')
-    scard.innerHTML = `${actual} ${res} Score:${res - actual}`
+    sCard = document.getElementById('sCard')
+    sPCon = document.getElementById('progressBase')
+    sPBar = document.getElementById('progress')
+    sPBar2 = document.getElementById('progress2');
+
+    let dirNeg = (actual > res) ? true : false;
+    pbLen = Math.round(qScore / 2000 * 50);
+    console.log('pblen', pbLen, actual, res, 'dirNeg', dirNeg)
+
+    sCard.innerHTML = `${actual} ${res} Score:${res - actual}`
+
+    sPCon.style.width = "100%";
+
+    if (dirNeg) {
+        sPBar.style.width = `${50 - pbLen}%`;
+    } else {
+        sPBar.style.width = `50%`;
+    }
+
+    sPBar2.style.width = `${pbLen}% `;
+    sPBar2.classList.add('score-success');
+    console.log("spBar created")
+
+
     console.log(actual, res)
     updateTicker();
+
+    _tcolor = "red"
+    if (qScore < 250) { _tcolor = "orange" }
+    if (qScore < 100) { _tcolor = "green" }
+    colorTallyBox(game.qNum - 1, _tcolor)
 }
 
 function getResponseYear(response, gameQuestions) {
     idx = ddValues.indexOf(response);
-    console.log(`idx ${idx}`)
+    console.log(`idx ${idx} `)
     return gameQuestions[idx].YearNum
 }
 
@@ -153,7 +214,7 @@ function prepareEventStr(ddValues) {
     let _str = "";
     if (ddValues) {
         ddValues.forEach((item) => {
-            _str += `<option> ${item}</option>`
+            _str += `<option>${item}</option> `
         });
     }
     return _str
@@ -293,5 +354,12 @@ function startNewGame(game) {
     game.qNum = 0;
     game.score = 0;
     clearTicker();
+
+    //clear TallyBoxes
+    tcon = document.getElementById('tallyBoard');
+    tcon.replaceChildren(); //get rid of the old tallyBoxes, children of tallyBoard
+    tallyboxes = createTallyBoxes(game, 'tallyBoard');
+
+
     nextQuestion(game);
 }

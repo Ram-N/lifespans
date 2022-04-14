@@ -80,7 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
     btnHint.id = 'btnHint';
     btnSoln.id = 'btnSoln';
 
-    createTallyBoxRow(output, 'tallyBoard');
+    _tid = "tallyBoard"
+    createTallyBoxesContainer(output, _tid); //qa_mechanics.js
 
     //PROGRESS BAR
     var pdiv = maker('div', output, 'padDiv', '');
