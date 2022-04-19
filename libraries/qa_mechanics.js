@@ -71,6 +71,7 @@ function giveHint() {
                 done = true;
             }
         }
+        const scoreBox = document.getElementById("scoreDiv");
         message(scoreBox, scoreString(), 'black');
     }
 }

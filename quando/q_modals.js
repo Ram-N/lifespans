@@ -489,7 +489,7 @@ function initResultsModal() {
     resChoiceText.id = 'res-choices';
 
     //placeholder for res tally boxes
-    createTallyBoxRow(resChoiceBox, "resTBRow");
+    createTallyBoxesContainer(resChoiceBox, "resTBRow");
 
     resText = maker('span', resChoiceBox, 'info-box-text', "");
     resText.id = 'res-text';
@@ -543,7 +543,8 @@ function closeoutGame() {
     tallyboxes = createTallyBoxes(game, "resTBRow");
     //Show tallyBoxes in ResultsModal
     game.results.forEach((e, idx) => {
-        colorTallyBox(idx, e)
+        _tcolor = itemColors[e];
+        colorTallyBox(idx, _tcolor)
     });
 
     console.log(game.results, "results")
@@ -566,6 +567,8 @@ function closeoutGame() {
         output.remove();
         hehead = document.getElementById("h2-game-category");
         hehead.innerHTML = 'Thank you for playing Quando!'
+        location.href = '../index.html'
+
     });
 
     tcon = document.getElementById('tallyBoard');
