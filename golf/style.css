@@ -78,14 +78,20 @@ h1 {
 
 
 .autocomplete-input {
+    position: absolute;
     padding: 25px 15px;
     border-radius: 1px;
     width: 90%;
-    border: none;
-    outline: none;
+    border: 1px solid blue;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    /* outline: none; */
     color: blueviolet;
     background-color: #fff;
+    font-family: sans-serif;
     font-size: 1.2rem;
+
+
 }
 
 .autocomplete-input::placeholder {
@@ -93,18 +99,37 @@ h1 {
 }
 
 .autocomplete-list {
+    position: absolute;
     list-style-type: none;
     margin: 0;
-    padding: 0;
-    width: 100%;
+    width: 90%;
     background-color: #fff;
     max-height: 200px;
     color: blueviolet;
-
+    padding: 4px;
+    margin-bottom: 1px;
+    font-size: 1.2rem;
+    cursor: pointer;
 }
 
 .autocomplete-list li {
     cursor: pointer;
     color: blueviolet;
     width: 100%;
+}
+
+option {
+    background-color: lavender;
+    padding: 4px;
+    color: blue;
+    margin-bottom: 1px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 80%;
+}
+
+/* highlight when hovering over the option */
+option:hover,
+.active {
+    background-color: lightblue;
 }

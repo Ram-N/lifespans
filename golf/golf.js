@@ -12,11 +12,13 @@
 //show the score
 
 const game = {
-    maxQns: 2, //Default, though this comes from the options modal
+    maxQns: 10, //Default, though this comes from the options modal
     score: 0,
     qList: [],
     qNum: 0,
 }
+
+const MAX_ALLOWED_SCORE = 2000;
 
 successGreen = "#28a745";
 warningOrange = "#ffc107";
@@ -33,11 +35,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const output = document.querySelector('.output');
     output.id = "output";
 
-    //TICKER
+
+
+    //TOP CARD
     scoreCard = maker('div', output, 'card', "")
     scoreCard.id = "overallScore"
     scoreCard.classList.add("wide");
     scoreCard.classList.add("black");
+
+    //Hangman Progressbar
+    var hangbase = document.createElement('div');
+    hangbase.classList.add('score-progress-bar');
+    hangbase.id = 'baseHang';
+    hangbase.style.display = "flex";
+    scoreCard.append(hangbase)
+
+    //this needs to be updated with each guess...
+    progress = document.createElement('div');
+    progress.classList.add('score-progress-bar');
+    progress.id = 'hangBar';
+    hangbase.append(progress)
+
 
     tickerTextContainer = maker('div', scoreCard, 'card-text-row', "")
 
@@ -104,7 +122,9 @@ document.addEventListener("DOMContentLoaded", () => {
     evInput.classList.add("autocomplete-input");
     evInput.placeholder = "Select Closest Event"
     evInput.id = "event-input"
-    evInput.setAttribute("list", "event-list") //the list attrib should match the datalist id
+    evInput.setAttribute("list", "") //this is intentional, so that we can style the autocomplete
+    evInput.setAttribute("autocomplete", "off") //https://dev.to/siddev/customise-datalist-45p0
+
     qdiv.append(evInput);
 
     const evDataList = document.createElement("datalist")
@@ -112,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
     evDataList.id = "event-list"
     optionsList = prepareEventStr(ddValues);
     evDataList.innerHTML = optionsList;
-    console.log(optionsList)
+    //console.log(optionsList)
     qdiv.append(evDataList)
 
     subDiv = document.createElement('div');
@@ -136,8 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     btnNext.addEventListener('click', (e) => {
-        nextQuestion(game);
         evInput.value = ""; //clear it
+        nextQuestion(game);
         btnSubmit.disabled = false;
         btnNext.disabled = true;
     })
@@ -146,9 +166,36 @@ document.addEventListener("DOMContentLoaded", () => {
         evInput.style.backgroundColor = ''; //reset background color
     });
 
+    evInput.onfocus = function () {
+        evDataList.style.display = 'block';
+        console.log('block evdisplay')
+        evInput.style.borderRadius = "5px 5px 0 0";
+    };
+    for (let option of evDataList.options) {
+        option.onclick = function () {
+            evInput.value = option.value;
+            evDataList.style.display = 'none';
+            evInput.style.borderRadius = "5px";
+        }
+    };
+
+    //Implement the autofilter option
+    evInput.oninput = function () {
+        var text = evInput.value.toUpperCase();
+        for (let option of evDataList.options) {
+            if (option.value.toUpperCase().indexOf(text) > -1) {
+                option.style.display = "block"; //keep it
+            } else {
+                option.style.display = "none"; //discard it
+            }
+        };
+    }
+
     initResultsModal();
     startNewGame(game);
 });
+
+
 
 
 function validEventEntered(inputField) {
@@ -174,6 +221,8 @@ function scoreResponse(response, game) {
     sPCon = document.getElementById('progressBase')
     sPBar = document.getElementById('progress')
     sPBar2 = document.getElementById('progress2');
+    hangBar = document.getElementById('hangBar');
+
 
     let dirNeg = (actual > res) ? true : false;
     pbLen = Math.round(qScore / 2000 * 50);
@@ -191,10 +240,16 @@ function scoreResponse(response, game) {
 
     sPBar2.style.width = `${pbLen}% `;
     sPBar2.classList.add('score-success');
-    console.log("spBar created")
 
 
-    console.log(actual, res)
+    _hcolor = "red"
+    hangLen = Math.round(game.score / 2000 * 99)
+    if (hangLen < 75) { _hcolor = "orange" }
+    if (hangLen < 50) { _hcolor = "green" }
+    hangBar.style.width = `${1 + hangLen}%`
+    hangBar.style.background = _hcolor;
+
+    console.log(actual, res, 'hanglen', hangLen)
     updateTicker();
 
     _tcolor = "red"
@@ -232,6 +287,19 @@ function clearCard(_id) {
     scard = document.getElementById(_id)
     scard.innerHTML = ""
 }
+
+function clearInput(_id) {
+    inp = document.getElementById(_id)
+    inp.value = ""
+}
+
+function resetDatalist() {
+    evDataList = document.getElementById("event-list");
+    for (let option of evDataList.options) {
+        option.style.display = "block";
+    }
+}
+
 
 function updateTicker() {
     //Needs 3 elements: Avg, Score and Num Questions
@@ -332,8 +400,6 @@ function closeoutGame() {
         location.href = '../index.html'
     });
 
-    // tcon = document.getElementById('tallyBoard');
-    // tcon.replaceChildren(); //get rid of the tallyBoxes, children of tallyBoard
 }
 
 
@@ -341,6 +407,13 @@ function closeoutGame() {
 function nextQuestion(game) {
     game.qNum += 1;
     clearCard('sCard');
+    clearInput("event-input");
+    resetDatalist();
+
+    if (game.score > MAX_ALLOWED_SCORE) {
+        closeoutGame();
+    }
+
 
     if (game.qNum > game.maxQns) {
         closeoutGame();
@@ -354,6 +427,7 @@ function startNewGame(game) {
     game.qNum = 0;
     game.score = 0;
     clearTicker();
+    resetDatalist();
 
     //clear TallyBoxes
     tcon = document.getElementById('tallyBoard');
