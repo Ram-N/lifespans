@@ -78,7 +78,7 @@ h1 {
 
 
 .autocomplete-input {
-    position: absolute;
+    /* position: absolute; */
     padding: 25px 15px;
     border-radius: 1px;
     width: 90%;
@@ -99,14 +99,16 @@ h1 {
 }
 
 .autocomplete-list {
-    position: absolute;
+    /* position: absolute; */
+    overflow-y: scroll;
     list-style-type: none;
     margin: 0;
     width: 90%;
     background-color: #fff;
+    min-height: 10vh;
     max-height: 200px;
     color: blueviolet;
-    padding: 4px;
+    padding: 15px 15px 1px 15px;
     margin-bottom: 1px;
     font-size: 1.2rem;
     cursor: pointer;
@@ -125,7 +127,6 @@ option {
     margin-bottom: 1px;
     font-size: 1.2rem;
     cursor: pointer;
-    width: 80%;
 }
 
 /* highlight when hovering over the option */

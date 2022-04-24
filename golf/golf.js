@@ -116,16 +116,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //Style datalist using the following:
     //https://dev.to/siddev/customise-datalist-45p0
-    qdiv = maker('div', output, 'main', "")
+    listDiv = maker('div', output, 'card', "");
+    inpDiv = maker('div', output, 'card', "");
+    listDiv.classList.add("black", "wide");
+    inpDiv.classList.add("black", "wide");
+
+
+    listDiv.style.minHeight = "20vh";
+    listDiv.style.paddingBottom = "0px";
+
     const evInput = document.createElement("input");
     evInput.type = "text";
     evInput.classList.add("autocomplete-input");
-    evInput.placeholder = "Select Closest Event"
+    evInput.placeholder = "Start typing to Search, Filter and Select Closest Event from the list above"
     evInput.id = "event-input"
     evInput.setAttribute("list", "") //this is intentional, so that we can style the autocomplete
     evInput.setAttribute("autocomplete", "off") //https://dev.to/siddev/customise-datalist-45p0
 
-    qdiv.append(evInput);
 
     const evDataList = document.createElement("datalist")
     evDataList.classList.add("autocomplete-list")
@@ -133,7 +140,10 @@ document.addEventListener("DOMContentLoaded", () => {
     optionsList = prepareEventStr(ddValues);
     evDataList.innerHTML = optionsList;
     //console.log(optionsList)
-    qdiv.append(evDataList)
+
+    //placement
+    listDiv.append(evDataList)
+    inpDiv.append(evInput);
 
     subDiv = document.createElement('div');
     output.append(subDiv);
@@ -309,7 +319,7 @@ function updateTicker() {
 
     tickerCenter.innerHTML = game.score;
     tickerRight.innerText = game.qNum + " / " + game.maxQns;
-    tickerLeft.innerText = "Par: " + (game.score / game.qNum)
+    tickerLeft.innerText = "Avg Miss: " + Math.round(game.score / game.qNum) + " years"
 }
 
 function clearTicker() {
@@ -433,7 +443,6 @@ function startNewGame(game) {
     tcon = document.getElementById('tallyBoard');
     tcon.replaceChildren(); //get rid of the old tallyBoxes, children of tallyBoard
     tallyboxes = createTallyBoxes(game, 'tallyBoard');
-
 
     nextQuestion(game);
 }
