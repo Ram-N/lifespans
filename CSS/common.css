@@ -180,13 +180,13 @@
 }
 
 .tallyBox {
-  display: flex;
-  border: 2px solid rgb(58, 58, 60);
+  /* display: flex; */
+  border: rgb(58, 58, 60);
   font-family: inherit;
   font-weight: bold;
   padding: 0;
-  height: 20px;
+  padding-bottom: 20px;
   width: 20px;
-  margin-right: 6px;
+  margin-right: 1px;
   user-select: none;
 }

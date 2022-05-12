@@ -5,6 +5,17 @@
   margin: 3%;
 }
 
+
+.card-box {
+  margin: 20px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+  background-color: #fff;
+  grid-row: auto;
+}
+
 .card {
   /* Add shadows to create the "card" effect */
   transition: 0.3s;
@@ -14,6 +25,11 @@
   margin: auto;
   /* margin-bottom: 5%; */
   color: aliceblue;
+}
+
+.card.center {
+  align-items: center;
+  justify-content: center;
 }
 
 .card.black {
