@@ -8,6 +8,21 @@
 }
 
 
+header {
+  text-align: center;
+  font-size: 24px;
+  padding: 20px;
+  background-color: beige;
+  color: black;
+  transition: 0.5s ease 0.5s;
+  /* max-width: 1080px;
+  margin: auto; */
+  border-bottom: 1px solid rgb(58, 58, 60);
+  display: flex;
+  justify-content: space-between;
+}
+
+
 .output {
   width: 90%;
   /* margin: auto; */
@@ -189,4 +204,22 @@
   width: 20px;
   margin-right: 1px;
   user-select: none;
+}
+
+#bannercontainer {
+  display: flex;
+  background-color: black;
+  height: 100%;
+  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  margin: auto;
+}
+
+#game-head {
+  width: 100%;
+  /* max-width: 500px; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }

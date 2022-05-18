@@ -14,17 +14,17 @@
   grid-row-gap: 16px;
   background-color: #fff;
   grid-row: auto;
+  align-content: center;
 }
 
 .card {
-  /* Add shadows to create the "card" effect */
   transition: 0.3s;
   border-radius: 7px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
   padding: 5px;
   margin: auto;
-  /* margin-bottom: 5%; */
   color: aliceblue;
+
 }
 
 .card.center {

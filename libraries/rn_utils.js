@@ -60,10 +60,10 @@ function addTextBox(parent, elClass, _id = null) {
 
 
 //https://github.com/lsvekis/JavaScript-Code/tree/main/JavaScript%20Projects
-function maker(eleType, elParent, eleClass, html) {
+function maker(eleType, elParent, eleClass, _text) {
     const ele = document.createElement(eleType);
     ele.classList.add(eleClass);
-    ele.innerHTML = html;
+    ele.innerHTML = _text;
     elParent.append(ele);
     return ele;
 }

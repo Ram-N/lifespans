@@ -1,0 +1,166 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #3C5377;
+}
+
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0.4rem 0 0.4rem 0;
+  /* text-align: center; */
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.content h1 span.fa {
+  top: 0;
+}
+
+.fa-icon {
+  align-self: center;
+  cursor: pointer;
+}
+
+h1 {
+  color: white;
+  text-align: center;
+  font-size: 2em;
+  line-height: 0.5em;
+  margin: 40px
+}
+
+/* THE MAINCONTAINER HOLDS EVERYTHING */
+.maincontainer {
+  position: absolute;
+  width: 550px;
+  height: 320px;
+  background: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
+
+/* THE CARD HOLDS THE FRONT AND BACK FACES */
+#reviewcard {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: blue;
+  border-radius: 10px;
+  transform-style: preserve-3d;
+  transition: all 0.8s ease;
+}
+
+/* THIS USED TO BE THE PSUEDO CLASS CONTROLS THAT FLIP ON MOUSEOVER AND MOUSEOUT IN CSS */
+/* BUT NOW THIS CLASS IS BEING CALLED IN JAVASCRIPT WHEN THE CARD IS CLICKED */
+.flipper {
+  transform: rotateY(180deg);
+}
+
+/* THE FRONT FACE OF THE CARD, WHICH SHOWS BY DEFAULT */
+.review-front {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  overflow: hidden;
+  background: #ffc728;
+  color: #000;
+
+  font-family: 'zilla slab', sans-serif;
+  /* padding: 30px; */
+  font-weight: bold;
+  font-size: 30px;
+  text-align: center;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+}
+
+/* THE BACK FACE OF THE CARD, WHICH SHOWS ON MOUSEOVER */
+.review-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  overflow: hidden;
+  background: #fafafa;
+  color: #333;
+
+  font-family: 'zilla slab', sans-serif;
+  /* padding: 30px; */
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+  transform: rotateY(180deg);
+}
+
+
+/*This block (starts here) is merely styling for the flip card, and is NOT an essential part of the flip code */
+.review-front h1,
+.review-back h1 {
+  font-family: 'zilla slab', sans-serif;
+  /* padding: 30px; */
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+}
+
+.review-front p,
+.review-back p {
+  font-family: 'zilla slab', sans-serif;
+  /* padding: 30px; */
+  font-weight: normal;
+  font-size: 12px;
+  text-align: center;
+}
+
+.cardbuttoncontainer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 20%;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fafa00;
+  color: #333;
+
+}
+
+.navbtn {
+  width: 25%;
+  margin: auto;
+  font-size: 1.3em;
+  border-radius: 8px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.longbtn {
+  width: 80%;
+  margin: auto;
+  display: block;
+  font-size: 1.3em;
+  border-radius: 12px;
+}
