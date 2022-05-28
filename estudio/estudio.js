@@ -55,15 +55,18 @@ function myFlipFunction() {
 document.addEventListener("DOMContentLoaded", () => {
 
     //PAGE APPEARANCE
-    const output = document.querySelector('.output');
+    const output = document.querySelector('.mainstudio');
 
 
     const main = maker('div', output, 'maincontainer', '');
     const card = maker('div', main, 'reviewcard', '');
     const cfront = maker('div', card, 'review-front', 'front');
-    const cback = maker('div', card, 'review-back', 'back');
+
+    const cback = maker('div', card, 'review-back', '');
+    const cbackH1 = maker('h1', cback, 'review-back.h1', '');
+
     cfront.id = "rfront";
-    cback.id = "rback";
+    cbackH1.id = "rback";
     output.id = "output";
     card.id = 'reviewcard'
     cfront.innerHTML = 'Test this please'
@@ -78,9 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnWiki = maker('button', navdiv2, 'navbtn', 'Wikipedia');
     const btnDetails = maker('button', navdiv2, 'navbtn', 'Details');
     btnDetails.id = 'btnDetails';
+    btnWiki.id = 'btnWiki';
 
     var divDetails = maker('div', output, 'textDiv', '');
     divDetails.id = "divDetails"
+    divDetails.style.display = 'none';
+
 
     const btnNext = maker('button', cardcontainer, 'longbtn', 'Next');
     btnNext.id = 'btnNext';
@@ -133,29 +139,24 @@ document.addEventListener("DOMContentLoaded", () => {
     //SHOW DETAILS
     btnDetails.onmouseenter = function () {
         console.log(divDetails.innerHTML);
-        divDetails.classList.add("slide-up")
+        divDetails.classList.remove("slide-left")
+        divDetails.classList.add("slide-right")
         divDetails.style.display = "block";
     };
 
     btnDetails.onmouseleave = function () {
         console.log('details off');
-
+        divDetails.classList.remove("slide-right")
+        divDetails.classList.add("slide-left")
         divDetails.style.display = 'none';
     };
 
-    // // When the user clicks on the button, open the modal
-    // btnDetails.addEventListener("click", function () {
-    // });
+    btnWiki.addEventListener("click", function () {
+        let url = gameQuestions[game.index].wikipedia;
+        window.open(url, "_blank");
+        console.log("url to wiki")
+    });
 
-    // span.addEventListener("click", function () { //(x) close the modal
-    //     slideback(divDetails);
-    // });
-
-    // window.addEventListener("click", function (event) { //close the modal
-    //     if (event.target == sidebar) {
-    //         slideback(divDetails);
-    //     }
-    // });
 
     startNewGame(game);
 
@@ -174,7 +175,8 @@ function displayNextReviewCard(game) {
     var cfront = document.getElementById("rfront");
     var cback = document.getElementById("rback");
     var divDetails = document.getElementById("divDetails");
-
+    var btnWiki = document.getElementById("btnWiki");
+    var btnDetails = document.getElementById("btnDetails");
 
     game.index = pickNextEventIndex();
     console.log(game.index);
@@ -182,11 +184,16 @@ function displayNextReviewCard(game) {
     let _qstr = formatLine(gameQuestions[game.index].event);
     let _qdate = gameQuestions[game.index].stem;
     let _qdetails = gameQuestions[game.index].details;
+    let _qwiki = gameQuestions[game.index].wikipedia;
 
     btnDetails.disabled = false;
+    btnWiki.disabled = false;
 
     if (!_qdetails) {
         btnDetails.disabled = true;
+    }
+    if (!_qwiki) {
+        btnWiki.disabled = true;
     }
 
     // console.log(_qstr)

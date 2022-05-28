@@ -9,9 +9,12 @@ body {
   /*   color variables */
   --clr-primary: #6aeeb5;
   --clr-primary-hover: #29e6a7;
-  --clr-primary-dark: #0a4542;
+  --clr-primary-dark: #3C5377;
   --clr-gray100: #f0f7f8;
   --clr-gray200: #cfd8dc;
+
+  --start_per: 20%;
+  --end-per: 10%;
 
   /*   border radius */
   --radius: 0.2rem;
@@ -45,6 +48,13 @@ h1 {
   margin: 40px
 }
 
+
+.mainstudio {
+  text-align: center;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+
+
 /* THE MAINCONTAINER HOLDS EVERYTHING */
 .maincontainer {
   position: absolute;
@@ -64,14 +74,12 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: blue;
+  background: var(--clr-gray100);
   border-radius: 10px;
   transform-style: preserve-3d;
   transition: all 0.8s ease;
 }
 
-/* THIS USED TO BE THE PSUEDO CLASS CONTROLS THAT FLIP ON MOUSEOVER AND MOUSEOUT IN CSS */
-/* BUT NOW THIS CLASS IS BEING CALLED IN JAVASCRIPT WHEN THE CARD IS CLICKED */
 .flipper {
   transform: rotateY(180deg);
 }
@@ -116,7 +124,6 @@ h1 {
   color: #333;
 
   font-family: 'zilla slab', sans-serif;
-  /* padding: 30px; */
   font-weight: bold;
   font-size: 24px;
   text-align: center;
@@ -124,21 +131,27 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-
-
   transform: rotateY(180deg);
 }
 
 
-/*This block (starts here) is merely styling for the flip card, and is NOT an essential part of the flip code */
-.review-front h1,
-.review-back h1 {
+.review-front h1 {
   font-family: 'zilla slab', sans-serif;
   /* padding: 30px; */
   font-weight: bold;
   font-size: 24px;
   text-align: center;
 }
+
+.review-back h1 {
+  font-family: 'zilla slab', sans-serif;
+  /* padding: 30px; */
+  font-weight: bold;
+  font-size: 4em;
+  text-align: center;
+  color: #303;
+}
+
 
 .review-front p,
 .review-back p {
@@ -156,17 +169,16 @@ h1 {
   height: 20%;
   border-radius: 10px;
   overflow: hidden;
-  background: #fafa00;
+  /* background: #fafa00; */
   color: #333;
 
 }
 
 .navbtn {
-  width: 25%;
+  width: 33%;
   margin: auto;
   font-size: 1.3em;
   border-radius: 8px;
-  margin-left: 10px;
   cursor: pointer;
 }
 
@@ -186,20 +198,20 @@ h1 {
 .textDiv {
 
   position: fixed;
-  bottom: 45%;
-  right: 0;
-  z-index: 10;
+  right: var(--end-per);
+  bottom: 50%;
+  z-index: -1;
   background-color: gainsboro;
   color: rgb(18, 18, 19);
   /* margin: 5% auto; */
   padding: 10px;
-  width: 80%;
+  width: 20%;
   max-width: 500px;
   font-size: 1.3em;
 }
 
 
-#btnDetails {
+#btn2Details {
   color: #fc7478;
   font-weight: bold;
   text-decoration: underline;
@@ -221,6 +233,38 @@ h1 {
   bottom: calc(100% + 2px);
   opacity: 1;
 } */
+
+
+.slide-right {
+  animation-duration: 1s;
+  animation-name: slideright;
+}
+
+@keyframes slideright {
+  from {
+    right: var(--start_per)
+  }
+
+  to {
+    right: var(--end-per)
+  }
+}
+
+
+.slide-left {
+  animation-duration: 1s;
+  animation-name: slideleft;
+}
+
+@keyframes slideleft {
+  from {
+    right: var(--end_per)
+  }
+
+  to {
+    right: var(--start_per)
+  }
+}
 
 
 .slide-up {
