@@ -77,8 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnSoln = maker('button', navdiv2, 'navbtn', 'Flip Card');
     const btnWiki = maker('button', navdiv2, 'navbtn', 'Wikipedia');
     const btnDetails = maker('button', navdiv2, 'navbtn', 'Details');
-    // btnHint.id = 'btnHint';
-    // btnSoln.id = 'btnSoln';
+    btnDetails.id = 'btnDetails';
+
+    var divDetails = maker('div', output, 'textDiv', '');
+    divDetails.id = "divDetails"
 
     const btnNext = maker('button', cardcontainer, 'longbtn', 'Next');
     btnNext.id = 'btnNext';
@@ -118,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
 
-    //GIVE A HINT
     btnDetails.addEventListener('click', (e) => {
         // giveHint()
     })
@@ -129,17 +130,41 @@ document.addEventListener("DOMContentLoaded", () => {
         myFlipFunction();
     })
 
+    //SHOW DETAILS
+    btnDetails.onmouseenter = function () {
+        console.log(divDetails.innerHTML);
+        divDetails.classList.add("slide-up")
+        divDetails.style.display = "block";
+    };
+
+    btnDetails.onmouseleave = function () {
+        console.log('details off');
+
+        divDetails.style.display = 'none';
+    };
+
+    // // When the user clicks on the button, open the modal
+    // btnDetails.addEventListener("click", function () {
+    // });
+
+    // span.addEventListener("click", function () { //(x) close the modal
+    //     slideback(divDetails);
+    // });
+
+    // window.addEventListener("click", function (event) { //close the modal
+    //     if (event.target == sidebar) {
+    //         slideback(divDetails);
+    //     }
+    // });
+
     startNewGame(game);
 
 });
 
-function startNewGame(game) {
-    game.qList = [];
-    game.qNum = 0;
-    game.score = 0;
-    //    clearTicker();
 
-    displayNextReviewCard(game);
+function slideback(divDetails) {
+    divDetails.className = "slide-down"
+    setTimeout(() => divDetails.style.display = "none", 775)
 }
 
 
@@ -148,19 +173,38 @@ function displayNextReviewCard(game) {
     //var card = document.getElementById("reviewcard");
     var cfront = document.getElementById("rfront");
     var cback = document.getElementById("rback");
+    var divDetails = document.getElementById("divDetails");
 
 
     game.index = pickNextEventIndex();
     console.log(game.index);
 
-    //check if there are enough questions...message accordingly
     let _qstr = formatLine(gameQuestions[game.index].event);
     let _qdate = gameQuestions[game.index].stem;
+    let _qdetails = gameQuestions[game.index].details;
+
+    btnDetails.disabled = false;
+
+    if (!_qdetails) {
+        btnDetails.disabled = true;
+    }
+
     // console.log(_qstr)
     // console.log(_qdate)
+    console.log(divDetails.innerHTML);
+
 
     cback.innerHTML = _qdate;
     cfront.innerHTML = _qstr.text;
+    divDetails.innerHTML = _qdetails;
+}
 
+function startNewGame(game) {
+    game.qList = [];
+    game.qNum = 0;
+    game.score = 0;
+    //    clearTicker();
+
+    displayNextReviewCard(game);
 }
 

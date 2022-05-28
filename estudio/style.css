@@ -5,6 +5,19 @@ body {
   background: #3C5377;
 }
 
+:root {
+  /*   color variables */
+  --clr-primary: #6aeeb5;
+  --clr-primary-hover: #29e6a7;
+  --clr-primary-dark: #0a4542;
+  --clr-gray100: #f0f7f8;
+  --clr-gray200: #cfd8dc;
+
+  /*   border radius */
+  --radius: 0.2rem;
+}
+
+
 
 .title {
   font-size: 2.5rem;
@@ -163,4 +176,79 @@ h1 {
   display: block;
   font-size: 1.3em;
   border-radius: 12px;
+}
+
+/* #btnDetails:hover {
+  color: var(--clr-primary-dark);
+} */
+
+
+.textDiv {
+
+  position: fixed;
+  bottom: 45%;
+  right: 0;
+  z-index: 10;
+  background-color: gainsboro;
+  color: rgb(18, 18, 19);
+  /* margin: 5% auto; */
+  padding: 10px;
+  width: 80%;
+  max-width: 500px;
+  font-size: 1.3em;
+}
+
+
+#btnDetails {
+  color: #fc7478;
+  font-weight: bold;
+  text-decoration: underline;
+  position: relative;
+}
+
+
+/* Set scale and position it further to the right. When we bring it back 
+  to -50% on x (middle of parent element) and +100% on y axis (above parent element) 
+  on hover, it will look like it flew out from the side of the parent element in
+  semi circular motion, which we want for our animation */
+/* transition: transform ease-out 500ms,
+    bottom ease-out 100ms,
+    left ease-out 150ms,
+    opacity ease-out 150ms; */
+
+/* #btnDetails:hover::before {
+  transform: scale(5) translateX(-50%);
+  bottom: calc(100% + 2px);
+  opacity: 1;
+} */
+
+
+.slide-up {
+  animation-duration: 1s;
+  animation-name: slideup;
+}
+
+@keyframes slideup {
+  from {
+    bottom: 30%;
+  }
+
+  to {
+    bottom: 45%
+  }
+}
+
+.slide-down {
+  animation-duration: 0.8s;
+  animation-name: slidedown;
+}
+
+@keyframes slidedown {
+  from {
+    bottom: 45%
+  }
+
+  to {
+    bottom: 30%;
+  }
 }
