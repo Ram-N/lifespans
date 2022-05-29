@@ -103,7 +103,7 @@ h1 {
   font-size: 30px;
   text-align: center;
 
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
 
@@ -128,24 +128,24 @@ h1 {
   font-size: 24px;
   text-align: center;
 
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
   transform: rotateY(180deg);
 }
 
 
-.review-front h1 {
+.review-text {
+  margin: 3%;
   font-family: 'zilla slab', sans-serif;
-  /* padding: 30px; */
   font-weight: bold;
-  font-size: 24px;
+  font-size: 0.8em;
   text-align: center;
+  color: #303;
 }
 
 .review-back h1 {
   font-family: 'zilla slab', sans-serif;
-  /* padding: 30px; */
   font-weight: bold;
   font-size: 4em;
   text-align: center;
@@ -153,12 +153,13 @@ h1 {
 }
 
 
-.review-front p,
-.review-back p {
+.review-front.subj,
+.review-back.subj {
+  display: block;
+  width: 100%;
   font-family: 'zilla slab', sans-serif;
-  /* padding: 30px; */
   font-weight: normal;
-  font-size: 12px;
+  font-size: 1em;
   text-align: center;
 }
 

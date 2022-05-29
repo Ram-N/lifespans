@@ -8,6 +8,11 @@ dangerRed = "#dc3545";
 BtnActiveColor = "#1c3494"
 BtnOffColor = "#e6f3f8";
 
+const categoryValues = ["America", "Europe", "Asia", "Africa",
+    "France", "Germany", "Britain", "China", "Discovery", "Greek", "India", "Invention", "MiddleEast", "prehistory",
+    "Religion", "Roman", "Royalty", "Russia", "Science", "Wars", "World"];
+
+
 const game = {
     score: 0,
     qNum: 0, penalty: [0, 2, 5, 10],
@@ -60,16 +65,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const main = maker('div', output, 'maincontainer', '');
     const card = maker('div', main, 'reviewcard', '');
-    const cfront = maker('div', card, 'review-front', 'front');
+
+    const cfront = maker('div', card, 'review-front', '');
+    const frontSubj = maker('div', cfront, 'review-front.subj', '');
+    const cfrontH1 = maker('div', cfront, 'review-text', '');
 
     const cback = maker('div', card, 'review-back', '');
+    const backSubj = maker('div', cback, 'review-back.subj', '');
     const cbackH1 = maker('h1', cback, 'review-back.h1', '');
 
-    cfront.id = "rfront";
-    cbackH1.id = "rback";
+    cfrontH1.id = "rfrontH1";
+    cbackH1.id = "rbackH1";
     output.id = "output";
-    card.id = 'reviewcard'
-    cfront.innerHTML = 'Test this please'
+    card.id = 'reviewcard';
+    backSubj.id = "subback";
+    frontSubj.id = "subfront";
+
+    // cfront.innerHTML = 'Test Console'
 
     //Nav Buttons
     var cardcontainer = maker('div', main, 'cardbuttoncontainer', '');
@@ -169,14 +181,31 @@ function slideback(divDetails) {
 }
 
 
+function getQSubject(idx) {
+    qitem = gameQuestions[index]
+
+    validSubjects = []
+    for (subj of categoryValues) {
+        if (qitem[subj]) {
+            validSubjects.push(subj)
+        }
+    }
+
+    return validSubjects.random()
+}
+
+
 function displayNextReviewCard(game) {
 
     //var card = document.getElementById("reviewcard");
-    var cfront = document.getElementById("rfront");
-    var cback = document.getElementById("rback");
+    var cfrontH1 = document.getElementById("rfrontH1");
+    var cbackH1 = document.getElementById("rbackH1");
     var divDetails = document.getElementById("divDetails");
     var btnWiki = document.getElementById("btnWiki");
     var btnDetails = document.getElementById("btnDetails");
+
+    var subback = document.getElementById("subback");
+    var subfront = document.getElementById("subfront");
 
     game.index = pickNextEventIndex();
     console.log(game.index);
@@ -185,6 +214,8 @@ function displayNextReviewCard(game) {
     let _qdate = gameQuestions[game.index].stem;
     let _qdetails = gameQuestions[game.index].details;
     let _qwiki = gameQuestions[game.index].wikipedia;
+    let _qsubj = getQSubject(game.index);
+    console.log("subj", _qsubj);
 
     btnDetails.disabled = false;
     btnWiki.disabled = false;
@@ -199,10 +230,13 @@ function displayNextReviewCard(game) {
     // console.log(_qstr)
     // console.log(_qdate)
     console.log(divDetails.innerHTML);
+    subback.innerHTML = _qsubj;
+    console.log(_qsubj);
 
+    subfront.innerHTML = _qsubj;
 
-    cback.innerHTML = _qdate;
-    cfront.innerHTML = _qstr.text;
+    cbackH1.innerHTML = _qdate;
+    cfrontH1.innerHTML = _qstr.text;
     divDetails.innerHTML = _qdetails;
 }
 
