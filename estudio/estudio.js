@@ -8,8 +8,8 @@ dangerRed = "#dc3545";
 BtnActiveColor = "#1c3494"
 BtnOffColor = "#e6f3f8";
 
-const categoryValues = ["America", "Europe", "Asia", "Africa",
-    "France", "Germany", "Britain", "China", "Discovery", "Greek", "India", "Invention", "MiddleEast", "prehistory",
+const categoryValues = ["All", "America", "Europe", "Asia", "Africa",
+    "France", "Britain", "China", "Discovery", "Greek", "India", "Invention", "MiddleEast", "prehistory",
     "Religion", "Roman", "Royalty", "Russia", "Science", "Wars", "World"];
 
 
@@ -62,8 +62,17 @@ document.addEventListener("DOMContentLoaded", () => {
     //PAGE APPEARANCE
     const output = document.querySelector('.mainstudio');
 
-
     const main = maker('div', output, 'maincontainer', '');
+
+    //Major Cat
+    const cDD = maker('div', main, 'categorycard', '');
+    promptText = "<br>" + "Category: "
+    selectID = "selectCat";
+    promptFor = "cat"
+    selIndex = 0;
+    addDropdown(categoryValues, selIndex, selectID, promptText, promptFor, cDD);
+
+
     const card = maker('div', main, 'reviewcard', '');
 
     const cfront = maker('div', card, 'review-front', '');
@@ -121,7 +130,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // --------------------------------------    
 
 
-    //REFRESH
+    ddCat = document.getElementById('selectCat')
+    ddCat.onchange = function () {
+        console.log(this.value, 'Category Selected');
+        assignGameCategory(ddCat) // game.category is set here
+        updateBannerText(this.value);
+
+        gameQuestions = subsetEventsbySelectedCategory(); //actual subsetting happens now.
+        console.log(gameQuestions.length, "after Cat", eList.length)
+        displayNextReviewCard(game);
+
+    }
+
+
     btnNext.addEventListener('click', (e) => {
         displayNextReviewCard(game);
     })
@@ -174,6 +195,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+function updateBannerText(seltext) {
+    sel = document.getElementById("h2-game-category");
+    sel.innerHTML = seltext;
+    console.log('Some option in sidepanel updated', seltext)
+}
+
+
 
 function slideback(divDetails) {
     divDetails.className = "slide-down"
@@ -214,7 +242,8 @@ function displayNextReviewCard(game) {
     let _qdate = gameQuestions[game.index].stem;
     let _qdetails = gameQuestions[game.index].details;
     let _qwiki = gameQuestions[game.index].wikipedia;
-    let _qsubj = getQSubject(game.index);
+    //let _qsubj = getQSubject(game.index);
+    let _qsubj = game.category;
     console.log("subj", _qsubj);
 
     btnDetails.disabled = false;
@@ -240,11 +269,38 @@ function displayNextReviewCard(game) {
     divDetails.innerHTML = _qdetails;
 }
 
+
+function assignGameCategory(dd) {
+    txt = dd.options[dd.selectedIndex].text
+    //console.log(txt, "chosen Cat")
+    game.category = txt;
+}
+
+
+function subsetEventsbySelectedCategory() {
+    var gameQuestions = eList; //start with all questions
+
+    if (game.category == "All") { return gameQuestions } //no need to filter
+    // let catMap = {};
+    // for (catText of categoryValues) {
+    //     catMap[catText] = catText
+    // }
+    // catMap['USA/America'] = 'America'
+    // catMap['UK/Great Britain'] = 'Britain'
+    gameQuestions = gameQuestions.filter(ev =>
+        ev[game.category] == 1.0
+    );
+    return gameQuestions
+}
+
 function startNewGame(game) {
-    game.qList = [];
-    game.qNum = 0;
-    game.score = 0;
+    // game.qList = [];
+    // game.qNum = 0;
+    // game.score = 0;
     //    clearTicker();
+
+    //subsetting questions
+    // subsetEventsbySelectedCategory(ddCat);
 
     displayNextReviewCard(game);
 }

@@ -54,12 +54,25 @@ h1 {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
 }
 
+.categorycard {
+  width: 100%;
+  border-radius: 7px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+  padding: 5px;
+  margin: auto;
+  background-color: var(--clr-gray100);
+
+}
+
+
 
 /* THE MAINCONTAINER HOLDS EVERYTHING */
 .maincontainer {
   position: absolute;
-  width: 550px;
-  height: 320px;
+  width: 30%;
+  /* width: 550px; */
+  height: 28%;
+  /* height: 320px; */
   background: none;
   top: 50%;
   left: 50%;
@@ -73,7 +86,7 @@ h1 {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 80%;
   background: var(--clr-gray100);
   border-radius: 10px;
   transform-style: preserve-3d;
@@ -90,7 +103,7 @@ h1 {
   top: 0;
   left: 0;
   width: 100%;
-  height: 80%;
+  height: 100%;
   border-radius: 10px;
   backface-visibility: hidden;
   overflow: hidden;
@@ -116,7 +129,7 @@ h1 {
   top: 0;
   left: 0;
   width: 100%;
-  height: 80%;
+  height: 100%;
   border-radius: 10px;
   backface-visibility: hidden;
   overflow: hidden;
@@ -165,12 +178,13 @@ h1 {
 
 .cardbuttoncontainer {
   position: absolute;
-  bottom: 0;
+  /* bottom: 0; */
   width: 100%;
   height: 20%;
   border-radius: 10px;
   overflow: hidden;
   /* background: #fafa00; */
+  background-color: var(--clr-gray100);
   color: #333;
 
 }

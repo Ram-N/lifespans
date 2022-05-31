@@ -24,8 +24,8 @@ function buttonSelected(btn) {
 }
 
 
-//Appearance of dropdown
-function addDropdown(values, selIndex, selectID, promptText, promptFor, modalcontent) {
+//Appearance of dropdown. Gets added to parentElement.
+function addDropdown(values, selIndex, selectID, promptText, promptFor, parentElement) {
 
     var dddiv = document.createElement("div");
     var select = document.createElement("select");
@@ -45,7 +45,7 @@ function addDropdown(values, selIndex, selectID, promptText, promptFor, modalcon
     label.htmlFor = promptFor;
 
     select.selectedIndex = selIndex;
-    modalcontent.append(dddiv);
+    parentElement.append(dddiv);
     dddiv.appendChild(label).appendChild(select);
 }
 
