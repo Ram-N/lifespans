@@ -3,31 +3,472 @@
 
 <head>
   <title>History Golf</title>
-  <link rel="stylesheet" type="text/css" href="../CSS/cards.css">
-  <link rel="stylesheet" type="text/css" href="../CSS/common.css">
-  <link rel="stylesheet" type="text/css" href="style.css">
   <meta charset="utf-8">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Base Styles -->
+  <link rel="stylesheet" type="text/css" href="../CSS/common.css?v=1.1.0">
+  <link rel="stylesheet" type="text/css" href="../CSS/cards.css?v=1.1.0">
+  <link rel="stylesheet" type="text/css" href="../CSS/layout.css?v=1.1.0">
+  <link rel="stylesheet" type="text/css" href="../CSS/animations.css?v=1.1.0">
+  <link rel="stylesheet" type="text/css" href="../CSS/overrides.css?v=1.1.0">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Module-specific styles -->
+  <link rel="stylesheet" type="text/css" href="style.css">
+  
+  <style>
+    :root {
+      --rich-black: #03071e;
+      --chocolate-cosmos: #370617;
+      --rosewood: #6a040f;
+      --dark-moss-green: #606c38;
+      --pakistan-green: #283618;
+      --cornsilk: #fefae0;
+      --earth-yellow: #dda15e;
+      --tigers-eye: #bc6c25;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f5f5;
+    }
+    
+    .game-layout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.1);
+      overflow: hidden;
+    }
+    
+    .game-header {
+      background-color: var(--cornsilk);
+      padding: 8px 12px;
+      border-bottom: 2px solid var(--tigers-eye);
+      text-align: center;
+    }
+    
+    .game-header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--rich-black);
+    }
+    
+    .game-content {
+      padding: 8px 12px;
+    }
+    
+    .score-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--rich-black);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-bottom: 5px;
+      height: 20px;
+      font-size: 0.8rem;
+    }
+    
+    #baseHang {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 4px;
+      width: 100%;
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    #hangBar {
+      height: 4px;
+      background-color: var(--dark-moss-green);
+      width: 0%;
+    }
+    
+    .score-stats {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+    }
+    
+    .stat-item {
+      white-space: nowrap;
+    }
+    
+    #tallyBoard {
+      display: flex;
+      justify-content: center;
+      padding: 3px 0;
+      font-size: 0.75rem;
+    }
+    
+    .question-area {
+      background-color: var(--rosewood);
+      padding: 8px 12px;
+      border-radius: 4px;
+      color: white;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    
+    .question-title {
+      margin: 0 0 4px 0;
+      font-size: 0.9rem;
+      color: white !important;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    
+    .year-display {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+      margin: 3px 0;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    
+    .input-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+    
+    .input-field {
+      width: 100%;
+      position: relative;
+    }
+    
+    .autocomplete-input {
+      width: 100%;
+      height: 38px;
+      padding: 0 12px;
+      border: 2px solid var(--tigers-eye);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    
+    .autocomplete-input:focus {
+      outline: none;
+      border-color: var(--dark-moss-green);
+      box-shadow: 0 0 0 2px rgba(96, 108, 56, 0.2);
+    }
+    
+    .custom-dropdown {
+      position: absolute;
+      width: 100%;
+      max-height: 250px;
+      overflow-y: auto;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 100;
+      top: 40px;
+      left: 0;
+    }
+    
+    .dropdown-item {
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      line-height: 1.2;
+    }
+    
+    .dropdown-item:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 5px;
+    }
+    
+    .navbtn {
+      height: 38px;
+      padding: 0 18px;
+      background-color: var(--rosewood);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      min-width: 100px;
+      font-weight: 500;
+    }
+    
+    .navbtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .help-text {
+      font-size: 0.75rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    
+    .result-area {
+      padding: 5px 8px;
+      background-color: var(--cornsilk);
+      border-radius: 4px;
+      margin-bottom: 8px;
+      min-height: 20px;
+    }
+    
+    #sCard {
+      margin: 0;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+    
+    .score-progress-container {
+      height: 4px;
+      background-color: #ddd;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    
+    #progressBase {
+      display: flex;
+      height: 100%;
+      width: 100%;
+    }
+    
+    #progress, #progress2 {
+      height: 100%;
+    }
+    
+    .score-success {
+      background-color: var(--dark-moss-green);
+    }
+    
+    .score-warning {
+      background-color: var(--earth-yellow);
+    }
+    
+    .score-danger {
+      background-color: var(--rosewood);
+    }
+    
+    .events-container {
+      margin-bottom: 5px;
+    }
+    
+    .events-header {
+      background-color: var(--rich-black);
+      color: white;
+      padding: 8px 10px;
+      font-size: 1rem;
+      border-radius: 4px 4px 0 0;
+      font-weight: 500;
+    }
+    
+    .events-list {
+      height: 260px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      background-color: white;
+    }
+    
+    .event-item {
+      padding: 6px 8px;
+      font-size: 0.85rem;
+      line-height: 1.3;
+      background-color: #f8f8f8;
+      border-radius: 3px;
+      white-space: normal;
+      overflow: visible;
+      cursor: pointer;
+      margin: 2px 0;
+      border: 1px solid #e0e0e0;
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .event-item:hover {
+      background-color: var(--tigers-eye);
+      color: white;
+      border-color: var(--tigers-eye);
+    }
+    
+    .score-result {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+    
+    .score-year, .score-diff, .score-cumulative {
+      text-align: center;
+    }
+    
+    .score-year span, .score-diff span, .score-cumulative span {
+      font-size: 0.75rem;
+      opacity: 0.8;
+      display: block;
+      margin-bottom: 2px;
+    }
+    
+    .modal {
+      border: none;
+      border-radius: 8px;
+      padding: 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      max-width: 90%;
+      width: 400px;
+    }
+    
+    .modal::backdrop {
+      background-color: rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+      padding: 15px;
+    }
+    
+    .info-box {
+      background-color: #f8f8f8;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    .results-summary h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    
+    .results-summary p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+    }
+    
+    .stdBtn {
+      padding: 8px 12px;
+      margin: 5px;
+      background-color: var(--rosewood);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
-<body>
-  <h1>History Golf</h1>
-  <!-- <div class="card-row">
-    <div class="card slate">
-      <h2>An event that happened closest to...</h2>
-      <div class="card-container" id="qCard">
+<body class="game-layout">
+  <div class="container output" id="output">
+    <!-- Header -->
+    <div class="game-header">
+      <h1>History Golf Challenge</h1>
+    </div>
+    
+    <div class="game-content">
+      <!-- Score Bar -->
+      <div id="overallScore" class="score-bar">
+        <div style="position: relative; width: 100%; height: 4px;">
+          <div id="baseHang">
+            <div id="hangBar"></div>
+          </div>
+        </div>
+        <div class="score-stats">
+          <span id="tickerLeft" class="stat-item"></span>
+          <span id="tickerCenter" class="stat-item"></span>
+          <span id="tickerRight" class="stat-item"></span>
+        </div>
+        <div id="tallyBoard"></div>
+      </div>
+      
+      <!-- Question Area -->
+      <div id="qText" class="question-area">
+        <h3 class="question-title" style="color: white !important;">Find an event that happened closest to...</h3>
+        <div id="qCard" class="year-display" style="color: white !important; font-size: 2.5rem; font-weight: bold;"></div>
+      </div>
+      
+      <!-- Input Area -->
+      <div id="interaction-container">
+        <div class="input-row">
+          <div class="input-field" style="width: 100%;">
+            <input type="text" id="event-input" class="autocomplete-input" placeholder="Select historical event closest to the target year" autocomplete="off" style="width: 100%;">
+            <div id="custom-dropdown" class="custom-dropdown"></div>
+          </div>
+          <div class="button-group">
+            <button id="btnSubmit" class="navbtn">Submit</button>
+            <button id="btnNext" class="navbtn" disabled>Next</button>
+          </div>
+        </div>
+        <!-- Removed help text to save space -->
+      </div>
+      
+      <!-- Result Area -->
+      <div id="result-container" class="result-area">
+        <div id="sCard"></div>
+        <div class="score-progress-container">
+          <div id="progressBase">
+            <div id="progress" class="score-progress-bar"></div>
+            <div id="progress2" class="score-progress-bar"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Events List -->
+      <div id="events-container" class="events-container">
+        <div class="events-header">Historical Events</div>
+        <div class="events-list" id="full-events-list"></div>
       </div>
     </div>
-  </div> -->
-
-  <div class="output"> </div>
-
+  </div>
+  
+  <!-- Results Modal -->
+  <dialog id="results-modal" class="modal">
+    <div class="modal-content">
+      <div class="info-box">
+        <span id="res-text" class="info-box-text"></span>
+      </div>
+      <button id="btnAnother" class="stdBtn">Another Round</button>
+      <button id="btnShare" class="stdBtn">Share</button>
+      <button id="btnDone" class="stdBtn">Leave</button>
+    </div>
+  </dialog>
+  
+  <!-- Load Scripts -->
   <script src="../data/eventsDB.js"></script>
   <script src="../libraries/rn_utils.js"></script>
   <script src="../libraries/qa_mechanics.js"></script>
   <script src="golf.js"></script>
-
-
+  <script src="golf_styles.js"></script>
 </body>
 
 </html>

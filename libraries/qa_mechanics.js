@@ -87,9 +87,13 @@ function getTallyRows() {
 
 //this function is called once, when creating "main"
 function createTallyBoxesContainer(parent, _tid) {
+    if (!parent) {
+        console.error("Parent element is null in createTallyBoxesContainer");
+        return;
+    }
     var tcon = maker('div', parent, 'tallyRow', "")
     tcon.id = _tid;
-    parent.append(tcon);
+    // No need for parent.append(tcon) as maker() already does this
 }
 
 

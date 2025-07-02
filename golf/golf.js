@@ -13,12 +13,13 @@
 
 const game = {
     maxQns: 10, //Default, though this comes from the options modal
-    score: 0,
+    score: 0, // Will be used to track cumulative gap
     qList: [],
     qNum: 0,
+    cumulativeGap: 0 // Track total gap across all questions
 }
 
-const MAX_ALLOWED_SCORE = 2000;
+const MAX_ALLOWED_SCORE = 3000; // Maximum allowed cumulative gap
 
 /* Using style guide color variables */
 /* Success and progress colors */
@@ -33,194 +34,89 @@ var gameQuestions = eList;
 let ddValues = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-    //PAGE APPEARANCE
+    console.log("DOM fully loaded and parsed");
+    
+    // Get existing elements from HTML
     const output = document.querySelector('.output');
-    output.id = "output";
-
-
-
-    //TOP CARD
-    scoreCard = maker('div', output, 'card', "")
-    scoreCard.id = "overallScore"
-    scoreCard.classList.add("wide");
-    scoreCard.classList.add("black");
-
-    //Hangman Progressbar
-    var hangbase = document.createElement('div');
-    hangbase.classList.add('score-progress-bar');
-    hangbase.id = 'baseHang';
-    hangbase.style.display = "flex";
-    scoreCard.append(hangbase)
-
-    //this needs to be updated with each guess...
-    progress = document.createElement('div');
-    progress.classList.add('score-progress-bar');
-    progress.id = 'hangBar';
-    hangbase.append(progress)
-
-
-    tickerTextContainer = maker('div', scoreCard, 'card-text-row', "")
-
-    txt = maker('span', tickerTextContainer, "card-text", "");
-    txt.id = "tickerLeft"
-    txt = maker('span', tickerTextContainer, "card-text", "");
-    txt.id = "tickerCenter"
-    txt = maker('span', tickerTextContainer, "card-text", "");
-    txt.id = "tickerRight"
-
-    _tid = "tallyBoard"
-    // createTallyBoxesContainer(tickerTextContainer, _tid); //qa_mechanics.js
-    createTallyBoxesContainer(scoreCard, _tid); //qa_mechanics.js
-
-
-
-    // Create instruction header
-    const instructionHeader = maker('div', output, 'instruction-header', "");
-    instructionHeader.innerHTML = `
-        <h2>History Golf Challenge</h2>
-        <p class="game-instructions">Identify historical events that happened closest to the given year. The smaller the time difference, the better your score!</p>
-    `;
-
-    // Question card container
-    crow = maker('div', output, 'card-row', "")
-    crow.id = "question-container";
-    cslate = maker('div', crow, 'card', "")
-    cslate.classList.add('slate')
-    cslate.innerHTML = "<h3>Find an event that happened closest to...</h3>"
-    cslate.id = "qText";
-    qCard = maker('div', cslate, "card-container", "")
-    qCard.id = "qCard"
-
-    //ddValues defined here
+    if (output && !output.id) {
+        output.id = "output";
+    }
+    
+    // Get reference to existing elements
+    const scoreCard = document.getElementById('overallScore');
+    const hangbase = document.getElementById('baseHang');
+    const progressBar = document.getElementById('hangBar');
+    
+    // Get ticker elements
+    const tickerLeft = document.getElementById('tickerLeft');
+    const tickerCenter = document.getElementById('tickerCenter');
+    const tickerRight = document.getElementById('tickerRight');
+    
+    console.log("Initializing elements:", {
+        scoreCard, hangbase, progressBar, tickerLeft, tickerCenter, tickerRight
+    });
+    
+    // Setup tally boxes
+    if (scoreCard) {
+        _tid = "tallyBoard";
+        createTallyBoxesContainer(scoreCard, _tid); // qa_mechanics.js
+    } else {
+        console.error("scoreCard element not found!");
+    }
+    
+    // Get question card
+    const qCard = document.getElementById('qCard');
+    
+    // Set up event values
     Object.entries(gameQuestions).forEach(([key, val]) => ddValues.push(val.event));
     
-    // Create a unified input container with a better organization
-    const interactionContainer = maker('div', output, 'interaction-container', "");
-    interactionContainer.id = "interaction-container";
+    // Get input elements
+    const evInput = document.getElementById('event-input');
+    const customDropdown = document.getElementById('custom-dropdown');
     
-    // Create input box first
-    const inputWrapper = maker('div', interactionContainer, 'input-wrapper', "");
-    
-    const evInput = document.createElement("input");
-    evInput.type = "text";
-    evInput.classList.add("autocomplete-input");
-    evInput.placeholder = "Select the historical event you think happened closest to the year above"
-    evInput.id = "event-input"
-    evInput.setAttribute("autocomplete", "off")
-    inputWrapper.appendChild(evInput);
-    
-    // Create custom dropdown that will replace datalist
-    const customDropdown = document.createElement("div");
-    customDropdown.classList.add("custom-dropdown");
-    customDropdown.id = "custom-dropdown";
-    customDropdown.style.display = "none";
-    inputWrapper.appendChild(customDropdown);
-    
-    // Add help text below input
-    const helpText = document.createElement('div');
-    helpText.classList.add('help-text');
-    helpText.innerHTML = "Type to search for historical events";
-    inputWrapper.appendChild(helpText);
-    
-    // Add buttons immediately after input
-    const buttonContainer = document.createElement('div');
-    buttonContainer.classList.add('button-container');
-    interactionContainer.appendChild(buttonContainer);
-    
-    const btnSubmit = maker('button', buttonContainer, 'navbtn', 'Submit');
-    btnSubmit.id = 'btnSubmit';
-    
-    const btnNext = maker('button', buttonContainer, 'navbtn', 'Next');
-    btnNext.id = 'btnNext';
+    // Get buttons
+    const btnSubmit = document.getElementById('btnSubmit');
+    const btnNext = document.getElementById('btnNext');
     btnNext.disabled = true;
     
-    // Create the datalist for suggestions (the card black wide fade-in element)
-    // This is the dropdown list of events that appears when typing in the input
-    const eventsContainer = maker('div', output, 'events-container', "");
-    eventsContainer.id = "events-container";
+    // Get result container
+    const sCard = document.getElementById('sCard');
+    const progressBase = document.getElementById('progressBase');
+    const progress = document.getElementById('progress');
+    const progress2 = document.getElementById('progress2');
     
-    const listDiv = maker('div', eventsContainer, 'card', "");
-    listDiv.classList.add("black", "wide");
-    listDiv.id = "events-list-container";
-    
+    // Create datalist for autocomplete
     const evDataList = document.createElement("datalist");
     evDataList.id = "event-list";
     optionsList = prepareEventStr(ddValues);
     evDataList.innerHTML = optionsList;
-    
-    // Add datalist to the document
     document.body.appendChild(evDataList);
     
-    // Add an events list display (previously shown in the black card)
-    listDiv.innerHTML = "<div class='events-header'>Available Historical Events</div>";
-    listDiv.style.maxHeight = "150px";
-    listDiv.style.overflowY = "auto";
+    // Add ALL events to the event list with scrollbar
+    const eventsList = document.querySelector('.events-list');
     
-    // Create an events list element to show available options
-    const eventsList = document.createElement("div");
-    eventsList.classList.add("events-list");
-    // We'll show the first few events to give users an idea
-    const previewEvents = ddValues.slice(0, 10);
-    previewEvents.forEach(event => {
+    // Clear any existing events first
+    eventsList.innerHTML = '';
+    
+    // Add all events from the database
+    console.log(`Adding ${ddValues.length} events to the list`);
+    ddValues.forEach(event => {
         const eventItem = document.createElement("div");
         eventItem.classList.add("event-item");
         eventItem.textContent = event;
+        
+        // Make events clickable to select them
+        eventItem.addEventListener('click', function() {
+            evInput.value = event;
+            // Trigger input event to update any UI elements that depend on input
+            const inputEvent = new Event('input', { bubbles: true });
+            evInput.dispatchEvent(inputEvent);
+        });
+        
         eventsList.appendChild(eventItem);
     });
-    listDiv.appendChild(eventsList);
     
-    // Result container
-    crow2 = maker('div', output, 'card-row', "")
-    crow2.id = "result-container";
-    crow2.style.minHeight = 100 + "px";
-    crow2.style.background = "var(--rosewood, #6a040f)";
-    crow2.style.borderRadius = "12px";
-    let sCard = maker('div', crow2, 'card', "")
-    sCard.id = "sCard"
-    sCard.classList.add("wide")
-    sCard.classList.add("slate")
-
-    //PROGRESS BAR
-    var pdiv = document.createElement('div');
-    pdiv.classList.add("score-progress-container");
-    crow2.append(pdiv);
-
-    var barbase = document.createElement('div');
-    barbase.classList.add('score-progress-bar');
-    barbase.id = 'progressBase';
-    barbase.style.display = "flex";
-    pdiv.append(barbase)
-
-    var progress = document.createElement('div');
-    progress.classList.add('score-progress-bar');
-    progress.id = 'progress';
-    barbase.append(progress)
-
-    progress = document.createElement('div');
-    progress.classList.add('score-progress-bar');
-    progress.id = 'progress2';
-    barbase.append(progress)
-
-    // END OF APPEARANCE
-
-
-    btnSubmit.addEventListener('click', (e) => {
-        if (validEventEntered(evInput)) {
-            console.log(`evList ${evInput.value}`)
-            scoreResponse(evInput.value, game);
-            btnSubmit.disabled = true;
-            btnNext.disabled = false;
-        }
-    })
-
-    btnNext.addEventListener('click', (e) => {
-        evInput.value = ""; //clear it
-        nextQuestion(game);
-        btnSubmit.disabled = false;
-        btnNext.disabled = true;
-    })
-
-    // Custom dropdown functionality
+    // Make sure the custom dropdown works correctly
     evInput.addEventListener('input', function() {
         const filterText = this.value.toUpperCase();
         customDropdown.innerHTML = ''; // Clear previous results
@@ -257,6 +153,62 @@ document.addEventListener("DOMContentLoaded", () => {
             customDropdown.style.display = 'none';
         }
     });
+
+    // END OF APPEARANCE
+
+
+    btnSubmit.addEventListener('click', (e) => {
+        if (validEventEntered(evInput)) {
+            console.log(`evList ${evInput.value}`)
+            scoreResponse(evInput.value, game);
+            btnSubmit.disabled = true;
+            btnNext.disabled = false;
+        }
+    })
+
+    btnNext.addEventListener('click', (e) => {
+        evInput.value = ""; //clear it
+        nextQuestion(game);
+        btnSubmit.disabled = false;
+        btnNext.disabled = true;
+    })
+
+    // Custom dropdown functionality with immediate filtering
+    evInput.addEventListener('input', function() {
+        const filterText = this.value.toUpperCase();
+        customDropdown.innerHTML = ''; // Clear previous results
+        
+        // Show dropdown as soon as user starts typing
+        customDropdown.style.display = 'block';
+            
+        // Filter events and add to dropdown (phonetic/lexical matching)
+        const matchingEvents = filterText.length > 0 ?
+            ddValues.filter(event => 
+                event.toUpperCase().includes(filterText)
+            ).slice(0, 8) : // Limit to first 8 matches for better UX
+            ddValues.slice(0, 8); // Show first 8 events when empty
+            
+        if (matchingEvents.length > 0) {
+            matchingEvents.forEach(event => {
+                const item = document.createElement('div');
+                item.classList.add('dropdown-item');
+                item.textContent = event;
+                
+                // Handle item click
+                item.addEventListener('click', function() {
+                    evInput.value = event;
+                    customDropdown.style.display = 'none';
+                });
+                
+                customDropdown.appendChild(item);
+            });
+        } else {
+            const noMatch = document.createElement('div');
+            noMatch.classList.add('dropdown-item', 'no-match');
+            noMatch.textContent = 'No matching events found';
+            customDropdown.appendChild(noMatch);
+        }
+    });
     
     // Close dropdown when clicking outside
     document.addEventListener('click', function(e) {
@@ -276,11 +228,25 @@ document.addEventListener("DOMContentLoaded", () => {
     evInput.addEventListener('input', function() {
         evInput.style.backgroundColor = '';
     });
+    
+    // Add Enter key support for submission
+    evInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !btnSubmit.disabled) {
+            if (validEventEntered(evInput)) {
+                scoreResponse(evInput.value, game);
+                btnSubmit.disabled = true;
+                btnNext.disabled = false;
+            }
+        }
+    });
 
     //reset score and results
     initResultsModal();
 
+    // Start the game
+    console.log("Starting new game");
     startNewGame(game);
+    console.log("Game started");
 });
 
 
@@ -302,8 +268,9 @@ function validEventEntered(inputField) {
 function scoreResponse(response, game) {
     actual = game.qList[game.qNum - 1]; //O is the first element, but its qnum is 1
     res = getResponseYear(response, gameQuestions);
-    qScore = Math.abs(actual - res);
-    game.score += qScore;
+    qScore = Math.abs(actual - res); // This is the gap in years
+    game.score += qScore; // Track total gap
+    game.cumulativeGap += qScore; // Also store in cumulativeGap for clarity
 
     sCard = document.getElementById('sCard')
     sPCon = document.getElementById('progressBase')
@@ -320,10 +287,13 @@ function scoreResponse(response, game) {
     const scoreColor = scoreDiff < 0 ? 'var(--dark-moss-green, #606c38)' : 'var(--rosewood, #6a040f)';
     sCard.innerHTML = `
         <div class="score-result">
-            <div class="score-year"><span>Target:</span> ${actual}</div>
-            <div class="score-year"><span>Your guess:</span> ${res}</div>
+            <div class="score-year"><span>Target Year:</span> ${actual < 0 ? Math.abs(actual) + ' BC' : actual + ' AD'}</div>
+            <div class="score-year"><span>Selected Event:</span> ${res < 0 ? Math.abs(res) + ' BC' : res + ' AD'}</div>
             <div class="score-diff" style="color: ${scoreColor}">
-                <span>Score:</span> ${scoreDiff} years
+                <span>Year Gap:</span> ${Math.abs(scoreDiff)} years ${scoreDiff < 0 ? '(before target)' : '(after target)'}
+            </div>
+            <div class="score-cumulative">
+                <span>Cumulative Gap:</span> ${game.cumulativeGap} years
             </div>
         </div>
     `
@@ -350,7 +320,7 @@ function scoreResponse(response, game) {
 
 
     // Calculate progress bar values
-    hangLen = Math.round(game.score / 2000 * 99)
+    hangLen = Math.round(game.cumulativeGap / (game.maxQns * 300) * 99) // Scale based on expected reasonable gaps
     hangBar.style.width = `${1 + hangLen}%`
     
     // Add appropriate class based on progress
@@ -390,11 +360,29 @@ function prepareEventStr(ddValues) {
 }
 
 function updateYearCard(game) {
-    qCard = document.getElementById("qCard");
-    let rndYear = Math.floor(Math.random() * 2001)
-    game.qList.push(rndYear)
-    //TODO : Also handle BC cases
-    qCard.innerHTML = rndYear + " AD"
+    console.log("Updating year card");
+    
+    const qCard = document.getElementById("qCard");
+    console.log("qCard element:", qCard);
+    
+    // Generate random year between -1000 (1000 BC) and 2000 AD
+    let rndYear = Math.floor(Math.random() * 3001) - 1000;
+    game.qList.push(rndYear);
+    
+    // Ensure the text is visible
+    if (qCard) {
+        // Format year display with BC/AD
+        const yearText = rndYear < 0 ? Math.abs(rndYear) + " BC" : rndYear + " AD";
+        console.log("Setting year display to:", yearText);
+        qCard.innerHTML = yearText;
+        qCard.style.color = "white";
+        qCard.style.fontSize = "1.8rem";
+        qCard.style.fontWeight = "bold";
+        // Add !important to make sure it stays white
+        qCard.setAttribute("style", "color: white !important; font-size: 1.8rem; font-weight: bold;");
+    } else {
+        console.error("qCard element not found!");
+    }
 }
 
 function clearCard(_id) {
@@ -416,14 +404,14 @@ function resetDatalist() {
 
 
 function updateTicker() {
-    //Needs 3 elements: Avg, Score and Num Questions
+    //Needs 3 elements: Avg, Cumulative Gap and Num Questions
     tickerLeft = document.getElementById('tickerLeft')
     tickerCenter = document.getElementById('tickerCenter')
     tickerRight = document.getElementById('tickerRight')
 
-    tickerCenter.innerHTML = game.score;
+    tickerCenter.innerHTML = "Total Gap: " + game.cumulativeGap + " years";
     tickerRight.innerText = game.qNum + " / " + game.maxQns;
-    tickerLeft.innerText = "Avg Miss: " + Math.round(game.score / game.qNum) + " years"
+    tickerLeft.innerText = "Avg Gap: " + Math.round(game.cumulativeGap / game.qNum) + " years"
 }
 
 function clearTicker() {
@@ -434,59 +422,43 @@ function clearTicker() {
 
 
 function initResultsModal() {
-
-    const output = document.getElementById("output");
-
-    const resmodal = maker('dialog', output, 'modal', '');
-    const rescontainer = maker('div', resmodal, 'modal-content', '');
-    resmodal.id = "results-modal"
-    console.log('results modal created')
-
-    const resTextBox = maker('div', rescontainer, 'info-box', "");
-    // const resChoiceTitle = maker('div', resChoiceBox, 'info-box-title', "Game Options");
-    // resChoiceText = maker('span', resChoiceBox, 'info-box-text', "");
-    // resChoiceText.id = 'res-choices';
-
-    // //placeholder for res tally boxes
-    // createTallyBoxRow(resChoiceBox, "resTBRow");
-
-    resText = maker('span', resTextBox, 'info-box-text', "");
-    resText.id = 'res-text';
-
-
-    //RESULTS MODAL Buttons
-    const btnAnother = maker('button', rescontainer, 'stdBtn', 'Another Round');
-    const btnShare = maker('button', rescontainer, 'stdBtn', 'Share');
-    const btnDone = maker('button', rescontainer, 'stdBtn', 'Leave');
+    // Get the existing modal elements
+    const resmodal = document.getElementById("results-modal");
+    const btnAnother = document.getElementById("btnAnother");
+    const btnShare = document.getElementById("btnShare");
+    const btnDone = document.getElementById("btnDone");
+    
+    // Apply styles
     btnAnother.style.background = '#007bff';
     btnAnother.style.color = 'white';
     btnDone.style.background = '#dc3545';
-    btnAnother.id = 'btnAnother';
-    btnDone.id = 'btnDone';
-    btnShare.id = 'btnShare';
-    btnShare.style.background = successGreen
+    btnShare.style.background = successGreen;
+    
+    // Add event listeners
+    btnAnother.addEventListener("click", function () {
+        resmodal.close();
+        clearCard('sCard');
+        startNewGame(game);
+    });
 
+    btnDone.addEventListener("click", function () {
+        resmodal.close();
+        clearCard('sCard');
+        location.href = '../index.html'
+    });
+    
+    console.log('Modal initialized');
 }
 
 
 
 function closeoutGame() {
-
     const resmodal = document.getElementById("results-modal");
-    const openModal = document.querySelector(".open-button");
-    const closeModal = document.querySelector(".close-button");
     const btnAnother = document.getElementById("btnAnother");
     const btnDone = document.getElementById("btnDone");
+    const resText = document.getElementById("res-text");
 
     resmodal.showModal();
-
-    // const output = document.getElementById("output");
-    // const resmodal = document.getElementById("results-modal");
-    // //const modalcontent = document.getElementById("options-modal-content");
-    // const resclose = document.getElementById("close-results");
-    // const resBox = document.getElementById('results-box');
-    // const resChText = document.getElementById('res-choices');
-    const resText = document.getElementById("res-text");
 
 
     // //show results tally boxes
@@ -498,21 +470,15 @@ function closeoutGame() {
     //     colorTallyBox(idx, e)
     // });
 
-    console.log(game.score, "Score")
-    resText.innerHTML = `${game.score} Points <br> Average: ${(game.score / game.maxQns).toFixed(2)} `;
-
-
-    btnAnother.addEventListener("click", function () {
-        resmodal.close();
-        clearCard('sCard');
-        startNewGame(game); //startNewGame only if Another is clicked 
-    });
-
-    btnDone.addEventListener("click", function () {
-        resmodal.close();
-        clearCard('sCard');
-        location.href = '../index.html'
-    });
+    console.log(game.cumulativeGap, "Total Gap")
+    resText.innerHTML = `
+        <div class="results-summary">
+            <h3>Game Results</h3>
+            <p>Total Gap: ${game.cumulativeGap} years</p>
+            <p>Average Gap: ${(game.cumulativeGap / game.qNum).toFixed(2)} years per question</p>
+            <p>Smaller gaps are better!</p>
+        </div>
+    `;
 
 }
 
@@ -540,13 +506,18 @@ function startNewGame(game) {
     game.qList = [];
     game.qNum = 0;
     game.score = 0;
+    game.cumulativeGap = 0;
     clearTicker();
     resetDatalist();
 
     //clear TallyBoxes
     tcon = document.getElementById('tallyBoard');
-    tcon.replaceChildren(); //get rid of the old tallyBoxes, children of tallyBoard
-    tallyboxes = createTallyBoxes(game, 'tallyBoard');
+    if (tcon) {
+        tcon.replaceChildren(); //get rid of the old tallyBoxes, children of tallyBoard
+        tallyboxes = createTallyBoxes(game, 'tallyBoard');
+    } else {
+        console.error("tallyBoard element not found!");
+    }
 
     nextQuestion(game);
 }
