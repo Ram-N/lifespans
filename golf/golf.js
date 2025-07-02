@@ -20,11 +20,13 @@ const game = {
 
 const MAX_ALLOWED_SCORE = 2000;
 
-successGreen = "#28a745";
-warningOrange = "#ffc107";
-dangerRed = "#dc3545";
-BtnActiveColor = "#1c3494"
-BtnOffColor = "#e6f3f8";
+/* Using style guide color variables */
+/* Success and progress colors */
+successGreen = "var(--dark-moss-green, #606c38)";
+warningOrange = "var(--earth-yellow, #dda15e)";
+dangerRed = "var(--rosewood, #6a040f)";
+BtnActiveColor = "var(--tigers-eye, #bc6c25)";
+BtnOffColor = "var(--cornsilk, #fefae0)";
 
 var eList = Object.values(events); //from eventsDB.js
 var gameQuestions = eList;
@@ -72,20 +74,107 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+    // Create instruction header
+    const instructionHeader = maker('div', output, 'instruction-header', "");
+    instructionHeader.innerHTML = `
+        <h2>History Golf Challenge</h2>
+        <p class="game-instructions">Identify historical events that happened closest to the given year. The smaller the time difference, the better your score!</p>
+    `;
+
+    // Question card container
     crow = maker('div', output, 'card-row', "")
+    crow.id = "question-container";
     cslate = maker('div', crow, 'card', "")
     cslate.classList.add('slate')
-    cslate.innerHTML = "An event that happened closest to..."
+    cslate.innerHTML = "<h3>Find an event that happened closest to...</h3>"
     cslate.id = "qText";
     qCard = maker('div', cslate, "card-container", "")
     qCard.id = "qCard"
 
     //ddValues defined here
     Object.entries(gameQuestions).forEach(([key, val]) => ddValues.push(val.event));
-
+    
+    // Create a unified input container with a better organization
+    const interactionContainer = maker('div', output, 'interaction-container', "");
+    interactionContainer.id = "interaction-container";
+    
+    // Create input box first
+    const inputWrapper = maker('div', interactionContainer, 'input-wrapper', "");
+    
+    const evInput = document.createElement("input");
+    evInput.type = "text";
+    evInput.classList.add("autocomplete-input");
+    evInput.placeholder = "Select the historical event you think happened closest to the year above"
+    evInput.id = "event-input"
+    evInput.setAttribute("autocomplete", "off")
+    inputWrapper.appendChild(evInput);
+    
+    // Create custom dropdown that will replace datalist
+    const customDropdown = document.createElement("div");
+    customDropdown.classList.add("custom-dropdown");
+    customDropdown.id = "custom-dropdown";
+    customDropdown.style.display = "none";
+    inputWrapper.appendChild(customDropdown);
+    
+    // Add help text below input
+    const helpText = document.createElement('div');
+    helpText.classList.add('help-text');
+    helpText.innerHTML = "Type to search for historical events";
+    inputWrapper.appendChild(helpText);
+    
+    // Add buttons immediately after input
+    const buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('button-container');
+    interactionContainer.appendChild(buttonContainer);
+    
+    const btnSubmit = maker('button', buttonContainer, 'navbtn', 'Submit');
+    btnSubmit.id = 'btnSubmit';
+    
+    const btnNext = maker('button', buttonContainer, 'navbtn', 'Next');
+    btnNext.id = 'btnNext';
+    btnNext.disabled = true;
+    
+    // Create the datalist for suggestions (the card black wide fade-in element)
+    // This is the dropdown list of events that appears when typing in the input
+    const eventsContainer = maker('div', output, 'events-container', "");
+    eventsContainer.id = "events-container";
+    
+    const listDiv = maker('div', eventsContainer, 'card', "");
+    listDiv.classList.add("black", "wide");
+    listDiv.id = "events-list-container";
+    
+    const evDataList = document.createElement("datalist");
+    evDataList.id = "event-list";
+    optionsList = prepareEventStr(ddValues);
+    evDataList.innerHTML = optionsList;
+    
+    // Add datalist to the document
+    document.body.appendChild(evDataList);
+    
+    // Add an events list display (previously shown in the black card)
+    listDiv.innerHTML = "<div class='events-header'>Available Historical Events</div>";
+    listDiv.style.maxHeight = "150px";
+    listDiv.style.overflowY = "auto";
+    
+    // Create an events list element to show available options
+    const eventsList = document.createElement("div");
+    eventsList.classList.add("events-list");
+    // We'll show the first few events to give users an idea
+    const previewEvents = ddValues.slice(0, 10);
+    previewEvents.forEach(event => {
+        const eventItem = document.createElement("div");
+        eventItem.classList.add("event-item");
+        eventItem.textContent = event;
+        eventsList.appendChild(eventItem);
+    });
+    listDiv.appendChild(eventsList);
+    
+    // Result container
     crow2 = maker('div', output, 'card-row', "")
+    crow2.id = "result-container";
     crow2.style.minHeight = 100 + "px";
-    crow2.style.background = "slateblue";
+    crow2.style.background = "var(--rosewood, #6a040f)";
+    crow2.style.borderRadius = "12px";
     let sCard = maker('div', crow2, 'card', "")
     sCard.id = "sCard"
     sCard.classList.add("wide")
@@ -96,7 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
     pdiv.classList.add("score-progress-container");
     crow2.append(pdiv);
 
-    console.log(pdiv)
     var barbase = document.createElement('div');
     barbase.classList.add('score-progress-bar');
     barbase.id = 'progressBase';
@@ -112,46 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
     progress.classList.add('score-progress-bar');
     progress.id = 'progress2';
     barbase.append(progress)
-
-
-    //Style datalist using the following:
-    //https://dev.to/siddev/customise-datalist-45p0
-    listDiv = maker('div', output, 'card', "");
-    inpDiv = maker('div', output, 'card', "");
-    listDiv.classList.add("black", "wide");
-    inpDiv.classList.add("black", "wide");
-
-
-    listDiv.style.minHeight = "20vh";
-    listDiv.style.paddingBottom = "0px";
-
-    const evInput = document.createElement("input");
-    evInput.type = "text";
-    evInput.classList.add("autocomplete-input");
-    evInput.placeholder = "Start typing to Search, Filter and Select Closest Event from the list above"
-    evInput.id = "event-input"
-    evInput.setAttribute("list", "") //this is intentional, so that we can style the autocomplete
-    evInput.setAttribute("autocomplete", "off") //https://dev.to/siddev/customise-datalist-45p0
-
-
-    const evDataList = document.createElement("datalist")
-    evDataList.classList.add("autocomplete-list")
-    evDataList.id = "event-list"
-    optionsList = prepareEventStr(ddValues);
-    evDataList.innerHTML = optionsList;
-    //console.log(optionsList)
-
-    //placement
-    listDiv.append(evDataList)
-    inpDiv.append(evInput);
-
-    subDiv = document.createElement('div');
-    output.append(subDiv);
-    const btnSubmit = maker('button', subDiv, 'navbtn', 'Submit');
-    nextDiv = document.createElement('div');
-    output.append(nextDiv);
-    const btnNext = maker('button', nextDiv, 'navbtn', 'Next');
-    btnNext.disabled = true;
 
     // END OF APPEARANCE
 
@@ -172,36 +220,66 @@ document.addEventListener("DOMContentLoaded", () => {
         btnNext.disabled = true;
     })
 
-    evInput.addEventListener('input', (e) => {
-        evInput.style.backgroundColor = ''; //reset background color
+    // Custom dropdown functionality
+    evInput.addEventListener('input', function() {
+        const filterText = this.value.toUpperCase();
+        customDropdown.innerHTML = ''; // Clear previous results
+        
+        if (filterText.length > 0) {
+            customDropdown.style.display = 'block';
+            
+            // Filter events and add to dropdown
+            const matchingEvents = ddValues.filter(event => 
+                event.toUpperCase().includes(filterText)
+            ).slice(0, 8); // Limit to first 8 matches for better UX
+            
+            if (matchingEvents.length > 0) {
+                matchingEvents.forEach(event => {
+                    const item = document.createElement('div');
+                    item.classList.add('dropdown-item');
+                    item.textContent = event;
+                    
+                    // Handle item click
+                    item.addEventListener('click', function() {
+                        evInput.value = event;
+                        customDropdown.style.display = 'none';
+                    });
+                    
+                    customDropdown.appendChild(item);
+                });
+            } else {
+                const noMatch = document.createElement('div');
+                noMatch.classList.add('dropdown-item', 'no-match');
+                noMatch.textContent = 'No matching events found';
+                customDropdown.appendChild(noMatch);
+            }
+        } else {
+            customDropdown.style.display = 'none';
+        }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target !== evInput && e.target !== customDropdown) {
+            customDropdown.style.display = 'none';
+        }
+    });
+    
+    // Show dropdown on focus if there's text
+    evInput.addEventListener('focus', function() {
+        if (this.value.length > 0) {
+            customDropdown.style.display = 'block';
+        }
+    });
+    
+    // Reset background color on input
+    evInput.addEventListener('input', function() {
+        evInput.style.backgroundColor = '';
     });
 
-    evInput.onfocus = function () {
-        evDataList.style.display = 'block';
-        console.log('block evdisplay')
-        evInput.style.borderRadius = "5px 5px 0 0";
-    };
-    for (let option of evDataList.options) {
-        option.onclick = function () {
-            evInput.value = option.value;
-            evDataList.style.display = 'none';
-            evInput.style.borderRadius = "5px";
-        }
-    };
-
-    //Implement the autofilter option
-    evInput.oninput = function () {
-        var text = evInput.value.toUpperCase();
-        for (let option of evDataList.options) {
-            if (option.value.toUpperCase().indexOf(text) > -1) {
-                option.style.display = "block"; //keep it
-            } else {
-                option.style.display = "none"; //discard it
-            }
-        };
-    }
-
+    //reset score and results
     initResultsModal();
+
     startNewGame(game);
 });
 
@@ -238,7 +316,17 @@ function scoreResponse(response, game) {
     pbLen = Math.round(qScore / 2000 * 50);
     console.log('pblen', pbLen, actual, res, 'dirNeg', dirNeg)
 
-    sCard.innerHTML = `${actual} ${res} Score:${res - actual}`
+    const scoreDiff = res - actual;
+    const scoreColor = scoreDiff < 0 ? 'var(--dark-moss-green, #606c38)' : 'var(--rosewood, #6a040f)';
+    sCard.innerHTML = `
+        <div class="score-result">
+            <div class="score-year"><span>Target:</span> ${actual}</div>
+            <div class="score-year"><span>Your guess:</span> ${res}</div>
+            <div class="score-diff" style="color: ${scoreColor}">
+                <span>Score:</span> ${scoreDiff} years
+            </div>
+        </div>
+    `
 
     sPCon.style.width = "100%";
 
@@ -249,15 +337,31 @@ function scoreResponse(response, game) {
     }
 
     sPBar2.style.width = `${pbLen}% `;
-    sPBar2.classList.add('score-success');
+    
+    // Apply appropriate class based on score
+    sPBar2.classList.remove('score-success', 'score-warning', 'score-danger');
+    if (qScore < 100) {
+        sPBar2.classList.add('score-success');
+    } else if (qScore < 250) {
+        sPBar2.classList.add('score-warning');
+    } else {
+        sPBar2.classList.add('score-danger');
+    }
 
 
-    _hcolor = "red"
+    // Calculate progress bar values
     hangLen = Math.round(game.score / 2000 * 99)
-    if (hangLen < 75) { _hcolor = "orange" }
-    if (hangLen < 50) { _hcolor = "green" }
     hangBar.style.width = `${1 + hangLen}%`
-    hangBar.style.background = _hcolor;
+    
+    // Add appropriate class based on progress
+    hangBar.classList.remove('score-success', 'score-warning', 'score-danger');
+    if (hangLen < 50) {
+        hangBar.classList.add('score-success');
+    } else if (hangLen < 75) {
+        hangBar.classList.add('score-warning');
+    } else {
+        hangBar.classList.add('score-danger');
+    }
 
     console.log(actual, res, 'hanglen', hangLen)
     updateTicker();

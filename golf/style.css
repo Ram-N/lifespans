@@ -5,7 +5,7 @@ body {
 }
 
 * {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: var(--font-family-primary, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
 }
 
 body {
@@ -15,31 +15,78 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: var(--cornsilk, #fefae0);
+    color: var(--rich-black, #03071e);
+    background-image: linear-gradient(to bottom, var(--cornsilk, #fefae0), #f8f2d8);
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 12px 0;
+    width: 100%;
 }
 
 .navbtn {
-    width: 30%;
-    font-size: 1.7em;
-    border-radius: 8px;
-    margin-left: 10px;
+    width: 160px;
+    font-size: 1.2em;
+    border-radius: 12px;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    background-color: var(--rosewood, #6a040f);
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 8px rgba(106, 4, 15, 0.2);
+}
+
+.navbtn:hover {
+    background-color: var(--tigers-eye, #bc6c25);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(188, 108, 37, 0.3);
+}
+
+.navbtn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(106, 4, 15, 0.2);
+}
+
+.navbtn:disabled {
+    background-color: #cccccc;
+    color: #888888;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
 #qCard {
     font-size: 3rem;
     font-weight: bold;
+    margin-top: 16px;
+    padding: 16px;
+    line-height: 1.2;
 }
 
 #qText {
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 20px;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
 }
 
 
 h1 {
     text-align: center;
+    color: var(--rosewood, #6a040f);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    letter-spacing: -0.5px;
 }
 
 .modal {
@@ -67,70 +114,410 @@ h1 {
 
 
 .modal-content {
-    background-color: gainsboro;
-    color: rgb(18, 18, 19);
+    background-color: var(--color-bg-primary, #FFFFFF);
+    color: var(--rich-black, #03071e);
     margin: 5% auto;
     padding: 20px;
     width: 80%;
     max-width: 500px;
     font-size: 1.5em;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(44, 62, 80, 0.08);
+    border: 1px solid var(--color-border-light, #ECF0F1);
 }
 
 
 .autocomplete-input {
-    /* position: absolute; */
-    padding: 25px 15px;
-    border-radius: 1px;
-    width: 90%;
-    border: 1px solid blue;
-    border-top: none;
-    border-radius: 0 0 5px 5px;
-    /* outline: none; */
-    color: blueviolet;
-    background-color: #fff;
-    font-family: sans-serif;
-    font-size: 1.2rem;
+    padding: 12px 15px;
+    width: 100%;
+    border: 1px solid var(--tigers-eye, #bc6c25);
+    border-radius: 8px;
+    color: var(--rich-black, #03071e);
+    background-color: var(--color-bg-primary, #FFFFFF);
+    font-family: var(--font-family-primary, 'Inter', sans-serif);
+    font-size: var(--font-size-body-medium, 0.9375rem);
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
 
-
+.autocomplete-input:focus {
+    outline: none;
+    border-color: var(--rosewood, #6a040f);
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 2px 8px rgba(106, 4, 15, 0.2);
 }
 
 .autocomplete-input::placeholder {
-    color: blueviolet;
+    color: var(--color-text-secondary, #7F8C8D);
 }
 
 .autocomplete-list {
-    /* position: absolute; */
-    overflow-y: scroll;
+    overflow-y: auto;
     list-style-type: none;
     margin: 0;
-    width: 90%;
-    background-color: #fff;
-    min-height: 10vh;
-    max-height: 200px;
-    color: blueviolet;
-    padding: 15px 15px 1px 15px;
-    margin-bottom: 1px;
-    font-size: 1.2rem;
+    width: 100%;
+    background-color: var(--color-bg-primary, #FFFFFF);
+    min-height: 5vh;
+    max-height: 180px;
+    color: var(--rich-black, #03071e);
+    padding: 10px 15px 1px 15px;
+    margin-bottom: 0;
+    font-size: var(--font-size-body-medium, 0.9375rem);
     cursor: pointer;
+    border: 1px solid var(--tigers-eye, #bc6c25);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
 }
 
 .autocomplete-list li {
     cursor: pointer;
-    color: blueviolet;
+    color: var(--rich-black, #03071e);
     width: 100%;
 }
 
 option {
-    background-color: lavender;
-    padding: 4px;
-    color: blue;
+    background-color: var(--color-bg-primary, #FFFFFF);
+    padding: 8px;
+    color: var(--rich-black, #03071e);
     margin-bottom: 1px;
-    font-size: 1.2rem;
+    font-size: var(--font-size-body-medium, 0.9375rem);
     cursor: pointer;
+    border-bottom: 1px solid var(--color-border-light, #ECF0F1);
 }
 
 /* highlight when hovering over the option */
 option:hover,
 .active {
-    background-color: lightblue;
+    background-color: var(--earth-yellow, #dda15e);
+    color: var(--color-bg-primary, #FFFFFF);
+}
+
+/* Add card row styling */
+.card-row {
+    width: 90%;
+    max-width: 600px;
+    margin: 16px auto;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Instruction header styling */
+.instruction-header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 0 20px;
+}
+
+.instruction-header h2 {
+    color: var(--rosewood, #6a040f);
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.game-instructions {
+    color: var(--rich-black, #03071e);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+/* Help text styling */
+.help-text {
+    color: var(--color-text-secondary, #7F8C8D);
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    text-align: left;
+    font-style: italic;
+}
+
+/* Container IDs for better organization */
+#question-container {
+    margin-bottom: 16px;
+}
+
+#interaction-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto 16px;
+    gap: 8px;
+}
+
+.input-wrapper {
+    width: 100%;
+    position: relative;
+}
+
+/* Custom dropdown styling */
+.custom-dropdown {
+    position: absolute;
+    width: 100%;
+    max-height: 240px;
+    overflow-y: auto;
+    background-color: var(--color-bg-primary, #FFFFFF);
+    border: 1px solid var(--tigers-eye, #bc6c25);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.dropdown-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    color: var(--rich-black, #03071e);
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(188, 108, 37, 0.1);
+    transition: background-color 0.2s ease;
+    text-align: left;
+}
+
+.dropdown-item:hover {
+    background-color: var(--cornsilk, #fefae0);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.no-match {
+    font-style: italic;
+    color: var(--color-text-secondary, #7F8C8D);
+}
+
+.events-container {
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto 16px;
+}
+
+.events-header {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--chocolate-cosmos, #370617);
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.event-item {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    text-align: left;
+    color: var(--rich-black, #03071e);
+    border-bottom: 1px solid rgba(188, 108, 37, 0.1);
+}
+
+#result-container {
+    margin-top: 16px;
+}
+
+/* Make the UI more professional */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.game-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+}
+
+/* Standard card sizes */
+.card {
+    width: 90%;
+    max-width: 600px;
+    margin: 8px auto;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card.wide {
+    width: 90%;
+    max-width: 600px;
+}
+
+.output {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 16px;
+    gap: 8px;
+}
+
+/* Modern progress bar styling */
+.score-progress-container {
+    height: 0.65rem;
+    border-radius: 100px;
+    overflow: hidden;
+    margin: 20px 0;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
+    background-color: rgba(3, 7, 30, 0.05);
+    position: relative;
+    width: 100%;
+}
+
+.score-progress-bar {
+    border-radius: 100px;
+    height: 0.65rem;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.6s ease;
+    position: relative;
+}
+
+/* Progress bar colors */
+.score-success {
+    background: linear-gradient(to right, var(--dark-moss-green, #606c38), var(--pakistan-green, #283618));
+}
+
+.score-warning {
+    background: linear-gradient(to right, var(--earth-yellow, #dda15e), var(--tigers-eye, #bc6c25));
+}
+
+.score-danger {
+    background: linear-gradient(to right, var(--rosewood, #6a040f), var(--chocolate-cosmos, #370617));
+}
+
+/* Modern tally box styling */
+#tallyBoard {
+  padding: 12px;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 12px auto !important;
+}
+
+.tallyRow {
+  display: flex !important;
+  justify-content: center !important;
+  width: auto !important;
+  margin: 8px auto !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.tallyBox {
+  border: none !important;
+  font-family: inherit !important;
+  font-weight: bold !important;
+  height: 12px !important;
+  width: 12px !important;
+  border-radius: 50% !important;
+  margin: 0 3px !important;
+  user-select: none !important;
+  background-color: var(--color-border-medium, #D5DBDB) !important;
+  transition: background-color 0.3s ease, transform 0.3s ease !important;
+  padding: 0 !important;
+}
+
+/* Override inline styles with important */
+.tallyBox[style*="background: green"] {
+  background-color: var(--dark-moss-green, #606c38) !important;
+  transform: scale(1.1) !important;
+}
+
+.tallyBox[style*="background: orange"] {
+  background-color: var(--earth-yellow, #dda15e) !important;
+  transform: scale(1.1) !important;
+}
+
+.tallyBox[style*="background: red"] {
+  background-color: var(--rosewood, #6a040f) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Styling for score result display */
+.score-result {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 1.2rem;
+    padding: 12px;
+    text-align: left;
+}
+
+.score-year {
+    color: var(--rich-black, #03071e);
+    font-weight: 400;
+}
+
+.score-year span, .score-diff span {
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.score-diff {
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-top: 8px;
+}
+
+/* Card background styles from style guide */
+.card {
+    background-color: var(--color-bg-primary, #FFFFFF);
+    color: var(--rich-black, #03071e);
+}
+
+.card.black {
+    background-color: var(--cornsilk, #fefae0) !important;
+    color: var(--rich-black, #03071e) !important;
+    border: 1px solid rgba(188, 108, 37, 0.2) !important;
+}
+
+.card.slate {
+    background-color: var(--color-rose, #F4E8ED) !important;
+    color: var(--rich-black, #03071e) !important;
+    border: 1px solid rgba(106, 4, 15, 0.15) !important;
+}
+
+/* Card containers for different content types */
+#qCard {
+    background-color: var(--color-blush, #FCF7F9);
+    padding: 24px;
+    border-radius: 12px;
+    margin-top: 16px;
+    border: 1px solid rgba(139, 21, 56, 0.1);
+}
+
+#sCard {
+    background-color: var(--cornsilk, #fefae0);
+    border: 1px solid rgba(188, 108, 37, 0.2);
+}
+
+#overallScore {
+    background-color: var(--color-bg-secondary, #FAFBFC);
+    border: 1px solid var(--color-border-medium, #D5DBDB);
+}
+
+/* Improved card-text styling */
+.card-text {
+    color: var(--rich-black, #03071e);
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin: 0 12px;
+}
+
+.card-text-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 16px 0;
+    padding: 8px;
 }
